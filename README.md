@@ -1,4 +1,4 @@
-# Dorpie™
+# Dorpwag™
 > SA Community Platform | VCDS™ Wave 1 | Launch: June 1, 2026
 
 ## Overview
