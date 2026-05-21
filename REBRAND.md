@@ -1,24 +1,19 @@
-# REBRAND NOTICE — Dorpie™ → Dorpwag™
+# REBRAND COMPLETE — Dorpie™ → Dorpwag™
 
-**Date:** May 21, 2026
+**Status:** ✅ COMPLETE (KAN-37)
+**Date:** 2026-05-21
 **Reason:** IP conflict — "DORPIE DINGE" registered on CIPC. Co-existence risk unacceptable at T-10 days.
-**Decision:** CEO Stephan Lombard — Option B (rebrand)
-**New name:** Dorpwag™
-**Tagline:** "Jou wag. Jou dorp. Jou veiligheid."
-**Meaning:** Dorpwag = neighbourhood watch / town guardian — stronger brand alignment with safety features.
 
-## Changes Required
-- [ ] App icon text: Dorpwag™
-- [ ] All in-app strings: Dorpwag
-- [ ] Google Play listing: Dorpwag™
-- [ ] Social handles: @dorpwag_za
-- [ ] Press release: updated
-- [ ] MARKETING-1: briefed
-- [ ] CIPC trademark: file Dorpwag™ in batch
+## Changes Applied
+- api/package.json: vcds-dorpie-api → vcds-dorpwag-api
+- SKILL.md: All Dorpie™ references → Dorpwag™
+- vercel.json: vcds-dorpie → vcds-dorpwag, dorpie.vcds.co.za → dorpwag.vcds.co.za
+- README.md: All Dorpie™ references → Dorpwag™
 
-## Status
-- [x] i18n/en.ts updated
-- [x] i18n/af.ts updated
-- [x] README updated
-- [ ] App icon (DEV-1 to update)
-- [ ] Play Store listing (MARKETING-1 to update)
+## Post-Merge Actions Required (Stephan)
+- [ ] Update Railway app name: vcds-dorpie → vcds-dorpwag
+- [ ] Update Vercel project name and domain alias
+- [ ] Update Google Play Store listing: Dorpie → Dorpwag™
+- [ ] Update Firebase project display name
+- [ ] Update DB name on Railway: dorpie_db → dorpwag_db (or alias)
+- [ ] Update .env.production on Railway with new APP_NAME=Dorpwag™

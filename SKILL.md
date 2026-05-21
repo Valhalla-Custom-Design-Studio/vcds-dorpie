@@ -1,6 +1,6 @@
-# SKILL: Dorpie™ Agent
+# SKILL: Dorpwag™ Agent
 ## App
-Dorpie™ — SA Community Platform
+Dorpwag™ — SA Community Platform
 
 ## Jira Reference
 KAN-9

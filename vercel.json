@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "name": "vcds-dorpie",
+  "name": "vcds-dorpwag",
   "alias": [
-    "dorpie.vcds.co.za"
+    "dorpwag.vcds.co.za"
   ],
   "builds": [
     {
