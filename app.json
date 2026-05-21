@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Dorpie",
+    "slug": "dorpie",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2E7D32"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "co.za.vcds.dorpie",
+      "buildNumber": "1"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#2E7D32"
+      },
+      "package": "co.za.vcds.dorpie",
+      "versionCode": 1,
+      "permissions": [
+        "INTERNET"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "name": "Dorpie",
+      "themeColor": "#2E7D32"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "vcds-dorpie"
+      },
+      "subdomain": "dorpie.vcds.co.za",
+      "payfastMerchantId": "11910323"
+    }
+  }
+}
