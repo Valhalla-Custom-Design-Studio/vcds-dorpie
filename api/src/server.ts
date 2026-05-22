@@ -18,5 +18,14 @@ app.get(`/api/${API_VERSION}/health`, async (_req, res) => {
   res.json({ success: true, status: 'healthy', timestamp: new Date().toISOString() });
 });
 
+
+app.get('/', (_req, res) => {
+  res.json({ success: true, app: 'Dorpwag™ API', version: API_VERSION, status: 'healthy' });
+});
+
+app.get('/health', (_req, res) => {
+  res.json({ success: true, status: 'healthy', timestamp: new Date().toISOString() });
+});
+
 app.listen(PORT, () => console.log(`VCDS API running on port ${PORT}`));
 export default app;
