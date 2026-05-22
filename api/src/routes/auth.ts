@@ -27,7 +27,7 @@ authRouter.post('/register', async (req: Request, res: Response) => {
       'INSERT INTO users (id, email, password_hash, first_name, last_name, preferred_locale, tier) VALUES ($1,$2,$3,$4,$5,$6,$7)',
       [userId, value.email, passwordHash, value.firstName, value.lastName, value.preferredLocale, 'free']
     );
-    const token = jwt.sign({ id: userId, email: value.email, tier: 'free' }, process.env.JWT_SECRET!, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
+    const token = jwt.sign({ id: userId, email: value.email, tier: 'free' }, process.env.JWT_SECRET!, { expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as any });
     res.status(201).json({ success: true, token, user: { id: userId, email: value.email, tier: 'free' } });
   } catch (err) { res.status(500).json({ success: false, message: 'Registration failed' }); }
 });
@@ -41,7 +41,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     const user = result.rows[0];
     const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) { res.status(401).json({ success: false, message: 'Invalid credentials' }); return; }
-    const token = jwt.sign({ id: user.id, email: user.email, tier: user.tier }, process.env.JWT_SECRET!, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
+    const token = jwt.sign({ id: user.id, email: user.email, tier: user.tier }, process.env.JWT_SECRET!, { expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as any });
     res.json({ success: true, token, user: { id: user.id, email: user.email, tier: user.tier } });
   } catch { res.status(500).json({ success: false, message: 'Login failed' }); }
 });
