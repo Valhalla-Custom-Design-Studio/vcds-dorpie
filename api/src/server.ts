@@ -37,6 +37,7 @@ import filesRouter from './routes/files';
 import pushTokensRouter from './routes/pushTokens';
 import paymentsRouter from './routes/payments';
 import safetyRouter from './routes/safety';
+import suiteRouter from './routes/suite';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -78,6 +79,8 @@ app.use(`${API}/safety`, safetyRouter);
 
 app.use(Sentry.expressErrorHandler());
 app.use((_req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
+
+app.use('/api/suite', suiteRouter);
 
 app.listen(PORT, () => console.log(`🛡️  Dorpwag™ API v2.0 running on port ${PORT}`));
 export default app;
