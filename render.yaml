@@ -6,6 +6,7 @@ services:
     dockerContext: ./api
     branch: main
     autoDeploy: true
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
