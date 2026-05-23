@@ -1,64 +1,64 @@
-name: Autonomous QA — Dorpwag
+name: QA - Playwright E2E
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
     branches: [main]
-  schedule:
-    - cron: '0 4 * * *'  # 06:00 SAST daily
   workflow_dispatch:
 
 jobs:
   qa:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci || npm install
+      - name: Install API dependencies
+        working-directory: ./api
+        run: npm ci
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
-
-      - name: Run QA suite
-        id: qa
-        env:
-          BASE_URL: ${{ secrets.QA_DORPWAG_BASE_URL }}
-          QA_EMAIL: ${{ secrets.QA_DORPWAG_EMAIL }}
-          QA_PASS: ${{ secrets.QA_DORPWAG_PASS }}
+      - name: Install Playwright
         run: |
-          npx playwright test --reporter=json 2>&1 | tee qa-results.json || true
-          PASSED=$(cat qa-results.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('stats',{}).get('expected',0))" 2>/dev/null || echo "?")
-          FAILED=$(cat qa-results.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('stats',{}).get('unexpected',0))" 2>/dev/null || echo "?")
-          echo "passed=$PASSED" >> $GITHUB_OUTPUT
-          echo "failed=$FAILED" >> $GITHUB_OUTPUT
+          npm init -y
+          npm install --save-dev @playwright/test
+          npx playwright install --with-deps chromium
 
-      - name: Upload QA artifacts
+      - name: Start API server
+        working-directory: ./api
+        run: |
+          npm start &
+          sleep 10
+        env:
+          NODE_ENV: test
+          PORT: 3000
+
+      - name: Run E2E tests
+        run: npx playwright test --reporter=list
+        env:
+          BASE_URL: http://localhost:3000
+          CI: true
+
+      - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: qa-results-dorpwag
-          path: |
-            qa-results.json
-            playwright-report/
+          name: playwright-report
+          path: playwright-report/
           retention-days: 7
 
-      - name: Notify Slack
-        if: always()
+      - name: Notify Slack on failure
+        if: failure()
         uses: slackapi/slack-github-action@v1.26.0
         with:
           channel-id: 'vcds-ops'
           slack-message: |
-            *ODIN QA — Dorpwag* ${{ job.status == 'success' && ':white_check_mark:' || ':x:' }}
-            Passed: ${{ steps.qa.outputs.passed }} | Failed: ${{ steps.qa.outputs.failed }}
-            Branch: `${{ github.ref_name }}` | Run: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View>
+            🔴 QA FAILED: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
