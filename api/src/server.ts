@@ -95,10 +95,10 @@ app.use((_req, res) => res.status(404).json({ success: false, message: 'Route no
 (async () => {
   try {
     await runMigrations();
-    app.listen(PORT, () => console.log(`🛡️  Dorpwag™ API v2.1 — Die Afrikaanse Suite™ Shared Backend — port \${PORT}`));
+    console.log('[STARTUP] ✅ Migrations complete');
   } catch (err) {
-    console.error('[STARTUP] Fatal migration error — exiting', err);
-    process.exit(1);
+    console.error('[STARTUP] ⚠️  Migration error (non-fatal) — server will start anyway:', err);
   }
+  app.listen(PORT, () => console.log(`🛡️  Dorpwag™ API v2.1 — Die Afrikaanse Suite™ Shared Backend — port \${PORT}`));
 })();
 export default app;
