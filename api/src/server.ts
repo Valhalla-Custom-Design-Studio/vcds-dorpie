@@ -38,6 +38,7 @@ import pushTokensRouter from './routes/pushTokens';
 import paymentsRouter from './routes/payments';
 import safetyRouter from './routes/safety';
 import suiteRouter from './routes/suite';
+import careRouter from './routes/care';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -49,12 +50,29 @@ app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 300, standardHeaders: true })
 app.use(express.json({ limit: '10mb' }));
 
 // Health
-app.get('/health', (_req, res) => res.json({ success: true, app: 'Dorpwag™ API', status: 'healthy', version: '2.0.0', ts: new Date().toISOString() }));
-app.get(`${API}/health`, (_req, res) => res.json({ success: true, status: 'healthy' }));
+app.get('/health', (_req, res) => res.json({ success: true, app: 'Dorpwag™ API', status: 'healthy', version: '2.1.0', ts: new Date().toISOString() }));
+app.get(`${API}/health`, (_req, res) => res.json({ success: true, status: 'healthy', version: '2.1.0' }));
 
-// Routes
+// ─── SHARED ROUTES (all apps) ────────────────────────────────────────────────
 app.use(`${API}/auth`, authRouter);
 app.use(`${API}/towns`, townsRouter);
+app.use(`${API}/push-tokens`, pushTokensRouter);
+app.use(`${API}/profile`, profileRouter);
+app.use(`${API}/files`, filesRouter);
+app.use(`${API}/upload`, uploadRouter);
+app.use(`${API}/payments`, paymentsRouter);
+
+// ─── SAFETY ROUTES (all apps — shared) ──────────────────────────────────────
+app.use(`${API}/guardian`, guardianRouter);
+app.use(`${API}/guardian-public`, guardianPublicRouter);
+app.use(`${API}/sos`, sosRouter);
+app.use(`${API}/heatmap`, heatmapRouter);
+app.use(`${API}/movement`, movementRouter);
+app.use(`${API}/movement-public`, movementPublicRouter);
+app.use(`${API}/safety`, safetyRouter);
+app.use(`${API}/emergency-alerts`, emergencyAlertsRouter);
+
+// ─── DORPWAG™ SPECIFIC ROUTES ────────────────────────────────────────────────
 app.use(`${API}/notices`, noticesRouter);
 app.use(`${API}/listings`, listingsRouter);
 app.use(`${API}/message-threads`, messageThreadsRouter);
@@ -62,25 +80,16 @@ app.use(`${API}/events`, eventsRouter);
 app.use(`${API}/businesses`, businessesRouter);
 app.use(`${API}/topics`, topicsRouter);
 app.use(`${API}/reports`, reportsRouter);
-app.use(`${API}/emergency-alerts`, emergencyAlertsRouter);
-app.use(`${API}/guardian`, guardianRouter);
-app.use(`${API}/guardian-public`, guardianPublicRouter);
-app.use(`${API}/sos`, sosRouter);
-app.use(`${API}/heatmap`, heatmapRouter);
-app.use(`${API}/movement`, movementRouter);
-app.use(`${API}/movement-public`, movementPublicRouter);
-app.use(`${API}/profile`, profileRouter);
 app.use(`${API}/admin`, adminRouter);
-app.use(`${API}/upload`, uploadRouter);
-app.use(`${API}/files`, filesRouter);
-app.use(`${API}/push-tokens`, pushTokensRouter);
-app.use(`${API}/payments`, paymentsRouter);
-app.use(`${API}/safety`, safetyRouter);
+
+// ─── OUMA EN OPPAS™ SPECIFIC ROUTES ─────────────────────────────────────────
+app.use(`${API}/care`, careRouter);
+
+// ─── SUITE / INTERNAL ────────────────────────────────────────────────────────
+app.use(`${API}/suite`, suiteRouter);
 
 app.use(Sentry.expressErrorHandler());
 app.use((_req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
 
-app.use('/api/suite', suiteRouter);
-
-app.listen(PORT, () => console.log(`🛡️  Dorpwag™ API v2.0 running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🛡️  Dorpwag™ API v2.1 — Die Afrikaanse Suite™ Shared Backend — port ${PORT}`));
 export default app;
