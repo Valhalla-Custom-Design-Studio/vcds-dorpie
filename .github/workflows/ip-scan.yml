@@ -1,0 +1,75 @@
+name: ODIN IP & Security Scan
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  ip-security-scan:
+    name: 🛡️ IP & Security Bot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 🔍 Scan for exposed secrets
+        id: secret_scan
+        run: |
+          echo "Scanning for exposed credentials..."
+          FOUND=0
+          # Check for hardcoded secrets patterns
+          if grep -rn --include="*.ts" --include="*.js" --include="*.json"             -E "(password|secret|key|token)\s*[:=]\s*['""][a-zA-Z0-9]{8,}"             --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git             --exclude="*.test.ts" --exclude="*.example" . 2>/dev/null |             grep -v "process.env" | grep -v "placeholder" | grep -v "your_" |             grep -v "test_secret" | grep -v "ci_test"; then
+            echo "⚠️ Potential hardcoded secrets found above"
+            FOUND=1
+          fi
+          echo "found=$FOUND" >> $GITHUB_OUTPUT
+
+      - name: 🔍 Check for localhost references in production code
+        id: localhost_scan
+        run: |
+          echo "Scanning for localhost references..."
+          if grep -rn --include="*.ts" --include="*.tsx"             "localhost"             --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git             --exclude="*.test.ts" --exclude="docker-compose*" . 2>/dev/null |             grep -v "// " | grep -v "process.env"; then
+            echo "⚠️ Localhost references found in production code"
+          fi
+
+      - name: 🔍 IP Feature Flag Check
+        run: |
+          echo "Checking for VONK™ / Die Kluis™ / LEWE™ references (embargo check)..."
+          if grep -rn --include="*.ts" --include="*.tsx" --include="*.md"             -iE "(vonk|die.kluis|lewe.app|wysheid)"             --exclude-dir=node_modules --exclude-dir=.git . 2>/dev/null; then
+            echo "🚨 EMBARGO ALERT: Embargoed IP references found — review before merging"
+          else
+            echo "✅ No embargoed IP references found"
+          fi
+
+      - name: 🔒 npm security audit
+        run: |
+          if [ -f "api/package.json" ]; then
+            cd api && npm audit --audit-level=high --json > ../audit_report.json 2>&1 || true
+            CRITICAL=$(cat ../audit_report.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('metadata',{}).get('vulnerabilities',{}).get('critical',0))" 2>/dev/null || echo 0)
+            HIGH=$(cat ../audit_report.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('metadata',{}).get('vulnerabilities',{}).get('high',0))" 2>/dev/null || echo 0)
+            echo "Critical: $CRITICAL | High: $HIGH"
+            if [ "$CRITICAL" -gt "0" ]; then
+              echo "🚨 CRITICAL vulnerabilities found!"
+            fi
+          fi
+
+      - name: 📊 Notify Slack — IP Scan Results
+        if: always()
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          channel-id: 'vcds-ops'
+          slack-message: |
+            🛡️ *IP & Security Scan* — ${{ github.repository }}
+            Branch: `${{ github.ref_name }}` | PR: ${{ github.event.pull_request.number || 'push' }}
+            Status: ${{ job.status == 'success' && '✅ Clean' || '⚠️ Review Required' }}
+            <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Full Report>
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
