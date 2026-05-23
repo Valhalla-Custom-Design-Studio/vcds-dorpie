@@ -19,7 +19,6 @@ r.post('/subscribe', authenticate, async (req: AuthRequest, res: Response) => {
     const url = buildPaymentURL({
       amount: TIERS.paid.price,
       itemName: TIERS.paid.name,
-      itemDescription: TIERS.paid.description,
       email: user.email,
       firstName, lastName,
       returnUrl: returnUrl || `${process.env.APP_URL}/subscribe/success`,
