@@ -2,6 +2,40 @@ import axios from 'axios';
 
 export interface NotifyContact { name: string; phone?: string; pushToken?: string; }
 
+// ─── Notification Log ──────────────────────────────────────
+export async function logNotification(
+  pool: any,
+  opts: {
+    userId?: string;
+    title: string;
+    body: string;
+    type: string;
+    targetApp?: string;
+    pushToken?: string;
+    status?: string;
+    errorMessage?: string;
+  }
+): Promise<void> {
+  try {
+    await pool.query(
+      `INSERT INTO notification_log(user_id, title, body, type, target_app, push_token, status, error_message)
+       VALUES($1,$2,$3,$4,$5,$6,$7,$8)`,
+      [
+        opts.userId || null,
+        opts.title,
+        opts.body,
+        opts.type,
+        opts.targetApp || 'dorpwag',
+        opts.pushToken || null,
+        opts.status || 'sent',
+        opts.errorMessage || null,
+      ]
+    );
+  } catch (e) {
+    console.error('[NotificationLog] Failed to log:', e);
+  }
+}
+
 export async function sendBulkSMS(contacts: NotifyContact[], message: string): Promise<void> {
   if (!process.env.BULKSMS_USERNAME || !process.env.BULKSMS_PASSWORD) {
     console.warn('[BulkSMS] Credentials not configured — skipping SMS');
@@ -28,7 +62,9 @@ export async function sendExpoPush(
   title: string,
   body: string,
   data?: Record<string, any>,
-  channelId?: string
+  channelId?: string,
+  targetApp?: string,
+  pool?: any
 ): Promise<void> {
   if (!tokens.length) return;
   const messages = tokens.map(to => ({
@@ -42,8 +78,19 @@ export async function sendExpoPush(
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     });
     console.log(`[Push] Sent to ${tokens.length} devices`);
+    // Log each notification
+    if (pool) {
+      for (const token of tokens) {
+        await logNotification(pool, { title, body, type: 'push', targetApp: targetApp || 'dorpwag', pushToken: token, status: 'sent' });
+      }
+    }
   } catch (e: any) {
     console.error('[Push] Failed:', e.response?.data || e.message);
+    if (pool) {
+      for (const token of tokens) {
+        await logNotification(pool, { title, body, type: 'push', targetApp: targetApp || 'dorpwag', pushToken: token, status: 'failed', errorMessage: e.message });
+      }
+    }
   }
 }
 

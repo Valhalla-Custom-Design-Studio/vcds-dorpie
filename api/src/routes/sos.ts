@@ -25,7 +25,7 @@ r.post('/trigger', async (req: AuthRequest, res: Response) => {
   const {lat,lng,message,source='manual',triggerMethod='button'}=req.body;
   try {
     const u=await pool.query('SELECT name FROM users WHERE id=$1',[req.user!.id]);
-    const {rows}=await pool.query('INSERT INTO sos_events(user_id,lat,lng,message,source,trigger_method) VALUES($1,$2,$3,$4,$5,$6) RETURNING *',[req.user!.id,lat,lng,message,source,triggerMethod]);
+    const {rows}=await pool.query('INSERT INTO sos_events(user_id,lat,lng,message,source,trigger_method,source_app) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *',[req.user!.id,lat,lng,message,source,triggerMethod,'dorpwag']);
     const sos=rows[0];
     await triggerSOSAlarm(sos.id,req.user!.id,u.rows[0].name,lat,lng,triggerMethod);
     res.status(201).json({success:true,data:sos});
@@ -36,7 +36,7 @@ r.post('/silent', async (req: AuthRequest, res: Response) => {
   const {lat,lng,triggerMethod='shake'}=req.body;
   try {
     const u=await pool.query('SELECT name FROM users WHERE id=$1',[req.user!.id]);
-    const {rows}=await pool.query('INSERT INTO sos_events(user_id,lat,lng,source,trigger_method) VALUES($1,$2,$3,$4,$5) RETURNING *',[req.user!.id,lat||null,lng||null,'silent',triggerMethod]);
+    const {rows}=await pool.query('INSERT INTO sos_events(user_id,lat,lng,source,trigger_method,source_app) VALUES($1,$2,$3,$4,$5,$6) RETURNING *',[req.user!.id,lat||null,lng||null,'silent',triggerMethod,'dorpwag']);
     const sos=rows[0];
     await triggerSOSAlarm(sos.id,req.user!.id,u.rows[0].name,lat,lng,triggerMethod);
     res.status(201).json({success:true,data:sos});
