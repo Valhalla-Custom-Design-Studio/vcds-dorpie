@@ -49,7 +49,7 @@ incidentsRouter.post('/', authenticate, async (req: AuthRequest, res: Response) 
 incidentsRouter.patch('/:id/resolve', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const result = await pool.query(
-      'UPDATE incidents SET status=''resolved'', resolved_at=NOW(), updated_at=NOW() WHERE id=$1 AND reporter_id=$2 RETURNING *',
+      "UPDATE incidents SET status='resolved', resolved_at=NOW(), updated_at=NOW() WHERE id=$1 AND reporter_id=$2 RETURNING *",
       [req.params.id, req.user!.id]
     );
     if (!result.rows.length) { res.status(404).json({ success: false, message: 'Not found or not your incident' }); return; }

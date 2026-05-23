@@ -49,7 +49,7 @@ patrolsRouter.post('/:id/join', authenticate, async (req: AuthRequest, res: Resp
 patrolsRouter.patch('/:id/end', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const result = await pool.query(
-      'UPDATE patrols SET status=''ended'', end_time=NOW() WHERE id=$1 AND leader_id=$2 RETURNING *',
+      "UPDATE patrols SET status='ended', end_time=NOW() WHERE id=$1 AND leader_id=$2 RETURNING *",
       [req.params.id, req.user!.id]
     );
     if (!result.rows.length) { res.status(404).json({ success: false, message: 'Not found' }); return; }
