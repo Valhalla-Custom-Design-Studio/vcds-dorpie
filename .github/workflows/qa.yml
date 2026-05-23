@@ -1,0 +1,64 @@
+name: Autonomous QA — Dorpwag
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 4 * * *'  # 06:00 SAST daily
+  workflow_dispatch:
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run QA suite
+        id: qa
+        env:
+          BASE_URL: ${{ secrets.QA_DORPWAG_BASE_URL }}
+          QA_EMAIL: ${{ secrets.QA_DORPWAG_EMAIL }}
+          QA_PASS: ${{ secrets.QA_DORPWAG_PASS }}
+        run: |
+          npx playwright test --reporter=json 2>&1 | tee qa-results.json || true
+          PASSED=$(cat qa-results.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('stats',{}).get('expected',0))" 2>/dev/null || echo "?")
+          FAILED=$(cat qa-results.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('stats',{}).get('unexpected',0))" 2>/dev/null || echo "?")
+          echo "passed=$PASSED" >> $GITHUB_OUTPUT
+          echo "failed=$FAILED" >> $GITHUB_OUTPUT
+
+      - name: Upload QA artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-results-dorpwag
+          path: |
+            qa-results.json
+            playwright-report/
+          retention-days: 7
+
+      - name: Notify Slack
+        if: always()
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          channel-id: 'vcds-ops'
+          slack-message: |
+            *ODIN QA — Dorpwag* ${{ job.status == 'success' && ':white_check_mark:' || ':x:' }}
+            Passed: ${{ steps.qa.outputs.passed }} | Failed: ${{ steps.qa.outputs.failed }}
+            Branch: `${{ github.ref_name }}` | Run: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View>
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
