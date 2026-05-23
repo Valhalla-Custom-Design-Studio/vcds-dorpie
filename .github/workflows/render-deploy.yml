@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - 'api/**'
-      - 'Dockerfile'
+      - 'api/Dockerfile'
 
 jobs:
   deploy-api:
@@ -16,7 +16,7 @@ jobs:
           curl -s -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
             -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
             -H "Content-Type: application/json" \
-            -d '{{"clearCache": false}}'
+            -d '{"clearCache": false}'
 
       - name: Notify Slack
         if: always()
