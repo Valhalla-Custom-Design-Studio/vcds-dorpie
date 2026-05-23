@@ -1,60 +1,65 @@
-import { Router, Request, Response } from 'express';
+import { Router, Response } from 'express';
 import { pool } from '../db/pool';
 import { authenticate, AuthRequest } from '../middleware/auth';
-import Joi from 'joi';
+import { sendTownPush } from '../services/NotificationService';
+const r = Router();
 
-const incidentsRouter = Router();
-
-const incidentSchema = Joi.object({
-  areaId: Joi.string().uuid().optional(),
-  type: Joi.string().valid('theft','suspicious','assault','vandalism','fire','medical','other').required(),
-  severity: Joi.string().valid('low','medium','high','critical').default('medium'),
-  title: Joi.string().min(5).max(200).required(),
-  description: Joi.string().max(2000).optional(),
-  address: Joi.string().max(500).optional(),
-  lat: Joi.number().optional(),
-  lng: Joi.number().optional(),
-});
-
-// Get all active incidents (public)
-incidentsRouter.get('/', async (req: Request, res: Response) => {
+r.get('/', authenticate, async (req: AuthRequest, res: Response) => {
+  const { page = 1, category, severity, status = 'open', limit = 20 } = req.query;
+  const offset = (Number(page) - 1) * Number(limit);
   try {
-    const result = await pool.query(
-      `SELECT i.*, a.name as area_name, a.name_af as area_name_af,
-        u.first_name || ' ' || u.last_name AS reporter_name
-       FROM incidents i
-       LEFT JOIN areas a ON i.area_id = a.id
-       JOIN users u ON i.reporter_id = u.id
-       WHERE i.status = 'active'
-       ORDER BY i.created_at DESC LIMIT 50`
-    );
-    res.json({ success: true, incidents: result.rows });
-  } catch { res.status(500).json({ success: false, message: 'Failed to fetch incidents' }); }
+    const u = await pool.query('SELECT town_id FROM users WHERE id=$1', [req.user!.id]);
+    const townId = u.rows[0]?.town_id;
+    let q = `SELECT i.*,u.name as reporter_name,
+             ARRAY(SELECT fi.cloud_storage_path FROM incident_media im JOIN files fi ON fi.id=im.file_id WHERE im.incident_id=i.id) as media
+             FROM incidents i JOIN users u ON u.id=i.reporter_id
+             WHERE i.town_id=$1`;
+    const params: any[] = [townId];
+    if (status !== 'all') { q += ` AND i.status=$${params.length+1}`; params.push(status); }
+    if (category) { q += ` AND i.category=$${params.length+1}`; params.push(category); }
+    if (severity) { q += ` AND i.severity=$${params.length+1}`; params.push(severity); }
+    q += ` ORDER BY i.created_at DESC LIMIT $${params.length+1} OFFSET $${params.length+2}`;
+    params.push(Number(limit), offset);
+    const { rows } = await pool.query(q, params);
+    res.json({ success: true, data: rows });
+  } catch(e) { console.error(e); res.status(500).json({ success: false, message: 'Failed' }); }
 });
 
-// Report incident (authenticated)
-incidentsRouter.post('/', authenticate, async (req: AuthRequest, res: Response) => {
-  const { error, value } = incidentSchema.validate(req.body);
-  if (error) { res.status(400).json({ success: false, message: error.details[0].message }); return; }
+r.post('/', authenticate, async (req: AuthRequest, res: Response) => {
+  const { title, description, category = 'Other', severity = 'medium', lat, lng } = req.body;
+  if (!title) { res.status(400).json({ success: false, message: 'Title required' }); return; }
   try {
-    const result = await pool.query(
-      'INSERT INTO incidents (reporter_id, area_id, type, severity, title, description, address, lat, lng) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *',
-      [req.user!.id, value.areaId, value.type, value.severity, value.title, value.description, value.address, value.lat, value.lng]
+    const u = await pool.query('SELECT town_id FROM users WHERE id=$1', [req.user!.id]);
+    const townId = u.rows[0]?.town_id;
+    const { rows } = await pool.query(
+      'INSERT INTO incidents(title,description,category,severity,reporter_id,town_id,lat,lng) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *',
+      [title, description, category, severity, req.user!.id, townId, lat, lng]
     );
-    res.status(201).json({ success: true, incident: result.rows[0] });
-  } catch { res.status(500).json({ success: false, message: 'Report failed' }); }
+    if (severity === 'high' || severity === 'critical') {
+      await sendTownPush(pool, townId, '⚠️ Nuwe Voorval', `${title} — ${category}`, { incidentId: rows[0].id }, 'dorpie-safety');
+    }
+    res.status(201).json({ success: true, data: rows[0] });
+  } catch { res.status(500).json({ success: false, message: 'Failed' }); }
 });
 
-// Resolve incident
-incidentsRouter.patch('/:id/resolve', authenticate, async (req: AuthRequest, res: Response) => {
+r.get('/:id', authenticate, async (req: AuthRequest, res: Response) => {
   try {
-    const result = await pool.query(
-      "UPDATE incidents SET status='resolved', resolved_at=NOW(), updated_at=NOW() WHERE id=$1 AND reporter_id=$2 RETURNING *",
-      [req.params.id, req.user!.id]
+    const { rows } = await pool.query(
+      `SELECT i.*,u.name as reporter_name,
+       ARRAY(SELECT fi.cloud_storage_path FROM incident_media im JOIN files fi ON fi.id=im.file_id WHERE im.incident_id=i.id) as media
+       FROM incidents i JOIN users u ON u.id=i.reporter_id WHERE i.id=$1`,
+      [req.params.id]
     );
-    if (!result.rows.length) { res.status(404).json({ success: false, message: 'Not found or not your incident' }); return; }
-    res.json({ success: true, incident: result.rows[0] });
-  } catch { res.status(500).json({ success: false, message: 'Resolve failed' }); }
+    if (!rows.length) { res.status(404).json({ success: false, message: 'Not found' }); return; }
+    res.json({ success: true, data: rows[0] });
+  } catch { res.status(500).json({ success: false, message: 'Failed' }); }
 });
 
-export default incidentsRouter;
+r.put('/:id/resolve', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    await pool.query('UPDATE incidents SET status=$1,resolved_at=NOW(),updated_at=NOW() WHERE id=$2', ['resolved', req.params.id]);
+    res.json({ success: true });
+  } catch { res.status(500).json({ success: false, message: 'Failed' }); }
+});
+
+export default r;

@@ -1,0 +1,77 @@
+{
+  "expo": {
+    "name": "Dorpwag\u2122",
+    "slug": "dorpwag",
+    "version": "2.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./src/assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0B0612"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "co.za.vcds.dorpwag",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Dorpwag\u2122 gebruik jou ligging vir Guardian Mode\u2122 veiligheidsmonitering.",
+        "NSLocationAlwaysUsageDescription": "Dorpwag\u2122 benodig agtergrondligging vir Guardian Mode\u2122.",
+        "NSMicrophoneUsageDescription": "Dorpwag\u2122 benodig die mikrofoon vir Witness Mode\u2122 bewyse.",
+        "NSCameraUsageDescription": "Dorpwag\u2122 gebruik die kamera vir foto's."
+      },
+      "backgroundModes": [
+        "location",
+        "fetch",
+        "remote-notification"
+      ]
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "backgroundColor": "#0B0612"
+      },
+      "package": "co.za.vcds.dorpwag",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "RECORD_AUDIO",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE",
+        "FOREGROUND_SERVICE"
+      ]
+    },
+    "web": {
+      "favicon": "./src/assets/favicon.png",
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-notifications",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Dorpwag\u2122 to use your location for Guardian Mode\u2122 safety monitoring."
+        }
+      ]
+    ],
+    "scheme": "dorpie",
+    "extra": {
+      "apiUrl": "https://dorpwag-api.onrender.com",
+      "eas": {
+        "projectId": "dorpwag-vcds"
+      }
+    }
+  }
+}
