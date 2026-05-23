@@ -1,74 +1,54 @@
 import crypto from 'crypto';
-import axios from 'axios';
 
 const PAYFAST_URL = process.env.PAYFAST_URL || 'https://www.payfast.co.za/eng/process';
 const MERCHANT_ID = process.env.PAYFAST_MERCHANT_ID!;
 const MERCHANT_KEY = process.env.PAYFAST_MERCHANT_KEY!;
 const PASSPHRASE = process.env.PAYFAST_PASSPHRASE || '';
 
-export interface PayFastPaymentParams {
-  amount: number;
-  itemName: string;
-  itemDescription?: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  subscriptionType?: number;
-  frequency?: number;
-  cycles?: number;
-  customStr1?: string;
-  customStr2?: string;
+export function generateSignature(params: Record<string, string>): string {
+  const sorted = Object.keys(params).sort().reduce((acc, k) => {
+    if (params[k] !== '') acc[k] = params[k];
+    return acc;
+  }, {} as Record<string, string>);
+  let str = Object.entries(sorted).map(([k, v]) => `${k}=${encodeURIComponent(v).replace(/%20/g, '+')}`).join('&');
+  if (PASSPHRASE) str += `&passphrase=${encodeURIComponent(PASSPHRASE).replace(/%20/g, '+')}`;
+  return crypto.createHash('md5').update(str).digest('hex');
 }
 
-export function buildPaymentUrl(params: PayFastPaymentParams): string {
-  const data: Record<string, string> = {
+export function buildPaymentURL(params: {
+  amount: number; itemName: string; email: string;
+  firstName: string; lastName: string;
+  returnUrl: string; cancelUrl: string; notifyUrl: string;
+  subscriptionType?: number; billingDate?: string; recurringAmount?: number; frequency?: number; cycles?: number;
+  customStr1?: string;
+}): string {
+  const p: Record<string, string> = {
     merchant_id: MERCHANT_ID,
     merchant_key: MERCHANT_KEY,
-    return_url: process.env.PAYFAST_RETURN_URL || 'https://dorpwag.co.za/payment/success',
-    cancel_url: process.env.PAYFAST_CANCEL_URL || 'https://dorpwag.co.za/payment/cancel',
-    notify_url: process.env.PAYFAST_NOTIFY_URL || 'https://dorpwag-api.onrender.com/api/payments/itn',
+    return_url: params.returnUrl,
+    cancel_url: params.cancelUrl,
+    notify_url: params.notifyUrl,
     name_first: params.firstName,
     name_last: params.lastName,
     email_address: params.email,
     amount: params.amount.toFixed(2),
     item_name: params.itemName,
-    item_description: params.itemDescription || '',
-    custom_str1: params.customStr1 || '',
-    custom_str2: params.customStr2 || '',
-    subscription_type: String(params.subscriptionType || 1),
-    frequency: String(params.frequency || 3),
-    cycles: String(params.cycles || 0),
   };
-
-  if (PASSPHRASE) data.passphrase = PASSPHRASE;
-
-  const queryString = Object.entries(data)
-    .map(([k, v]) => `${k}=${encodeURIComponent(v.trim())}`)
-    .join('&');
-
-  const signature = crypto.createHash('md5').update(queryString).digest('hex');
-  return `${PAYFAST_URL}?${queryString}&signature=${signature}`;
+  if (params.subscriptionType) {
+    p.subscription_type = String(params.subscriptionType);
+    p.billing_date = params.billingDate || new Date().toISOString().split('T')[0];
+    p.recurring_amount = (params.recurringAmount || params.amount).toFixed(2);
+    p.frequency = String(params.frequency || 3);
+    p.cycles = String(params.cycles || 0);
+  }
+  if (params.customStr1) p.custom_str1 = params.customStr1;
+  p.signature = generateSignature(p);
+  const qs = Object.entries(p).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&');
+  return `${PAYFAST_URL}?${qs}`;
 }
 
-export async function validateITN(body: Record<string, string>): Promise<boolean> {
-  try {
-    const pfData = { ...body };
-    delete pfData.signature;
-    if (PASSPHRASE) pfData.passphrase = PASSPHRASE;
-
-    const queryString = Object.entries(pfData)
-      .map(([k, v]) => `${k}=${encodeURIComponent(String(v).trim())}`)
-      .join('&');
-
-    const signature = crypto.createHash('md5').update(queryString).digest('hex');
-    if (signature !== body.signature) return false;
-
-    const validHosts = ['www.payfast.co.za', 'sandbox.payfast.co.za', 'w1w.payfast.co.za', 'w2w.payfast.co.za'];
-    // Basic amount validation
-    if (parseFloat(body.amount_gross) <= 0) return false;
-
-    return true;
-  } catch {
-    return false;
-  }
+export function verifyITN(params: Record<string, string>): boolean {
+  const { signature, ...rest } = params;
+  const expected = generateSignature(rest);
+  return expected === signature;
 }
