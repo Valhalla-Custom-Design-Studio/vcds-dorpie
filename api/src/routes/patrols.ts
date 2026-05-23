@@ -3,7 +3,7 @@ import { pool } from '../db/pool';
 import { authenticate, AuthRequest } from '../middleware/auth';
 import Joi from 'joi';
 
-export const patrolsRouter = Router();
+const patrolsRouter = Router();
 
 // Get active patrols (public)
 patrolsRouter.get('/', async (_req: Request, res: Response) => {
@@ -56,3 +56,5 @@ patrolsRouter.patch('/:id/end', authenticate, async (req: AuthRequest, res: Resp
     res.json({ success: true, patrol: result.rows[0] });
   } catch { res.status(500).json({ success: false, message: 'Failed' }); }
 });
+
+export default patrolsRouter;

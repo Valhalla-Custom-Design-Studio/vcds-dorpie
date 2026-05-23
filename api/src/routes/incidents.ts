@@ -3,7 +3,7 @@ import { pool } from '../db/pool';
 import { authenticate, AuthRequest } from '../middleware/auth';
 import Joi from 'joi';
 
-export const incidentsRouter = Router();
+const incidentsRouter = Router();
 
 const incidentSchema = Joi.object({
   areaId: Joi.string().uuid().optional(),
@@ -56,3 +56,5 @@ incidentsRouter.patch('/:id/resolve', authenticate, async (req: AuthRequest, res
     res.json({ success: true, incident: result.rows[0] });
   } catch { res.status(500).json({ success: false, message: 'Resolve failed' }); }
 });
+
+export default incidentsRouter;
