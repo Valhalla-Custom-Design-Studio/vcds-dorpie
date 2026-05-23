@@ -22,14 +22,14 @@ app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 app.use(express.json({ limit: '10mb' }));
 
 app.get('/health', (_req, res) => res.json({ success: true, app: 'Dorpwag™ API', status: 'healthy', ts: new Date().toISOString() }));
-app.get(\`\${API}/health\`, (_req, res) => res.json({ success: true, status: 'healthy' }));
+app.get(`${API}/health`, (_req, res) => res.json({ success: true, status: 'healthy' }));
 
-app.use(\`\${API}/auth\`, authRouter);
-app.use(\`\${API}/payments\`, paymentsRouter);
-app.use(\`\${API}/subscriptions\`, subscriptionRouter);
-app.use(\`\${API}/incidents\`, incidentsRouter);
-app.use(\`\${API}/patrols\`, patrolsRouter);
-app.use(\`\${API}/areas\`, areasRouter);
+app.use(`${API}/auth`, authRouter);
+app.use(`${API}/payments`, paymentsRouter);
+app.use(`${API}/subscriptions`, subscriptionRouter);
+app.use(`${API}/incidents`, incidentsRouter);
+app.use(`${API}/patrols`, patrolsRouter);
+app.use(`${API}/areas`, areasRouter);
 
-app.listen(PORT, () => console.log(\`Dorpwag™ API running on port \${PORT}\`));
+app.listen(PORT, () => console.log(`Dorpwag™ API running on port ${PORT}`));
 export default app;
