@@ -5,6 +5,7 @@ import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 dotenv.config();
 import * as Sentry from '@sentry/node';
+import { runMigrations } from './db/migrate';
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
@@ -91,5 +92,13 @@ app.use(`${API}/suite`, suiteRouter);
 app.use(Sentry.expressErrorHandler());
 app.use((_req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
 
-app.listen(PORT, () => console.log(`🛡️  Dorpwag™ API v2.1 — Die Afrikaanse Suite™ Shared Backend — port ${PORT}`));
+(async () => {
+  try {
+    await runMigrations();
+    app.listen(PORT, () => console.log(`🛡️  Dorpwag™ API v2.1 — Die Afrikaanse Suite™ Shared Backend — port \${PORT}`));
+  } catch (err) {
+    console.error('[STARTUP] Fatal migration error — exiting', err);
+    process.exit(1);
+  }
+})();
 export default app;
