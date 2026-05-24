@@ -5,6 +5,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+defaults:
+  run:
+    working-directory: react_native_space
+
 jobs:
   build:
     name: APK Build Dorpwag
@@ -35,22 +39,25 @@ jobs:
 
       - name: Build APK
         run: ./gradlew assembleRelease --no-daemon
-        working-directory: android
+        working-directory: react_native_space/android
         env:
           GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=512m"
 
       - uses: actions/upload-artifact@v4
         with:
           name: dorpwag-apk
-          path: android/app/build/outputs/apk/release/*.apk
+          path: react_native_space/android/app/build/outputs/apk/release/*.apk
           retention-days: 30
 
       - name: Slack notify
         if: always()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          STATUS=${ job.status }
-          curl -s -X POST -H 'Content-type: application/json' \
-            --data "{\"text\":\"[APK] Dorpwag: $STATUS - $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" \
-            https://slack.com/api/chat.postMessage \
-            -H 'Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN }}' \
-            -d 'channel=vcds-ops' || true
+          curl -s -X POST \
+            -H "Content-type: application/json" \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+            --data "{\"channel\":\"vcds-ops\",\"text\":\"[APK] APK Build Dorpwag: $JOB_STATUS - $RUN_URL\"}" \
+            https://slack.com/api/chat.postMessage || true
