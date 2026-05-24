@@ -58,7 +58,7 @@ jobs:
         with:
           channel-id: vcds-ops
           slack-message: |
-            ✅ *Dorpwag APK Build SUCCESS*
+            [SUCCESS] Dorpwag APK Build PASSED
             Download: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -69,7 +69,7 @@ jobs:
         with:
           channel-id: vcds-ops
           slack-message: |
-            ❌ *Dorpwag APK Build FAILED*
+            [FAILED] Dorpwag APK Build FAILED
             Logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
