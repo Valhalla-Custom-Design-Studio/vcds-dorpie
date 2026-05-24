@@ -5,10 +5,6 @@ on:
     branches: [main]
   workflow_dispatch:
 
-defaults:
-  run:
-    working-directory: react_native_space
-
 jobs:
   build:
     name: APK Build Dorpwag
@@ -35,18 +31,18 @@ jobs:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
       - name: Gradlew permission
-        run: chmod +x android/gradlew
+        run: chmod +x ./android/gradlew
 
       - name: Build APK
         run: ./gradlew assembleRelease --no-daemon
-        working-directory: react_native_space/android
+        working-directory: ./android
         env:
           GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=512m"
 
       - uses: actions/upload-artifact@v4
         with:
           name: dorpwag-apk
-          path: react_native_space/android/app/build/outputs/apk/release/*.apk
+          path: android/app/build/outputs/apk/release/*.apk
           retention-days: 30
 
       - name: Slack notify
