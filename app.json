@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Dorpwag™",
-    "slug": "valhalla-custom-design-studios-org",
+    "slug": "dorpwag",
     "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -75,7 +75,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "7f86de5a-8e21-44ff-a040-ef1b2780fde2"
+        "projectId": "d3584967-0809-49bd-a13b-9ef5915eebdd"
       }
     },
     "owner": "valhalla-custom-design-studios-org"
