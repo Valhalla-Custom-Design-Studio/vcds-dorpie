@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS users (
   reset_token_expires TIMESTAMPTZ,
   is_active BOOLEAN DEFAULT true,
   last_seen_at TIMESTAMPTZ,
+  registered_apps TEXT[] DEFAULT ARRAY['dorpwag'],
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -52,6 +53,7 @@ CREATE TABLE IF NOT EXISTS push_tokens (
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   token TEXT UNIQUE NOT NULL,
   device_type VARCHAR(20),
+  app_name VARCHAR(50) DEFAULT 'dorpwag',
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -320,6 +322,7 @@ CREATE TABLE IF NOT EXISTS sos_events (
   resolved_at TIMESTAMPTZ,
   resolved_by UUID REFERENCES users(id),
   notes TEXT,
+  source_app VARCHAR(50) DEFAULT 'dorpwag',
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS idx_sos_user ON sos_events(user_id);
@@ -447,3 +450,20 @@ INSERT INTO towns (name, province, lat, lng) VALUES
   ('Port Elizabeth', 'Eastern Cape', -33.9608, 25.6022),
   ('Grahamstown', 'Eastern Cape', -33.3042, 26.5328)
 ON CONFLICT DO NOTHING;
+
+-- ─── NOTIFICATION LOG ──────────────────────────────────────
+CREATE TABLE IF NOT EXISTS notification_log (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  title VARCHAR(255),
+  body TEXT,
+  type VARCHAR(50),
+  target_app VARCHAR(50),
+  push_token TEXT,
+  status VARCHAR(20) DEFAULT 'sent',
+  error_message TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_notification_log_user ON notification_log(user_id);
+CREATE INDEX IF NOT EXISTS idx_notification_log_app ON notification_log(target_app);
+CREATE INDEX IF NOT EXISTS idx_notification_log_created ON notification_log(created_at DESC);

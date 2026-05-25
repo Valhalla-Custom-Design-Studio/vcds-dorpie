@@ -1,21 +1,21 @@
-# Dorpwag™
-> SA Community Platform | VCDS™ Wave 1 | Launch: June 1, 2026
+# Dorpwag
+> SA Community Platform | VCDS Wave 1 | Launch: June 1, 2026
 
 ## Overview
-- **Pricing:** R49–R499/month
+- **Pricing:** R49R499/month
 - **Jira:** KAN-9
 - **Stack:** React Native | Node.js | PostgreSQL | Payfast
 
 ## Folder Structure
-- `src/` — React Native frontend (components, screens, navigation, services, hooks, utils, assets)
-- `api/` — Node.js backend (routes, controllers, middleware, models)
-- `tests/` — Test suites (unit, integration, e2e)
-- `docs/` — Documentation
+- `src/`  React Native frontend (components, screens, navigation, services, hooks, utils, assets)
+- `api/`  Node.js backend (routes, controllers, middleware, models)
+- `tests/`  Test suites (unit, integration, e2e)
+- `docs/`  Documentation
 
 ## Branch Strategy
-- `main` — production only, protected
-- `develop` — integration branch
-- `feature/KAN-XX-description` — feature branches per Jira ticket
+- `main`  production only, protected
+- `develop`  integration branch
+- `feature/KAN-XX-description`  feature branches per Jira ticket
 
 ## Tech Stack
 | Layer | Technology |
@@ -28,5 +28,6 @@
 | Testing | Jest + Detox |
 
 ## IP Notice
-© 2026 Valhalla Custom Design Studios™. All rights reserved.
+ 2026 Valhalla Custom Design Studios. All rights reserved.
 Private and confidential. Unauthorised access is prohibited.
+<!-- ODIN build trigger: 2026-05-24 15:53:09 UTC -->

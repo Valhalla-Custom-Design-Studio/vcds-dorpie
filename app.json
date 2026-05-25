@@ -48,7 +48,9 @@
         "WRITE_EXTERNAL_STORAGE",
         "RECEIVE_BOOT_COMPLETED",
         "VIBRATE",
-        "FOREGROUND_SERVICE"
+        "FOREGROUND_SERVICE",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
       ]
     },
     "web": {
@@ -69,9 +71,13 @@
     "scheme": "dorpie",
     "extra": {
       "apiUrl": "https://dorpwag-api.onrender.com",
+      "router": {
+        "origin": false
+      },
       "eas": {
-        "projectId": "dorpwag-vcds"
+        "projectId": "d3584967-0809-49bd-a13b-9ef5915eebdd"
       }
-    }
+    },
+    "owner": "valhalla-custom-design-studios"
   }
 }
