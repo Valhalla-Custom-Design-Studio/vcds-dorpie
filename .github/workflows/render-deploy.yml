@@ -29,3 +29,18 @@ jobs:
             Actor: ${{ github.actor }}
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+      - name: Notify Slack on Deploy
+        if: always()
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          channel-id: 'vcds-ops'
+          slack-message: |
+            *${{ github.repository }}* deploy ${{ job.status == 'success' && '✅ SUCCESS' || '❌ FAILED' }}
+            Branch: `${{ github.ref_name }}`
+            Commit: ${{ github.sha }}
+            Actor: ${{ github.actor }}
+            <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
