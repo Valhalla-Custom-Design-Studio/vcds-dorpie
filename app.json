@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Dorpwag™",
-    "slug": "valhalla-custom-design-studios-org",
+    "name": "Dorpwag\u2122",
+    "slug": "dorpwag",
     "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -21,10 +21,10 @@
       "supportsTablet": true,
       "bundleIdentifier": "co.za.vcds.dorpwag",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Dorpwag™ gebruik jou ligging vir Guardian Mode™ veiligheidsmonitering.",
-        "NSLocationAlwaysUsageDescription": "Dorpwag™ benodig agtergrondligging vir Guardian Mode™.",
-        "NSMicrophoneUsageDescription": "Dorpwag™ benodig die mikrofoon vir Witness Mode™ bewyse.",
-        "NSCameraUsageDescription": "Dorpwag™ gebruik die kamera vir foto's."
+        "NSLocationWhenInUseUsageDescription": "Dorpwag\u2122 gebruik jou ligging vir Guardian Mode\u2122 veiligheidsmonitering.",
+        "NSLocationAlwaysUsageDescription": "Dorpwag\u2122 benodig agtergrondligging vir Guardian Mode\u2122.",
+        "NSMicrophoneUsageDescription": "Dorpwag\u2122 benodig die mikrofoon vir Witness Mode\u2122 bewyse.",
+        "NSCameraUsageDescription": "Dorpwag\u2122 gebruik die kamera vir foto's."
       },
       "backgroundModes": [
         "location",
@@ -64,7 +64,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow Dorpwag™ to use your location for Guardian Mode™ safety monitoring."
+          "locationAlwaysAndWhenInUsePermission": "Allow Dorpwag\u2122 to use your location for Guardian Mode\u2122 safety monitoring."
         }
       ]
     ],
@@ -75,9 +75,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "7f86de5a-8e21-44ff-a040-ef1b2780fde2"
+        "projectId": "d3584967-0809-49bd-a13b-9ef5915eebdd"
       }
     },
-    "owner": "valhalla-custom-design-studios-org"
+    "owner": "valhalla-custom-design-studios"
   }
 }

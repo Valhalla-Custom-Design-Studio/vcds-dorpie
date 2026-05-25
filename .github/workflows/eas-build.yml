@@ -1,27 +1,22 @@
-name: EAS APK Build — Dorpwag
+name: EAS APK Build Dorpwag
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       profile:
-        description: 'Build profile (preview=APK, production=AAB)'
-        required: true
-        default: 'preview'
+        description: Build profile
+        required: false
+        default: production
         type: choice
         options:
-          - preview
           - production
-  push:
-    branches: [main]
-    paths:
-      - './app/**'
-      - './src/**'
-      - './package.json'
-      - './app.json'
+          - preview
 
 jobs:
-  build:
-    name: EAS Build
+  eas-build:
+    name: Build APK Dorpwag
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -30,31 +25,47 @@ jobs:
       - name: Setup Node 20
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
           cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        working-directory: .
+        run: npm ci
 
-      - name: Setup EAS CLI
+      - name: Setup EAS
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: EAS Build
-        run: eas build --platform android --profile ${{ github.event.inputs.profile || 'preview' }} --non-interactive --no-wait
+      - name: Build APK
+        working-directory: .
+        run: eas build --platform android --profile ${{ github.event.inputs.profile || 'production' }} --non-interactive --no-wait
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Slack Notification
-        if: always()
+      - name: Notify Slack on Success
+        if: success()
         uses: slackapi/slack-github-action@v1.26.0
         with:
-          payload: |
-            {
-              "text": "${{ job.status == 'success' && '✅' || '🔴' }} *Dorpwag APK Build* queued on EAS\nProfile: `${{ github.event.inputs.profile || 'preview' }}`\nActor: ${{ github.actor }}"
-            }
+          channel-id: vcds-ops
+          slack-message: |
+            [SUCCESS] Dorpwag APK Build QUEUED on EAS
+            Profile: ${{ github.event.inputs.profile || 'production' }}
+            Triggered by: ${{ github.actor }}
+            View: https://expo.dev/accounts/valhalla-custom-design-studios/builds
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+      - name: Notify Slack on Failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          channel-id: vcds-ops
+          slack-message: |
+            [FAILED] Dorpwag APK Build FAILED
+            Actor: ${{ github.actor }}
+            Logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
