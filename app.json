@@ -75,9 +75,12 @@
         "origin": false
       },
       "eas": {
-        "projectId": "d3584967-0809-49bd-a13b-9ef5915eebdd"
+        "projectId": "REPLACE_WITH_EAS_PROJECT_ID_DORPIE"
       }
     },
-    "owner": "valhalla-custom-design-studios"
+    "owner": "valhalla-custom-design-studios",
+    "eas": {
+      "projectId": "REPLACE_WITH_EAS_PROJECT_ID_DORPIE"
+    }
   }
 }
