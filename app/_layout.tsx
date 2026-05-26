@@ -5,6 +5,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Colors } from '../src/theme';
 import { useAuthStore } from '../src/store/auth';
+import { posthog } from '../src/lib/posthog';
+import { initSentry } from '../src/lib/sentry';
 
 function AuthGate({ children }: { children: React.ReactNode }) {
   const { user } = useAuthStore();
@@ -19,6 +21,9 @@ function AuthGate({ children }: { children: React.ReactNode }) {
 
   return <>{children}</>;
 }
+
+initSentry();
+posthog.capture('app_opened');
 
 export default function RootLayout() {
   return (
