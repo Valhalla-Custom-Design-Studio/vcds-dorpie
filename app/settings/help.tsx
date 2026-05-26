@@ -5,9 +5,9 @@ import { Colors, Typography, Spacing } from '../../../src/theme';
 import { ScreenHeader, PlatinumCard } from '../../../src/components/ui';
 
 const FAQ = [
-  { q: 'Hoe aktiveer ek 'n SOS noodalarm?', a: 'Gaan na die Veiligheid-oortjie en tik "Aktiveer SOS". Jou guardian kontakte sal onmiddellik in kennis gestel word.' },
+  { q: "Hoe aktiveer ek 'n SOS noodalarm?", a: 'Gaan na die Veiligheid-oortjie en tik "Aktiveer SOS". Jou guardian kontakte sal onmiddellik in kennis gestel word.' },
   { q: 'Hoe werk Guardian Mode™?', a: 'Guardian Mode™ stuur jou ligging elke 5 minute na jou vertroude kontakte. Gaan na Veiligheid > Guardian om dit te aktiveer.' },
-  { q: 'Wat is die Dooie Man Incheck?', a: 'Stel 'n tydhouer in. As jy nie voor die tyd incheckin nie, word jou kontakte outomaties verwittig.' },
+  { q: 'Wat is die Dooie Man Incheck?', a: "Stel 'n tydhouer in. As jy nie voor die tyd incheckin nie, word jou kontakte outomaties verwittig." },
   { q: 'Hoe kanselleer ek my intekening?', a: 'Gaan na Profiel > Intekening > Betalingsgeskiedenis om jou intekening te bestuur.' },
 ];
 
