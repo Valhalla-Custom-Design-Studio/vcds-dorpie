@@ -63,7 +63,7 @@ export default function Profile() {
         <Text style={[Typography.caption, { color: Colors.textMuted }]}>{user?.email}</Text>
         {user?.town_name ? <Text style={[Typography.caption, { color: Colors.accent, marginTop: 2 }]}>📍 {user.town_name}</Text> : null}
         <View style={s.tierBadge}>
-          <Badge label={tier === 'paid' ? '⭐ PRO MEMBER' : 'FREE PLAN'} variant={tier === 'paid' ? 'success' : 'muted'} />
+          <Badge label={tier === 'paid' ? '⭐ PRO MEMBER' : 'FREE PLAN'} color={tier === 'paid' ? Colors.success : Colors.textMuted} />
         </View>
       </View>
 
