@@ -1,52 +1,180 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Switch, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Colors, Typography, Spacing, Radius, Shadow } from '../../src/theme';
+import { PlatinumCard, Badge, ScreenHeader } from '../../src/components/ui';
+import { useAuthStore } from '../../src/store/auth';
+import { profileAPI } from '../../src/services/api';
 
-const strings = {
-  en: { title: "Profile", plan: "Plan", upgrade: "Upgrade Plan", alerts_sent: "Alerts Sent", patrols: "Patrols Joined", reports: "Reports Filed", logout: "Log Out", individual: "Individual", family: "Family Bundle", suite: "Die Afrikaanse Suite™" },
-  af: { title: "Profiel", plan: "Plan", upgrade: "Opgradeer Plan", alerts_sent: "Waarskuwings Gestuur", patrols: "Patrollies Gesluit", reports: "Verslae Ingedien", logout: "Teken Uit", individual: "Individueel", family: "Familie Bundel", suite: "Die Afrikaanse Suite™" },
-};
+export default function ProfileScreen() {
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const { user, logout } = useAuthStore();
+  const [stats, setStats] = useState({ alerts: 0, patrols: 0, reports: 0 });
+  const [loading, setLoading] = useState(true);
 
-export default function Profile() {
-  const [lang, setLang] = useState<'en'|'af'>('af');
-  const t = strings[lang];
+  useEffect(() => {
+    profileAPI.get()
+      .then(r => {
+        if (r.data?.data?.stats) setStats(r.data.data.stats);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
 
-  useEffect(() => { AsyncStorage.getItem('lang').then(v => v && setLang(v as any)); }, []);
-  const toggleLang = (v: boolean) => { const l = v ? 'af' : 'en'; setLang(l); AsyncStorage.setItem('lang', l); };
+  const handleLogout = () => {
+    Alert.alert('Teken Uit', 'Is jy seker jy wil uitteken?', [
+      { text: 'Kanselleer', style: 'cancel' },
+      { text: 'Teken Uit', style: 'destructive', onPress: () => { logout(); router.replace('/(auth)/welcome'); } },
+    ]);
+  };
+
+  const tier = user?.subscription_tier || 'free';
+  const tierLabel = tier === 'guardian' ? 'Bewaker™ PRO' : tier === 'community' ? 'Gemeenskap' : 'Gratis';
+  const tierColor = tier === 'guardian' ? Colors.success : tier === 'community' ? Colors.primary : Colors.textMuted;
+
+  const menuSections = [
+    {
+      title: 'Rekening',
+      items: [
+        { icon: 'person-outline', label: 'Wysig Profiel', route: '/settings/edit-profile' },
+        { icon: 'lock-closed-outline', label: 'Verander Wagwoord', route: '/settings/change-password' },
+        { icon: 'notifications-outline', label: 'Kennisgewings', route: '/settings/notifications' },
+        { icon: 'language-outline', label: 'Taal (EN/AF)', route: '/settings/language' },
+      ],
+    },
+    {
+      title: 'Intekening',
+      items: [
+        { icon: 'star-outline', label: tier !== 'free' ? `${tierLabel} ✓` : 'Opgradeer na Pro', route: '/subscribe', badge: tierLabel },
+        { icon: 'receipt-outline', label: 'Betalingsgeskiedenis', route: '/settings/payments' },
+      ],
+    },
+    {
+      title: 'Hulp & Wetlik',
+      items: [
+        { icon: 'help-circle-outline', label: 'Hulp & Ondersteuning', route: '/settings/help' },
+        { icon: 'document-text-outline', label: 'Gebruiksvoorwaardes', route: '/settings/terms' },
+        { icon: 'shield-outline', label: 'Privaatheidsbeleid', route: '/settings/privacy' },
+      ],
+    },
+  ];
 
   return (
-    <ScrollView style={s.container}>
-      <View style={s.header}>
-        <Text style={s.title}>{t.title}</Text>
-        <View style={s.langRow}><Text style={s.langLabel}>EN</Text><Switch value={lang==='af'} onValueChange={toggleLang} trackColor={{true:'#1e40af'}}/><Text style={s.langLabel}>AF</Text></View>
-      </View>
-      <View style={s.planCard}>
-        <Text style={s.planLabel}>{t.plan}</Text>
-        <Text style={s.planName}>{t.suite}</Text>
-        <Text style={s.planPrice}>R149/mo</Text>
-        <TouchableOpacity style={s.upgradeBtn}><Text style={s.upgradeTxt}>{t.upgrade}</Text></TouchableOpacity>
-      </View>
-      <View style={s.statsRow}>
-        <View style={s.stat}><Text style={s.statNum}>12</Text><Text style={s.statLabel}>{t.alerts_sent}</Text></View>
-        <View style={s.stat}><Text style={s.statNum}>5</Text><Text style={s.statLabel}>{t.patrols}</Text></View>
-        <View style={s.stat}><Text style={s.statNum}>3</Text><Text style={s.statLabel}>{t.reports}</Text></View>
-      </View>
-      <TouchableOpacity style={s.logoutBtn}><Text style={s.logoutTxt}>{t.logout}</Text></TouchableOpacity>
-    </ScrollView>
+    <View style={[s.container, { paddingTop: insets.top }]}>
+      <ScreenHeader title="Profiel" />
+      <ScrollView contentContainerStyle={s.scroll} showsVerticalScrollIndicator={false}>
+
+        {/* Avatar */}
+        <View style={s.avatarSection}>
+          <View style={s.avatarCircle}>
+            <Text style={s.avatarEmoji}>👤</Text>
+          </View>
+          <Text style={s.name}>{user?.name}</Text>
+          <Text style={s.email}>{user?.email}</Text>
+          {user?.town_name && (
+            <View style={s.townRow}>
+              <Ionicons name="location-outline" size={14} color={Colors.accent} />
+              <Text style={s.townText}>{user.town_name}</Text>
+            </View>
+          )}
+          <View style={s.badgeWrap}>
+            <Badge label={tierLabel} color={tierColor} />
+          </View>
+        </View>
+
+        {/* Stats */}
+        {loading ? (
+          <ActivityIndicator color={Colors.primary} style={{ marginVertical: 16 }} />
+        ) : (
+          <PlatinumCard style={s.statsCard}>
+            {[
+              { label: 'Waarskuwings', value: stats.alerts, icon: 'warning-outline' },
+              { label: 'Patrollies', value: stats.patrols, icon: 'shield-outline' },
+              { label: 'Verslae', value: stats.reports, icon: 'document-text-outline' },
+            ].map((s2, i) => (
+              <View key={s2.label} style={[s.statItem, i < 2 && s.statBorder]}>
+                <Ionicons name={s2.icon as any} size={20} color={Colors.primary} />
+                <Text style={s.statNum}>{s2.value}</Text>
+                <Text style={s.statLabel}>{s2.label}</Text>
+              </View>
+            ))}
+          </PlatinumCard>
+        )}
+
+        {/* Menu sections */}
+        {menuSections.map((section) => (
+          <View key={section.title} style={s.section}>
+            <Text style={s.sectionTitle}>{section.title}</Text>
+            <PlatinumCard style={s.menuCard}>
+              {section.items.map((item, i) => (
+                <TouchableOpacity
+                  key={item.label}
+                  style={[s.menuItem, i < section.items.length - 1 && s.menuBorder]}
+                  onPress={() => router.push(item.route as any)}
+                >
+                  <View style={s.menuIconWrap}>
+                    <Ionicons name={item.icon as any} size={20} color={Colors.primary} />
+                  </View>
+                  <Text style={s.menuLabel}>{item.label}</Text>
+                  {item.badge && <Badge label={item.badge} color={tierColor} />}
+                  <Ionicons name="chevron-forward" size={16} color={Colors.textMuted} />
+                </TouchableOpacity>
+              ))}
+            </PlatinumCard>
+          </View>
+        ))}
+
+        {/* Logout */}
+        <TouchableOpacity style={s.logoutBtn} onPress={handleLogout}>
+          <Ionicons name="log-out-outline" size={20} color={Colors.red} />
+          <Text style={s.logoutText}>Teken Uit</Text>
+        </TouchableOpacity>
+
+        <Text style={s.version}>Dorpwag™ v2.0 · VCDS™</Text>
+      </ScrollView>
+    </View>
   );
 }
 
 const s = StyleSheet.create({
-  container:{flex:1,backgroundColor:'#0f172a'}, header:{flexDirection:'row',justifyContent:'space-between',alignItems:'center',padding:20,paddingTop:50},
-  title:{fontSize:24,fontWeight:'bold',color:'#fff'}, langRow:{flexDirection:'row',alignItems:'center',gap:6}, langLabel:{color:'#94a3b8',fontSize:12},
-  planCard:{margin:20,padding:20,backgroundColor:'#1e293b',borderRadius:12,alignItems:'center'},
-  planLabel:{color:'#94a3b8',fontSize:13}, planName:{color:'#fff',fontSize:18,fontWeight:'bold',marginTop:4},
-  planPrice:{color:'#60a5fa',fontSize:22,fontWeight:'bold',marginTop:4},
-  upgradeBtn:{marginTop:12,paddingHorizontal:24,paddingVertical:10,backgroundColor:'#1e40af',borderRadius:8},
-  upgradeTxt:{color:'#fff',fontWeight:'bold'},
-  statsRow:{flexDirection:'row',justifyContent:'space-around',marginHorizontal:20,marginBottom:20},
-  stat:{alignItems:'center',backgroundColor:'#1e293b',padding:16,borderRadius:10,flex:1,marginHorizontal:4},
-  statNum:{color:'#fff',fontSize:24,fontWeight:'bold'}, statLabel:{color:'#94a3b8',fontSize:11,textAlign:'center',marginTop:4},
-  logoutBtn:{margin:20,padding:16,borderRadius:10,backgroundColor:'#dc2626',alignItems:'center'},
-  logoutTxt:{color:'#fff',fontWeight:'bold',fontSize:16},
+  container: { flex: 1, backgroundColor: Colors.bg },
+  scroll: { padding: Spacing.md, paddingBottom: 48 },
+  avatarSection: { alignItems: 'center', paddingVertical: Spacing.xl },
+  avatarCircle: {
+    width: 90, height: 90, borderRadius: 45, backgroundColor: Colors.surface,
+    borderWidth: 2, borderColor: Colors.primary, alignItems: 'center', justifyContent: 'center',
+    marginBottom: Spacing.md, ...Shadow.glow,
+  },
+  avatarEmoji: { fontSize: 44 },
+  name: { ...Typography.h2, marginBottom: 4 },
+  email: { ...Typography.body, color: Colors.textMuted },
+  townRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 6 },
+  townText: { ...Typography.bodySmall, color: Colors.accent },
+  badgeWrap: { marginTop: 10 },
+  statsCard: { flexDirection: 'row', padding: 0, overflow: 'hidden' },
+  statItem: { flex: 1, alignItems: 'center', paddingVertical: Spacing.md },
+  statBorder: { borderRightWidth: 1, borderRightColor: Colors.surfaceBorder },
+  statNum: { ...Typography.h2, fontSize: 24, marginTop: 4 },
+  statLabel: { ...Typography.caption, marginTop: 2 },
+  section: { marginTop: Spacing.lg },
+  sectionTitle: { ...Typography.label, marginBottom: Spacing.sm, paddingHorizontal: 4 },
+  menuCard: { padding: 0, overflow: 'hidden' },
+  menuItem: { flexDirection: 'row', alignItems: 'center', padding: Spacing.md, gap: 12 },
+  menuBorder: { borderBottomWidth: 1, borderBottomColor: Colors.surfaceBorder },
+  menuIconWrap: {
+    width: 36, height: 36, borderRadius: 10, backgroundColor: Colors.surface,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  menuLabel: { ...Typography.body, flex: 1 },
+  logoutBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    gap: 10, marginTop: Spacing.xl, padding: Spacing.md,
+    borderRadius: Radius.md, borderWidth: 1, borderColor: Colors.red,
+    backgroundColor: 'rgba(220,38,38,0.08)',
+  },
+  logoutText: { color: Colors.red, fontWeight: '700', fontSize: 16 },
+  version: { ...Typography.caption, textAlign: 'center', marginTop: Spacing.xl, color: Colors.textMuted },
 });

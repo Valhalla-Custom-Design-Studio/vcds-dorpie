@@ -40,6 +40,7 @@ import paymentsRouter from './routes/payments';
 import safetyRouter from './routes/safety';
 import suiteRouter from './routes/suite';
 import careRouter from './routes/care';
+import subscriptionsRouter from './routes/subscriptions';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -88,6 +89,7 @@ app.use(`${API}/care`, careRouter);
 
 // ─── SUITE / INTERNAL ────────────────────────────────────────────────────────
 app.use(`${API}/suite`, suiteRouter);
+app.use(`${API}/subscriptions`, subscriptionsRouter);
 
 app.use(Sentry.expressErrorHandler());
 app.use((_req, res) => res.status(404).json({ success: false, message: 'Route not found' }));

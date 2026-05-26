@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Colors } from '../../src/theme';
+import { Colors, Typography, Spacing, Radius } from '../../src/theme';
 import { useAuthStore } from '../../src/store/auth';
 import { api } from '../../src/services/api';
 
@@ -31,7 +31,7 @@ export default function SettingsScreen() {
 
   return (
     <ScrollView style={s.container} contentContainerStyle={s.content}>
-      <Text style={s.title}>Instellings</Text>
+      <Text style={[Typography.h2, { marginBottom: Spacing.lg }]}>Instellings</Text>
 
       <Text style={s.section}>Kennisgewings</Text>
       <View style={s.row}>
@@ -48,7 +48,7 @@ export default function SettingsScreen() {
       </View>
 
       <Text style={s.section}>Taal</Text>
-      <View style={s.row}>
+      <View style={s.langRow}>
         <TouchableOpacity style={[s.langBtn, lang === 'af' && s.langActive]} onPress={() => setLang('af')}>
           <Text style={[s.langText, lang === 'af' && s.langActiveText]}>Afrikaans</Text>
         </TouchableOpacity>
@@ -65,29 +65,29 @@ export default function SettingsScreen() {
       <TouchableOpacity style={s.dangerBtn} onPress={handleLogout}>
         <Text style={s.dangerText}>Teken Uit</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={[s.dangerBtn, { marginTop: 8 }]} onPress={() => router.push('/subscribe')}>
+      <TouchableOpacity style={[s.dangerBtn, { marginTop: Spacing.sm }]} onPress={() => router.push('/subscribe')}>
         <Text style={s.dangerText}>Bestuur Intekening</Text>
       </TouchableOpacity>
 
-      <Text style={s.version}>Dorpwag™ v2.0.0</Text>
+      <Text style={s.version}>Dorpwag™ v2.1.0</Text>
     </ScrollView>
   );
 }
 
 const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.bg },
-  content: { padding: 20, paddingBottom: 40 },
-  title: { fontSize: 28, fontWeight: '700', color: Colors.text, marginBottom: 20 },
-  section: { fontSize: 13, fontWeight: '700', color: Colors.muted, textTransform: 'uppercase', letterSpacing: 1, marginTop: 20, marginBottom: 10 },
-  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: Colors.card, borderRadius: 10, padding: 14, marginBottom: 8 },
-  label: { fontSize: 15, color: Colors.text },
-  langBtn: { flex: 1, padding: 12, borderRadius: 8, backgroundColor: Colors.card, alignItems: 'center', marginHorizontal: 4 },
-  langActive: { backgroundColor: Colors.primary },
-  langText: { color: Colors.muted, fontWeight: '600' },
+  content: { padding: Spacing.lg, paddingBottom: 48 },
+  section: { fontSize: 12, fontWeight: '700', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1, marginTop: Spacing.lg, marginBottom: Spacing.sm },
+  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: Colors.surface, borderRadius: Radius.md, padding: 14, marginBottom: Spacing.sm, borderWidth: 1, borderColor: Colors.surfaceBorder },
+  label: { fontSize: 15, color: Colors.textHeading },
+  langRow: { flexDirection: 'row', gap: Spacing.sm },
+  langBtn: { flex: 1, padding: 12, borderRadius: Radius.md, backgroundColor: Colors.surface, alignItems: 'center', borderWidth: 1, borderColor: Colors.surfaceBorder },
+  langActive: { backgroundColor: Colors.primary, borderColor: Colors.primary },
+  langText: { color: Colors.textMuted, fontWeight: '600' },
   langActiveText: { color: '#fff' },
-  saveBtn: { backgroundColor: Colors.primary, borderRadius: 10, padding: 14, alignItems: 'center', marginTop: 16 },
+  saveBtn: { backgroundColor: Colors.primary, borderRadius: Radius.md, padding: 14, alignItems: 'center', marginTop: Spacing.md },
   saveBtnText: { color: '#fff', fontWeight: '700', fontSize: 15 },
-  dangerBtn: { backgroundColor: '#2a1a1a', borderRadius: 10, padding: 14, alignItems: 'center', borderWidth: 1, borderColor: '#ff4444' },
-  dangerText: { color: '#ff4444', fontWeight: '700', fontSize: 15 },
-  version: { textAlign: 'center', color: Colors.muted, fontSize: 12, marginTop: 32 },
+  dangerBtn: { backgroundColor: 'rgba(239,68,68,0.08)', borderRadius: Radius.md, padding: 14, alignItems: 'center', borderWidth: 1, borderColor: Colors.error },
+  dangerText: { color: Colors.error, fontWeight: '700', fontSize: 15 },
+  version: { textAlign: 'center', color: Colors.textMuted, fontSize: 12, marginTop: 40 },
 });
