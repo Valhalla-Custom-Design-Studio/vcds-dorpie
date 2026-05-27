@@ -17,6 +17,12 @@ export default function AdminScreen() {
 
   if (user?.role !== 'admin') return null;
 
+  const navItems = [
+    { label: 'Bestuur Gebruikers', route: '/admin/users', icon: '👥' },
+    { label: 'Verslae', route: '/admin/reports', icon: '📊' },
+    { label: 'Waglyslys', route: '/admin/watchlist', icon: '🚨', highlight: true },
+  ];
+
   return (
     <ScrollView style={s.container} contentContainerStyle={s.content}>
       <Text style={s.title}>Admin Paneel</Text>
@@ -30,12 +36,16 @@ export default function AdminScreen() {
           ))}
         </View>
       )}
-      <TouchableOpacity style={s.btn} onPress={() => router.push('/admin/users')}>
-        <Text style={s.btnText}>Bestuur Gebruikers</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={s.btn} onPress={() => router.push('/admin/reports')}>
-        <Text style={s.btnText}>Verslae</Text>
-      </TouchableOpacity>
+      {navItems.map(item => (
+        <TouchableOpacity
+          key={item.route}
+          style={[s.btn, item.highlight && s.btnHighlight]}
+          onPress={() => router.push(item.route as any)}
+        >
+          <Text style={s.btnIcon}>{item.icon}</Text>
+          <Text style={[s.btnText, item.highlight && s.btnTextHighlight]}>{item.label}</Text>
+        </TouchableOpacity>
+      ))}
     </ScrollView>
   );
 }
@@ -48,6 +58,22 @@ const s = StyleSheet.create({
   stat: { backgroundColor: Colors.card, borderRadius: 12, padding: 16, width: '47%', alignItems: 'center' },
   statVal: { fontSize: 28, fontWeight: '700', color: Colors.primary },
   statKey: { fontSize: 12, color: Colors.muted, textTransform: 'capitalize', textAlign: 'center', marginTop: 4 },
-  btn: { backgroundColor: Colors.card, borderRadius: 10, padding: 14, alignItems: 'center', marginBottom: 10, borderWidth: 1, borderColor: Colors.primary },
+  btn: {
+    backgroundColor: Colors.card,
+    borderRadius: 10,
+    padding: 14,
+    alignItems: 'center',
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: Colors.primary,
+    flexDirection: 'row',
+    gap: 10,
+  },
+  btnHighlight: {
+    backgroundColor: '#1a0000',
+    borderColor: '#ff3b30',
+  },
+  btnIcon: { fontSize: 20 },
   btnText: { color: Colors.primary, fontWeight: '700', fontSize: 15 },
+  btnTextHighlight: { color: '#ff3b30' },
 });
