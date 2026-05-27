@@ -5,7 +5,7 @@ export const translations = {
     businesses: 'Businesses', chatCorner: 'Chat Corner', emergencies: 'Emergencies', profile: 'Profile',
     // Auth
     welcome: 'Welcome', signUp: 'Sign Up', login: 'Login', logout: 'Logout',
-    joinYourDorpie: 'Join Your Dorpie', email: 'Email', password: 'Password',
+    joinYourDorpwag: 'Join Your Dorpwag', email: 'Email', password: 'Password',
     confirmPassword: 'Confirm Password', fullName: 'Full Name', selectTown: 'Select Town',
     searchTowns: 'Search towns...', dontHaveAccount: "Don't have an account?",
     alreadyHaveAccount: 'Already have an account?',
@@ -81,14 +81,14 @@ export const translations = {
     communityScore: 'Community Score', highCoverage: 'High Coverage', noCoverage: 'No Coverage',
     inviteNeighbours: 'Invite Neighbours', areaIsRed: 'Your area is RED — invite neighbours to turn it GREEN!',
     // Upgrade
-    upgradeToPaid: 'Upgrade to Dorpie Veilig™', monthlyPlan: 'R49/month', annualPlan: 'R490/year',
+    upgradeToPaid: 'Upgrade to Dorpwag Veilig™', monthlyPlan: 'R49/month', annualPlan: 'R490/year',
     twoMonthsFree: '2 months free',
   },
   af: {
     notices: 'Kennisgewings', marketplace: 'Koop & Verkoop', events: 'Gebeure',
     businesses: 'Besighede', chatCorner: 'Kletshoek', emergencies: 'Noodgevalle', profile: 'Profiel',
     welcome: 'Welkom', signUp: 'Registreer', login: 'Teken In', logout: 'Teken Uit',
-    joinYourDorpie: 'Sluit Aan by Jou Dorpie', email: 'E-pos', password: 'Wagwoord',
+    joinYourDorpwag: 'Sluit Aan by Jou Dorpwag', email: 'E-pos', password: 'Wagwoord',
     confirmPassword: 'Bevestig Wagwoord', fullName: 'Volle Naam', selectTown: 'Kies Dorp',
     searchTowns: 'Soek dorpe...', dontHaveAccount: "Het jy nie 'n rekening nie?",
     alreadyHaveAccount: "Het jy reeds 'n rekening?",
@@ -149,7 +149,7 @@ export const translations = {
     streetHeatmap: 'Straat Hittemap™', activeGuardians: 'Aktiewe Wagte',
     communityScore: 'Gemeenskaptelling', highCoverage: 'Hoë Dekking', noCoverage: 'Geen Dekking',
     inviteNeighbours: 'Nooi Bure', areaIsRed: 'Jou area is ROOI — nooi jou bure om dit GROEN te maak!',
-    upgradeToPaid: 'Opgradeer na Dorpie Veilig™', monthlyPlan: 'R49/maand',
+    upgradeToPaid: 'Opgradeer na Dorpwag Veilig™', monthlyPlan: 'R49/maand',
     annualPlan: 'R490/jaar', twoMonthsFree: '2 maande gratis',
   }
 };

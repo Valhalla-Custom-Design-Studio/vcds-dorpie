@@ -6,7 +6,7 @@ export default defineConfig({
   retries: 1,
   reporter: [['html', { open: 'never' }], ['github']],
   use: {
-    baseURL: process.env.BASE_URL || 'https://vcds-dorpie.up.railway.app',
+    baseURL: process.env.BASE_URL || 'https://vcds-dorpwag.up.railway.app',
     trace: 'on-first-retry',
   },
   projects: [

@@ -1,4 +1,4 @@
-// Dorpie Camera Module — adds camera endpoints to existing Dorpie API
+// Dorpwag Camera Module — adds camera endpoints to existing Dorpwag API
 // Import this into app.module.ts — does NOT touch existing modules
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -20,11 +20,11 @@ import { WatchlistController } from '../../../../vcds-watchlist-engine/src/watch
   providers: [CameraService, IsapiService, AlertService],
   exports: [CameraService, IsapiService, AlertService],
 })
-export class DorpieCameraModule {}
+export class DorpwagCameraModule {}
 
 // HOW TO WIRE:
 // In api/src/app.module.ts, add to imports array:
-//   DorpieCameraModule
+//   DorpwagCameraModule
 // In TypeORM entities array, add:
 //   Camera, WatchlistEntry, CameraAlert
-// That's it. All existing Dorpie code is untouched.
+// That's it. All existing Dorpwag code is untouched.

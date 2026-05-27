@@ -36,7 +36,7 @@ r.post('/', authenticate, async (req: AuthRequest, res: Response) => {
       [title, description, category, severity, req.user!.id, townId, lat, lng]
     );
     if (severity === 'high' || severity === 'critical') {
-      await sendTownPush(pool, townId, '⚠️ Nuwe Voorval', `${title} — ${category}`, { incidentId: rows[0].id }, 'dorpie-safety');
+      await sendTownPush(pool, townId, '⚠️ Nuwe Voorval', `${title} — ${category}`, { incidentId: rows[0].id }, 'dorpwag-safety');
     }
     res.status(201).json({ success: true, data: rows[0] });
   } catch { res.status(500).json({ success: false, message: 'Failed' }); }
