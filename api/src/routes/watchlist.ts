@@ -56,7 +56,7 @@ router.post('/plates', requireAuth, requireAdmin, async (req, res) => {
   try {
     const data = await enginePost('/api/v1/watchlist/plates', {
       ...req.body,
-      added_by_app: 'dorpie',
+      added_by_app: 'dorpwag',
       added_by_user_id: (req as any).userId,
     });
     res.json(data);
@@ -88,7 +88,7 @@ router.post('/faces', requireAuth, requireAdmin, async (req, res) => {
   try {
     const data = await enginePost('/api/v1/watchlist/faces', {
       ...req.body,
-      added_by_app: 'dorpie',
+      added_by_app: 'dorpwag',
       added_by_user_id: (req as any).userId,
     });
     res.json(data);

@@ -35,7 +35,7 @@ async function triggerSOSAlarm(sosId: string, userId: string, userName: string, 
   ])];
 
   // Channel ID per app for proper notification routing
-  const channelId = sourceApp === 'ouma_en_oppas' ? 'ouma-emergency' : 'dorpie-emergency';
+  const channelId = sourceApp === 'ouma_en_oppas' ? 'ouma-emergency' : 'dorpwag-emergency';
 
   await Promise.all([
     sendBulkSMS(contactList, smsText),

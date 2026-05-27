@@ -28,7 +28,7 @@ r.post('/', authenticate, async (req: AuthRequest, res: Response) => {
       'INSERT INTO emergency_alerts(title,body,severity,category,author_id,town_id,lat,lng,expires_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *',
       [title, body, severity, category, req.user!.id, townId, lat, lng, expiresAt]
     );
-    await sendTownPush(pool, townId, `🚨 ${title}`, body, { alertId: rows[0].id }, 'dorpie-emergency');
+    await sendTownPush(pool, townId, `🚨 ${title}`, body, { alertId: rows[0].id }, 'dorpwag-emergency');
     res.status(201).json({ success: true, data: rows[0] });
   } catch { res.status(500).json({ success: false, message: 'Failed' }); }
 });
