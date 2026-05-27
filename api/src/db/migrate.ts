@@ -24,16 +24,13 @@ export async function runMigrations(): Promise<void> {
         'SELECT id FROM _migrations WHERE filename = $1', [file]
       );
       if (rows.length > 0) {
-        console.log(`[MIGRATE] Skipping ${file} (already ran)`);
-        continue;
+continue;
       }
 
       const sql = fs.readFileSync(path.join(migrationsDir, file), 'utf8');
-      console.log(`[MIGRATE] Running ${file}...`);
-      await client.query(sql);
+await client.query(sql);
       await client.query('INSERT INTO _migrations (filename) VALUES ($1)', [file]);
-      console.log(`[MIGRATE] ✅ ${file} complete`);
-    }
+}
   } catch (err) {
     console.error('[MIGRATE] ❌ Migration failed:', err);
     throw err;
