@@ -1,11 +1,11 @@
 import { Router, Request, Response } from 'express';
-import { authenticate } from '../middleware/auth';
+import { authMiddleware } from '../middleware/auth';
 import { pool } from '../db/pool';
 
 const router = Router();
 
 // GET /api/lpr/feed — live plate scan feed
-router.get('/feed', authenticate, async (req: Request, res: Response) => {
+router.get('/feed', authMiddleware, async (req: Request, res: Response) => {
   try {
     const limit = parseInt(req.query.limit as string) || 50;
     const result = await pool.query(
@@ -30,7 +30,7 @@ router.get('/feed', authenticate, async (req: Request, res: Response) => {
 });
 
 // GET /api/lpr/watchlist — community watchlist
-router.get('/watchlist', authenticate, async (req: Request, res: Response) => {
+router.get('/watchlist', authMiddleware, async (req: Request, res: Response) => {
   try {
     const result = await pool.query(
       `SELECT plate, reason, added_at, added_by FROM lpr_watchlist ORDER BY added_at DESC`
@@ -42,7 +42,7 @@ router.get('/watchlist', authenticate, async (req: Request, res: Response) => {
 });
 
 // POST /api/lpr/watchlist — add plate to watchlist
-router.post('/watchlist', authenticate, async (req: Request, res: Response) => {
+router.post('/watchlist', authMiddleware, async (req: Request, res: Response) => {
   const { plate, reason } = req.body;
   const userId = (req as any).user?.id;
   if (!plate || !reason) return res.status(400).json({ error: 'plate and reason required' });
@@ -60,7 +60,7 @@ router.post('/watchlist', authenticate, async (req: Request, res: Response) => {
 });
 
 // POST /api/lpr/report — report a plate sighting
-router.post('/report', authenticate, async (req: Request, res: Response) => {
+router.post('/report', authMiddleware, async (req: Request, res: Response) => {
   const { plate, reportedBy } = req.body;
   if (!plate) return res.status(400).json({ error: 'plate required' });
   try {

@@ -8,8 +8,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Colors } from '../../src/theme';
 import { useAuthStore } from '../../src/store/auth';
-import { lprAPI } from '../../src/services/api';
 import { posthog } from '../../src/lib/posthog';
+
+const API_URL = process.env.EXPO_PUBLIC_API_URL ?? '';
 
 interface PlateEntry {
   id: string;
@@ -35,7 +36,7 @@ type ActiveTab = 'live' | 'watchlist' | 'report';
 
 export default function LPRScreen() {
   const router = useRouter();
-  const user = useAuthStore(s => s.user);
+  const { token, user } = useAuthStore();
   const [activeTab, setActiveTab] = useState<ActiveTab>('live');
   const [entries, setEntries] = useState<PlateEntry[]>([]);
   const [watchlist, setWatchlist] = useState<WatchlistPlate[]>([]);
@@ -47,10 +48,15 @@ export default function LPRScreen() {
   const [submitting, setSubmitting] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+
   const fetchLiveFeed = async () => {
     try {
-      const { data } = await lprAPI.feed(50);
-      setEntries(data.entries ?? []);
+      const res = await fetch(`${API_URL}/api/lpr/feed?limit=50`, { headers });
+      if (res.ok) {
+        const data = await res.json();
+        setEntries(data.entries ?? []);
+      }
     } catch (e) {
       console.error('LPR feed error:', e);
     } finally {
@@ -61,8 +67,11 @@ export default function LPRScreen() {
 
   const fetchWatchlist = async () => {
     try {
-      const { data } = await lprAPI.watchlist();
-      setWatchlist(data.plates ?? []);
+      const res = await fetch(`${API_URL}/api/lpr/watchlist`, { headers });
+      if (res.ok) {
+        const data = await res.json();
+        setWatchlist(data.plates ?? []);
+      }
     } catch (e) {
       console.error('Watchlist error:', e);
     }
@@ -90,8 +99,12 @@ export default function LPRScreen() {
     }
     setSubmitting(true);
     try {
-      await lprAPI.addToWatchlist(newPlate.trim().toUpperCase(), newReason.trim());
-      {
+      const res = await fetch(`${API_URL}/api/lpr/watchlist`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ plate: newPlate.trim().toUpperCase(), reason: newReason.trim() }),
+      });
+      if (res.ok) {
         Alert.alert('Added', `Plate ${newPlate.toUpperCase()} added to watchlist.`);
         setNewPlate('');
         setNewReason('');
@@ -107,7 +120,11 @@ export default function LPRScreen() {
 
   const reportPlate = async (plate: string) => {
     try {
-      await lprAPI.report(plate, user?.id ?? '');
+      await fetch(`${API_URL}/api/lpr/report`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ plate, reportedBy: user?.id }),
+      });
       Alert.alert('Reported', `Plate ${plate} has been flagged and reported to the community.`);
       posthog.capture('lpr_plate_reported', { plate });
     } catch (e) {
