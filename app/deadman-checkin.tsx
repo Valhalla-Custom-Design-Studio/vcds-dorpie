@@ -45,7 +45,7 @@ export default function DeadmanCheckin() {
       clearInterval(timerRef.current);
       progressAnim.setValue(1);
       setActive(false);
-      Alert.alert('✅ Check-in confirmed!', 'Timer reset. You're safe.');
+      Alert.alert('✅ Check-in confirmed!', "Timer reset. You're safe.");
     } catch { Alert.alert('Check-in failed'); }
     finally { setLoading(false); }
   };
