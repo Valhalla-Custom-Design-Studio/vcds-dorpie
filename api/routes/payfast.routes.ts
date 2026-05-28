@@ -20,7 +20,11 @@ router.post('/payfast/webhook', async (req: Request, res: Response) => {
     // Update subscription on payment_status=COMPLETE
     if (data.payment_status === 'COMPLETE') {
       const { m_payment_id, custom_str1: userId, custom_str2: tier } = data;
-      // TODO: update user tier in DB
+      // Update user tier in DB on successful PayFast payment
+      await pool.query(
+        'UPDATE users SET tier=$1, tier_updated_at=NOW() WHERE id=$2',
+        [tier, userId]
+      ).catch((e: any) => console.error('[PayFast tier update error]', e.message));
       console.log(`Payment complete: user=${userId} tier=${tier} ref=${m_payment_id}`);
     }
     return res.status(200).send('OK');
