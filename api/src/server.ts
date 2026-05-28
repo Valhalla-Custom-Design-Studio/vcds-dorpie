@@ -97,10 +97,10 @@ app.use((_req, res) => res.status(404).json({ success: false, message: 'Route no
 (async () => {
   try {
     await runMigrations();
-    console.log('[STARTUP] ✅ Migrations complete');
   } catch (err) {
     console.error('[STARTUP] ⚠️  Migration error (non-fatal) — server will start anyway:', err);
   }
-  app.listen(PORT, () => console.log(`🛡️  Dorpwag™ API v2.1 — Die Afrikaanse Suite™ Shared Backend — port \${PORT}`));
+  app.listen(PORT, () =>
+);
 })();
 export default app;

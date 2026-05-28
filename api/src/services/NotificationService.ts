@@ -38,7 +38,6 @@ export async function logNotification(
 
 export async function sendBulkSMS(contacts: NotifyContact[], message: string): Promise<void> {
   if (!process.env.BULKSMS_USERNAME || !process.env.BULKSMS_PASSWORD) {
-    console.warn('[BulkSMS] Credentials not configured — skipping SMS');
     return;
   }
   const recipients = contacts
@@ -51,7 +50,6 @@ export async function sendBulkSMS(contacts: NotifyContact[], message: string): P
       { to: recipients, body: message },
       { auth: { username: process.env.BULKSMS_USERNAME!, password: process.env.BULKSMS_PASSWORD! } }
     );
-    console.log(`[BulkSMS] Sent to ${recipients.length} recipients`);
   } catch (e: any) {
     console.error('[BulkSMS] Failed:', e.response?.data || e.message);
   }
@@ -77,7 +75,6 @@ export async function sendExpoPush(
     await axios.post('https://exp.host/--/api/v2/push/send', messages, {
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     });
-    console.log(`[Push] Sent to ${tokens.length} devices`);
     // Log each notification
     if (pool) {
       for (const token of tokens) {
