@@ -41,6 +41,13 @@ import safetyRouter from './routes/safety';
 import suiteRouter from './routes/suite';
 import careRouter from './routes/care';
 import subscriptionsRouter from './routes/subscriptions';
+import lprRouter from './routes/lpr';
+import aiCrimeRouter from './routes/ai_crime';
+import incidentsRouter from './routes/incidents';
+import patrols2Router from './routes/patrols';
+import watchlistRouter from './routes/watchlist';
+import areasRouter from './routes/areas';
+import trustScoreRouter from './routes/trustscore.routes';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -83,6 +90,13 @@ app.use(`${API}/businesses`, businessesRouter);
 app.use(`${API}/topics`, topicsRouter);
 app.use(`${API}/reports`, reportsRouter);
 app.use(`${API}/admin`, adminRouter);
+app.use(`${API}/lpr`, lprRouter);
+app.use(`${API}/ai-crime`, aiCrimeRouter);
+app.use(`${API}/incidents`, incidentsRouter);
+app.use(`${API}/patrols`, patrols2Router);
+app.use(`${API}/watchlist`, watchlistRouter);
+app.use(`${API}/areas`, areasRouter);
+app.use(`${API}/trust-score`, trustScoreRouter);
 
 // ─── OUMA EN OPPAS™ SPECIFIC ROUTES ─────────────────────────────────────────
 app.use(`${API}/care`, careRouter);

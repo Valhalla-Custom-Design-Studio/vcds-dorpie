@@ -110,4 +110,52 @@ router.get('/neighbourhood-score', authenticate, async (req: Request, res: Respo
   } catch { res.status(500).json({ error: 'Score failed' }); }
 });
 
+
+// GET /ai-crime/hotspots — crime hotspot map data
+router.get('/hotspots', authenticate, async (req: Request, res: Response) => {
+  try {
+    const { town_id } = req.query;
+    const { rows } = await pool.query(
+      `SELECT latitude, longitude, COUNT(*) as incident_count, 
+              MAX(created_at) as last_incident
+       FROM incidents 
+       WHERE ($1::uuid IS NULL OR town_id = $1::uuid)
+         AND created_at > NOW() - INTERVAL '30 days'
+         AND latitude IS NOT NULL AND longitude IS NOT NULL
+       GROUP BY latitude, longitude
+       ORDER BY incident_count DESC
+       LIMIT 100`,
+      [town_id || null]
+    );
+    res.json({ success: true, hotspots: rows });
+  } catch (err) {
+    console.error('[AI-CRIME] hotspots error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch hotspots' });
+  }
+});
+
+// GET /ai-crime/stats — crime statistics summary
+router.get('/stats', authenticate, async (req: Request, res: Response) => {
+  try {
+    const { town_id } = req.query;
+    const { rows } = await pool.query(
+      `SELECT 
+         COUNT(*) FILTER (WHERE created_at > NOW() - INTERVAL '7 days') as this_week,
+         COUNT(*) FILTER (WHERE created_at > NOW() - INTERVAL '30 days') as this_month,
+         COUNT(*) FILTER (WHERE severity = 'high' AND created_at > NOW() - INTERVAL '30 days') as high_severity,
+         category,
+         COUNT(*) as total
+       FROM incidents
+       WHERE ($1::uuid IS NULL OR town_id = $1::uuid)
+       GROUP BY category
+       ORDER BY total DESC`,
+      [town_id || null]
+    );
+    res.json({ success: true, stats: rows });
+  } catch (err) {
+    console.error('[AI-CRIME] stats error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch stats' });
+  }
+});
+
 export default router;

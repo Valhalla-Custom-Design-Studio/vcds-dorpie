@@ -1,29 +1,37 @@
-import React, { useEffect } from 'react';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Stack, Redirect, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { View, ActivityIndicator } from 'react-native';
 import { Colors } from '../src/theme';
 import { useAuthStore } from '../src/store/auth';
 import { posthog } from '../src/lib/posthog';
 import { initSentry } from '../src/lib/sentry';
 
+initSentry();
+posthog.capture('app_opened');
+
 function AuthGate({ children }: { children: React.ReactNode }) {
-  const { user } = useAuthStore();
-  const router = useRouter();
+  const { user, _hasHydrated } = useAuthStore();
   const segments = useSegments();
 
-  useEffect(() => {
-    const inAuth = segments[0] === '(auth)';
-    if (!user && !inAuth) router.replace('/(auth)/welcome');
-    if (user && inAuth) router.replace('/(tabs)');
-  }, [user, segments]);
+  // Wait for Zustand persist to hydrate from AsyncStorage
+  if (!_hasHydrated) {
+    return (
+      <View style={{ flex: 1, backgroundColor: Colors.bg, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator color={Colors.primary} size="large" />
+      </View>
+    );
+  }
+
+  const inAuth = segments[0] === '(auth)';
+
+  if (!user && !inAuth) return <Redirect href="/(auth)/welcome" />;
+  if (user && inAuth) return <Redirect href="/(tabs)" />;
 
   return <>{children}</>;
 }
-
-initSentry();
-posthog.capture('app_opened');
 
 export default function RootLayout() {
   return (

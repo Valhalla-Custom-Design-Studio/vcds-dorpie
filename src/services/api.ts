@@ -198,7 +198,7 @@ export const lprAPI = {
 };
 
 export const aiCrimeAPI = {
-  predictions: (params?: any) => api.get('/ai-crime/predictions', { params }),
+  predictions: (params?: any) => api.get('/ai-crime/prediction', { params }),
   hotspots: () => api.get('/ai-crime/hotspots'),
   stats: () => api.get('/ai-crime/stats'),
 };
