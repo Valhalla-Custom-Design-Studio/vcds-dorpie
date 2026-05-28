@@ -9,6 +9,7 @@ export class DorpwagCameraAlertsService {
   private readonly logger = new Logger(DorpwagCameraAlertsService.name);
 
   async notifyEstate(plate: string, cameraId: string, estateId: string) {
+    try {
     this.logger.log(`Dorpwag estate alert: plate=${plate} | estate=${estateId} | cam=${cameraId}`);
     // TODO: Push to all Dorpwag users in estateId
   }
