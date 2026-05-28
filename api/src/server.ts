@@ -100,7 +100,8 @@ app.use((_req, res) => res.status(404).json({ success: false, message: 'Route no
   } catch (err) {
     console.error('[STARTUP] ⚠️  Migration error (non-fatal) — server will start anyway:', err);
   }
-  app.listen(PORT, () =>
-);
+  app.listen(PORT, () => {
+    // server started
+  });
 })();
 export default app;

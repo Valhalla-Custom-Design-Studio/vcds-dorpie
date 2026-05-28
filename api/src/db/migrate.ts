@@ -24,7 +24,6 @@ export async function runMigrations(): Promise<void> {
         'SELECT id FROM _migrations WHERE filename = $1', [file]
       );
       if (rows.length > 0) {
-`);
         continue;
       }
 
