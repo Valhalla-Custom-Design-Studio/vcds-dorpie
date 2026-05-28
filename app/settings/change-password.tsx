@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Colors, Spacing } from '../../../src/theme';
-import { ScreenHeader, PlatinumInput, PlatinumButton } from '../../../src/components/ui';
-import { authAPI } from '../../../src/services/api';
+import { Colors, Spacing } from '../../src/theme';
+import { ScreenHeader, PlatinumInput, PlatinumButton } from '../../src/components/ui';
+import { authAPI } from '../../src/services/api';
 
 export default function ChangePassword() {
   const router = useRouter();

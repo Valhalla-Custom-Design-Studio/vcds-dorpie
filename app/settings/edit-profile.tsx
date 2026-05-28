@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Colors, Spacing } from '../../../src/theme';
-import { ScreenHeader, PlatinumInput, PlatinumButton } from '../../../src/components/ui';
-import { profileAPI } from '../../../src/services/api';
-import { useAuthStore } from '../../../src/store/auth';
+import { Colors, Spacing } from '../../src/theme';
+import { ScreenHeader, PlatinumInput, PlatinumButton } from '../../src/components/ui';
+import { profileAPI } from '../../src/services/api';
+import { useAuthStore } from '../../src/store/auth';
 
 export default function EditProfile() {
   const router = useRouter();

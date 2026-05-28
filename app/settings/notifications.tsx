@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Switch } from 'react-native';
-import { Colors, Typography, Spacing } from '../../../src/theme';
-import { ScreenHeader, PlatinumCard } from '../../../src/components/ui';
+import { Colors, Typography, Spacing } from '../../src/theme';
+import { ScreenHeader, PlatinumCard } from '../../src/components/ui';
 
 const NOTIF_SETTINGS = [
   { key: 'sos_alerts', label: 'SOS Noodalarms', desc: "Ontvang kennisgewings wanneer 'n SOS in jou dorp geaktiveer word" },

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography, Spacing } from '../../../src/theme';
-import { ScreenHeader, PlatinumCard } from '../../../src/components/ui';
+import { Colors, Typography, Spacing } from '../../src/theme';
+import { ScreenHeader, PlatinumCard } from '../../src/components/ui';
 
 const LANGUAGES = [
   { code: 'af', label: 'Afrikaans', flag: '🇿🇦', desc: 'Dorpwag™ in Afrikaans' },
