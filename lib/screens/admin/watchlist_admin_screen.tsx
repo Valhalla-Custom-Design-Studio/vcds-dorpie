@@ -45,15 +45,13 @@ type WatchlistEvent = {
 
 type Tab = 'plates' | 'faces' | 'events';
 
-const API_BASE = process.env.EXPO_PUBLIC_API_URL || 'https://api.dorpwag.vcds.co.za';
+import { api } from '../../../src/services/api';
 
 async function apiFetch(path: string, opts?: RequestInit) {
-  const res = await fetch(`${API_BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...opts?.headers },
-    ...opts,
-  });
-  if (!res.ok) throw new Error(`API error ${res.status}`);
-  return res.json();
+  const method = (opts?.method || 'GET').toLowerCase() as 'get' | 'post' | 'put' | 'delete';
+  const body = opts?.body ? JSON.parse(opts.body as string) : undefined;
+  const res = await (body ? api[method](path, body) : api[method](path));
+  return res.data;
 }
 
 export default function WatchlistAdminScreen() {

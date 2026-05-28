@@ -176,3 +176,16 @@ export const adminAPI = {
   ban: (id: string) => api.put(`/admin/users/${id}/ban`, {}),
   reports: () => api.get('/admin/reports'),
 };
+
+export const subscriptionsAPI = {
+  history: () => api.get('/subscriptions/history'),
+  status: () => api.get('/subscriptions/status'),
+  cancel: () => api.post('/subscriptions/cancel', {}),
+};
+
+export const uploadAPI = {
+  presign: (fileName: string, mimeType: string) =>
+    api.post('/upload/presign', { fileName, mimeType }),
+  confirm: (fileId: string) =>
+    api.post('/upload/confirm', { fileId }),
+};
