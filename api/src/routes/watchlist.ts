@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { pool } from '../db/pool';
-import { requireAuth } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 
 const router = Router();
 const WATCHLIST_ENGINE_URL = process.env.WATCHLIST_ENGINE_URL || 'http://localhost:3100';
@@ -43,7 +43,7 @@ async function requireAdmin(req: Request, res: Response, next: Function) {
 }
 
 // ── PLATES ─────────────────────────────────────────────────────────────────────
-router.get('/plates', requireAuth, requireAdmin, async (req, res) => {
+router.get('/plates', authenticate, requireAdmin, async (req, res) => {
   try {
     const data = await engineGet('/api/v1/watchlist/plates');
     res.json(data);
@@ -52,7 +52,7 @@ router.get('/plates', requireAuth, requireAdmin, async (req, res) => {
   }
 });
 
-router.post('/plates', requireAuth, requireAdmin, async (req, res) => {
+router.post('/plates', authenticate, requireAdmin, async (req, res) => {
   try {
     const data = await enginePost('/api/v1/watchlist/plates', {
       ...req.body,
@@ -65,7 +65,7 @@ router.post('/plates', requireAuth, requireAdmin, async (req, res) => {
   }
 });
 
-router.delete('/plates/:id', requireAuth, requireAdmin, async (req, res) => {
+router.delete('/plates/:id', authenticate, requireAdmin, async (req, res) => {
   try {
     const data = await engineDelete(`/api/v1/watchlist/plates/${req.params.id}`);
     res.json(data);
@@ -75,7 +75,7 @@ router.delete('/plates/:id', requireAuth, requireAdmin, async (req, res) => {
 });
 
 // ── FACES ──────────────────────────────────────────────────────────────────────
-router.get('/faces', requireAuth, requireAdmin, async (req, res) => {
+router.get('/faces', authenticate, requireAdmin, async (req, res) => {
   try {
     const data = await engineGet('/api/v1/watchlist/faces');
     res.json(data);
@@ -84,7 +84,7 @@ router.get('/faces', requireAuth, requireAdmin, async (req, res) => {
   }
 });
 
-router.post('/faces', requireAuth, requireAdmin, async (req, res) => {
+router.post('/faces', authenticate, requireAdmin, async (req, res) => {
   try {
     const data = await enginePost('/api/v1/watchlist/faces', {
       ...req.body,
@@ -97,7 +97,7 @@ router.post('/faces', requireAuth, requireAdmin, async (req, res) => {
   }
 });
 
-router.delete('/faces/:id', requireAuth, requireAdmin, async (req, res) => {
+router.delete('/faces/:id', authenticate, requireAdmin, async (req, res) => {
   try {
     const data = await engineDelete(`/api/v1/watchlist/faces/${req.params.id}`);
     res.json(data);
@@ -107,7 +107,7 @@ router.delete('/faces/:id', requireAuth, requireAdmin, async (req, res) => {
 });
 
 // ── CAMERAS ────────────────────────────────────────────────────────────────────
-router.get('/cameras', requireAuth, requireAdmin, async (req, res) => {
+router.get('/cameras', authenticate, requireAdmin, async (req, res) => {
   try {
     const data = await engineGet('/api/v1/cameras');
     res.json(data);
@@ -116,7 +116,7 @@ router.get('/cameras', requireAuth, requireAdmin, async (req, res) => {
   }
 });
 
-router.post('/cameras', requireAuth, requireAdmin, async (req, res) => {
+router.post('/cameras', authenticate, requireAdmin, async (req, res) => {
   try {
     const data = await enginePost('/api/v1/cameras', req.body);
     res.json(data);
@@ -126,7 +126,7 @@ router.post('/cameras', requireAuth, requireAdmin, async (req, res) => {
 });
 
 // ── EVENTS (read-only log) ─────────────────────────────────────────────────────
-router.get('/events', requireAuth, requireAdmin, async (req, res) => {
+router.get('/events', authenticate, requireAdmin, async (req, res) => {
   try {
     const limit = req.query.limit || 50;
     const data = await engineGet(`/api/v1/watchlist/events?limit=${limit}`);
