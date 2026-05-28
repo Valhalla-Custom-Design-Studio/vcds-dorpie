@@ -33,7 +33,7 @@
     "expo-task-manager": "~12.0.4",
     "posthog-react-native": "^3.3.7",
     "react": "18.3.1",
-    "react-native": "0.76.9",
+    "react-native": "0.79.2",
     "react-native-gesture-handler": "~2.21.2",
     "react-native-maps": "1.18.0",
     "react-native-reanimated": "~3.16.1",
@@ -44,10 +44,22 @@
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@types/react": "~18.3.12",
-    "@types/react-native": "^0.73.0",
+    "@types/react-native": "^0.79.0",
     "typescript": "~5.3.3"
   },
   "engines": {
     "node": ">=20.19.4"
+  },
+  "resolutions": {
+    "metro": "0.81.5",
+    "metro-cache-key": "0.81.5",
+    "metro-config": "0.81.5",
+    "metro-core": "0.81.5",
+    "metro-file-map": "0.81.5",
+    "metro-resolver": "0.81.5",
+    "metro-runtime": "0.81.5",
+    "metro-source-map": "0.81.5",
+    "metro-transform-plugins": "0.81.5",
+    "metro-transform-worker": "0.81.5"
   }
 }
