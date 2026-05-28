@@ -8,9 +8,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Colors } from '../../src/theme';
 import { useAuthStore } from '../../src/store/auth';
+import { analyticsAPI } from '../../src/services/api';
 import { posthog } from '../../src/lib/posthog';
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? '';
 
 interface AnalyticsData {
   revenue: {
@@ -48,7 +47,7 @@ interface AnalyticsData {
 
 export default function AdminAnalyticsScreen() {
   const router = useRouter();
-  const { token } = useAuthStore();
+  const user = useAuthStore(s => s.user);
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -56,13 +55,8 @@ export default function AdminAnalyticsScreen() {
 
   const fetchAnalytics = async () => {
     try {
-      const res = await fetch(`${API_URL}/api/admin/analytics`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.ok) {
-        const json = await res.json();
-        setData(json);
-      }
+      const { data: json } = await analyticsAPI.admin();
+      setData(json);
     } catch (e) {
       console.error('Analytics error:', e);
     } finally {

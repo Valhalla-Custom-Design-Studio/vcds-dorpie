@@ -32,6 +32,10 @@ export const Colors = {
   sosRedDark: '#B71C1C',
   guardianGreen: '#00E676',
   guardianGreenDark: '#00C853',
+  // Aliases for legacy screens
+  text: '#F5F0FF',
+  muted: '#8B7BA0',
+  card: 'rgba(255,255,255,0.06)',
 };
 
 export const Spacing = {

@@ -189,3 +189,20 @@ export const uploadAPI = {
   confirm: (fileId: string) =>
     api.post('/upload/confirm', { fileId }),
 };
+
+export const lprAPI = {
+  feed: (limit = 50) => api.get('/lpr/feed', { params: { limit } }),
+  watchlist: () => api.get('/lpr/watchlist'),
+  addToWatchlist: (plate: string, reason: string) => api.post('/lpr/watchlist', { plate, reason }),
+  report: (plate: string, reportedBy: string) => api.post('/lpr/report', { plate, reportedBy }),
+};
+
+export const aiCrimeAPI = {
+  predictions: (params?: any) => api.get('/ai-crime/predictions', { params }),
+  hotspots: () => api.get('/ai-crime/hotspots'),
+  stats: () => api.get('/ai-crime/stats'),
+};
+
+export const analyticsAPI = {
+  admin: () => api.get('/admin/analytics'),
+};

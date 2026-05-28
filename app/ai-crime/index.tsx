@@ -8,9 +8,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Colors } from '../../src/theme';
 import { useAuthStore } from '../../src/store/auth';
+import { aiCrimeAPI } from '../../src/services/api';
 import { posthog } from '../../src/lib/posthog';
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? '';
 
 interface CrimePrediction {
   area: string;
@@ -46,7 +45,7 @@ const TREND_ICONS: Record<string, string> = {
 
 export default function AICrimeScreen() {
   const router = useRouter();
-  const { token } = useAuthStore();
+  
   const [stats, setStats] = useState<CrimeStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -54,13 +53,8 @@ export default function AICrimeScreen() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`${API_URL}/api/ai-crime/predictions`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setStats(data);
-      }
+      const { data } = await aiCrimeAPI.predictions();
+      setStats(data);
     } catch (e) {
       console.error('AI crime fetch error:', e);
     } finally {
