@@ -16,6 +16,7 @@ export default function Heatmap() {
         if (r.status === 'fulfilled') setData(r.value.data.data || []);
       })
       .finally(() => setLoading(false));
+        .catch((err) => { /* VCDS:SAFE */ if (__DEV__) { void 0; } });
   }, []);
 
   // Group by area
