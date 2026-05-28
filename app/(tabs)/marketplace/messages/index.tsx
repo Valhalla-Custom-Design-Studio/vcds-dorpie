@@ -1,4 +1,9 @@
 import { Redirect } from 'expo-router';
-export default function MarketplaceMessages() {
-  return <Redirect href="/messages" />;
+
+/**
+ * Marketplace messages entry — redirects to inbox.
+ * Covers: buyer/seller chat, offer negotiations, transaction confirmations.
+ */
+export default function MarketplaceMessagesRedirect() {
+  return <Redirect href="/(tabs)/marketplace/messages/inbox" />;
 }
