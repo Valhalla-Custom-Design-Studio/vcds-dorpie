@@ -12,7 +12,7 @@ export default function Community() {
 
   const sections = [
     { icon: 'document-text', label: 'Notice Board', sub: 'Town announcements & news', route: '/notices', color: Colors.primary },
-    { icon: 'calendar', label: 'Events', sub: 'What's happening in your area', route: '/events', color: Colors.accent },
+    { icon: 'calendar', label: 'Events', sub: "What's happening in your area", route: '/events', color: Colors.accent },
     { icon: 'chatbubbles', label: 'Forum', sub: 'Discussions & community topics', route: '/topics', color: Colors.success },
     { icon: 'bag', label: 'Marketplace', sub: 'Buy, sell & swap locally', route: '/listings', color: Colors.warning },
     { icon: 'chatbubble-ellipses', label: 'Messages', sub: 'Private conversations', route: '/messages', color: Colors.primaryLight },
