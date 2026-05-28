@@ -12,10 +12,12 @@ interface AuthState {
   user: User | null;
   token: string | null;
   isLoading: boolean;
+  _hasHydrated: boolean;
   setAuth: (user: User, token: string) => void;
   setUser: (user: Partial<User>) => void;
   logout: () => void;
   setLoading: (v: boolean) => void;
+  setHasHydrated: (v: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -24,14 +26,19 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isLoading: false,
+      _hasHydrated: false,
       setAuth: (user, token) => set({ user, token }),
       setUser: (partial) => set((s) => ({ user: s.user ? { ...s.user, ...partial } : null })),
       logout: () => set({ user: null, token: null }),
       setLoading: (v) => set({ isLoading: v }),
+      setHasHydrated: (v) => set({ _hasHydrated: v }),
     }),
     {
       name: 'dorpwag-auth',
       storage: createJSONStorage(() => AsyncStorage),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );
