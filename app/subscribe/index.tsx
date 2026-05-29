@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Colors } from '../../src/theme';
-import { api } from '../../src/services/api';
-import { useAuthStore } from '../../src/store/auth';
+import { Colors } from '@/theme';
+import { api } from '@/services/api';
+import { useAuthStore } from '@/store/auth';
 
 const TIERS = [
   { id: 'free', name: 'Gratis', price: 'R0/maand', features: ['Kennisgewings lees', 'Gemeenskap forums', 'Basiese gids'], color: Colors.muted },

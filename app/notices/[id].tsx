@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography } from '../../src/theme';
-import { PlatinumCard, Badge, ScreenHeader } from '../../src/components/ui';
-import { noticesAPI } from '../../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { PlatinumCard, Badge, ScreenHeader } from '@/components/ui';
+import { noticesAPI } from '@/services/api';
 
 const REACTIONS = ['👍', '❤️', '😮', '😢', '😡'];
 

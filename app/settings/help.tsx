@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography, Spacing } from '../../src/theme';
-import { ScreenHeader, PlatinumCard } from '../../src/components/ui';
+import { Colors, Typography, Spacing } from '@/theme';
+import { ScreenHeader, PlatinumCard } from '@/components/ui';
 
 const FAQ = [
   { q: "Hoe aktiveer ek 'n SOS noodalarm?", a: 'Gaan na die Veiligheid-oortjie en tik "Aktiveer SOS". Jou guardian kontakte sal onmiddellik in kennis gestel word.' },

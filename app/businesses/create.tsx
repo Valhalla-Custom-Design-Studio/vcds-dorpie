@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
-import { Colors } from '../../src/theme';
-import { PlatinumButton, PlatinumInput, ScreenHeader } from '../../src/components/ui';
-import { businessesAPI } from '../../src/services/api';
+import { Colors } from '@/theme';
+import { PlatinumButton, PlatinumInput, ScreenHeader } from '@/components/ui';
+import { businessesAPI } from '@/services/api';
 
 const CATS = ['Food', 'Services', 'Health', 'Retail', 'Auto', 'Legal', 'Other'];
 

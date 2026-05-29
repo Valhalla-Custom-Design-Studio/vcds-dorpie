@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
-import { Colors, Typography, Spacing } from '../../src/theme';
-import { ScreenHeader, PlatinumCard, EmptyState, Badge } from '../../src/components/ui';
-import { subscriptionsAPI } from '../../src/services/api';
+import { Colors, Typography, Spacing } from '@/theme';
+import { ScreenHeader, PlatinumCard, EmptyState, Badge } from '@/components/ui';
+import { subscriptionsAPI } from '@/services/api';
 
 export default function PaymentHistory() {
   const [history, setHistory] = useState<any[]>([]);

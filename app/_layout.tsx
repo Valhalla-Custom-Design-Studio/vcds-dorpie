@@ -4,10 +4,10 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { View, ActivityIndicator } from 'react-native';
-import { Colors } from '../src/theme';
-import { useAuthStore } from '../src/store/auth';
-import { posthog } from '../src/lib/posthog';
-import { initSentry } from '../src/lib/sentry';
+import { Colors } from '@/theme';
+import { useAuthStore } from '@/store/auth';
+import { posthog } from '@/lib/posthog';
+import { initSentry } from '@/lib/sentry';
 
 initSentry();
 posthog.capture('app_opened');

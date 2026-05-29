@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography } from '../../src/theme';
-import { PlatinumCard, Badge, ScreenHeader, EmptyState } from '../../src/components/ui';
-import { reportsAPI } from '../../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { PlatinumCard, Badge, ScreenHeader, EmptyState, FilterPill } from '@/components/ui';
+import { reportsAPI } from '@/services/api';
 
 const CATS = ['All', 'Theft', 'Break-in', 'Vandalism', 'Suspicious', 'Assault', 'Other'];
 
@@ -24,45 +24,54 @@ export default function Incidents() {
 
   useEffect(() => { load(); }, [cat]);
 
-  const severityColor = (s: string) => s === 'high' ? Colors.red : s === 'medium' ? Colors.warning : Colors.success;
-
   return (
     <View style={s.container}>
-      <ScreenHeader title="Incident Reports" showBack right={
-        <TouchableOpacity onPress={() => router.push('/incidents/create')}><Ionicons name="add-circle" size={28} color={Colors.primary} /></TouchableOpacity>
-      } />
+      <ScreenHeader
+        title="Voorvalle"
+        showBack
+        right={<TouchableOpacity onPress={() => router.push('/incidents/create')}><Ionicons name="add-circle" size={28} color={Colors.primary} /></TouchableOpacity>}
+      />
       <FlatList
         data={reports}
         keyExtractor={i => i.id}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); load(); }} tintColor={Colors.primary} />}
         ListHeaderComponent={
-          <FlatList horizontal data={CATS} keyExtractor={i => i} showsHorizontalScrollIndicator={false}
-            contentContainerStyle={s.catBar}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => setCat(item)} style={[s.catPill, cat === item && s.catActive]}>
-                <Text style={[s.catText, cat === item && { color: '#fff' }]}>{item}</Text>
-              </TouchableOpacity>
-            )}
+          <FlatList
+            horizontal data={CATS} keyExtractor={i => i}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={s.pillBar}
+            renderItem={({ item }) => <FilterPill label={item} active={cat === item} onPress={() => setCat(item)} />}
           />
         }
-        ListEmptyComponent={!loading ? <EmptyState icon="shield-outline" title="No incidents reported" subtitle="Keep your community safe by reporting suspicious activity" actionLabel="Report Incident" onAction={() => router.push('/incidents/create')} /> : null}
+        ListEmptyComponent={!loading ? (
+          <EmptyState
+            icon="shield-outline"
+            title="Geen voorvalle gerapporteer nie"
+            subtitle="Hou jou gemeenskap veilig deur verdagte aktiwiteit te rapporteer"
+            actionLabel="Rapporteer Voorval"
+            onAction={() => router.push('/incidents/create')}
+          />
+        ) : null}
         renderItem={({ item }) => (
-          <PlatinumCard style={s.card}>
-            <View style={s.row}>
-              <View style={[s.dot, { backgroundColor: severityColor(item.severity || 'low') }]} />
-              <View style={s.content}>
-                <Text style={Typography.bodySemi}>{item.title}</Text>
-                <Text style={[Typography.caption, { marginTop: 2 }]} numberOfLines={2}>{item.description}</Text>
-                <View style={s.meta}>
-                  <Badge label={item.category || 'Other'} variant="muted" />
-                  <Text style={[Typography.caption, { color: Colors.textMuted }]}>{new Date(item.created_at).toLocaleDateString('en-ZA')}</Text>
-                  {item.address && <Text style={[Typography.caption, { color: Colors.textMuted }]}>📍 {item.address}</Text>}
+          <TouchableOpacity onPress={() => router.push(`/incidents/${item.id}` as any)} style={s.item}>
+            <PlatinumCard accentColor={item.severity === 'high' ? Colors.accentRed : item.severity === 'medium' ? Colors.accentYellow : undefined}>
+              <View style={s.row}>
+                <View style={s.content}>
+                  <View style={s.metaRow}>
+                    <Badge label={item.category || 'Incident'} variant={item.severity === 'high' ? 'error' : item.severity === 'medium' ? 'warning' : 'muted'} />
+                    <Text style={[Typography.caption, { color: Colors.textMuted, marginLeft: 8 }]}>
+                      {new Date(item.created_at).toLocaleDateString('af-ZA')}
+                    </Text>
+                  </View>
+                  <Text style={[Typography.bodySemi, { marginTop: 6 }]} numberOfLines={2}>{item.description}</Text>
+                  {item.location ? <Text style={[Typography.caption, { color: Colors.textMuted, marginTop: 4 }]}>📍 {item.location}</Text> : null}
                 </View>
+                <Ionicons name="chevron-forward" size={16} color={Colors.textMuted} />
               </View>
-            </View>
-          </PlatinumCard>
+            </PlatinumCard>
+          </TouchableOpacity>
         )}
-        contentContainerStyle={{ padding: 16, paddingBottom: 32, gap: 8, flexGrow: 1 }}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
       />
     </View>
   );
@@ -70,13 +79,9 @@ export default function Incidents() {
 
 const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.bg },
-  catBar: { paddingHorizontal: 16, paddingVertical: 12, gap: 8 },
-  catPill: { paddingHorizontal: 14, paddingVertical: 7, borderRadius: 20, backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.surfaceBorder },
-  catActive: { backgroundColor: Colors.primary, borderColor: Colors.primary },
-  catText: { color: Colors.textBody, fontSize: 13, fontWeight: '600' },
-  card: {},
-  row: { flexDirection: 'row', alignItems: 'flex-start' },
-  dot: { width: 10, height: 10, borderRadius: 5, marginTop: 5, marginRight: 10 },
+  pillBar: { paddingHorizontal: 16, paddingVertical: 12 },
+  item: { marginBottom: 4 },
+  row: { flexDirection: 'row', alignItems: 'center' },
   content: { flex: 1 },
-  meta: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 6 },
+  metaRow: { flexDirection: 'row', alignItems: 'center' },
 });

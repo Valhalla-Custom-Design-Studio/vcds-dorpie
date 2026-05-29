@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '../../src/theme';
+import { Colors } from '@/theme';
 import { BlurView } from 'expo-blur';
 import { Platform, View, StyleSheet } from 'react-native';
 

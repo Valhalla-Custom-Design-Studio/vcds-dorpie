@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platfor
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography, Spacing } from '../../src/theme';
-import { PrimaryButton, InputField } from '../../src/components/ui';
-import { authAPI } from '../../src/services/api';
+import { Colors, Typography, Spacing } from '@/theme';
+import { PrimaryButton, InputField } from '@/components/ui';
+import { authAPI } from '@/services/api';
 
 export default function ForgotPassword() {
   const router = useRouter();

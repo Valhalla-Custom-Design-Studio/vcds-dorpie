@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography, Spacing, Radius, Shadow } from '../../src/theme';
-import { PrimaryButton } from '../../src/components/ui';
+import { Colors, Typography, Spacing, Radius, Shadow } from '@/theme';
+import { PrimaryButton } from '@/components/ui';
 
 export default function Welcome() {
   const router = useRouter();

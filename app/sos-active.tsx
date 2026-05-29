@@ -4,8 +4,8 @@ import { useRouter } from 'expo-router';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Typography } from '../src/theme';
-import { sosAPI } from '../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { sosAPI } from '@/services/api';
 
 export default function SOSActive() {
   const router = useRouter();

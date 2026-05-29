@@ -3,9 +3,9 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, ActivityIn
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography } from '../../src/theme';
-import { PlatinumCard, ScreenHeader, PlatinumButton } from '../../src/components/ui';
-import { sosAPI, uploadAPI } from '../../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { PlatinumCard, ScreenHeader, PlatinumButton } from '@/components/ui';
+import { sosAPI, uploadAPI } from '@/services/api';
 
 export default function SOSEvidence() {
   const { sosId } = useLocalSearchParams<{ sosId: string }>();

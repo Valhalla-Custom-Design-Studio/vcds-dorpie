@@ -3,9 +3,9 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, Switch } f
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Typography } from '../../src/theme';
-import { PlatinumCard, Badge } from '../../src/components/ui';
-import { useAuthStore } from '../../src/store/auth';
+import { Colors, Typography } from '@/theme';
+import { PlatinumCard, Badge } from '@/components/ui';
+import { useAuthStore } from '@/store/auth';
 
 export default function Profile() {
   const router = useRouter();

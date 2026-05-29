@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ScrollView, Text, StyleSheet } from 'react-native';
-import { Colors, Typography, Spacing } from '../../src/theme';
-import { ScreenHeader } from '../../src/components/ui';
+import { Colors, Typography, Spacing } from '@/theme';
+import { ScreenHeader } from '@/components/ui';
 
 export default function Terms() {
   return (

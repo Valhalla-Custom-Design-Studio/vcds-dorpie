@@ -1,8 +1,9 @@
 // Dorpwag™ UI Component Library — single source of truth
-// All components defined in index.tsx
 export {
   GlassCard,
   PlatinumCard,
+  FeatureCard,
+  FeatureIconBadge,
   PrimaryButton,
   SOSButton,
   Badge,
@@ -14,6 +15,7 @@ export {
   SectionHeader,
   Divider,
   StatusDot,
+  FilterPill,
 } from './index.tsx';
 
 // Additional standalone components

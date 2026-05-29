@@ -3,10 +3,10 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, RefreshControl, A
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Typography, Spacing } from '../../src/theme';
-import { PlatinumCard, Badge } from '../../src/components/ui';
-import { noticesAPI, emergencyAlertsAPI, eventsAPI } from '../../src/services/api';
-import { useAuthStore } from '../../src/store/auth';
+import { Colors, Typography, Spacing } from '@/theme';
+import { PlatinumCard, Badge } from '@/components/ui';
+import { noticesAPI, emergencyAlertsAPI, eventsAPI } from '@/services/api';
+import { useAuthStore } from '@/store/auth';
 
 export default function Home() {
   const router = useRouter();

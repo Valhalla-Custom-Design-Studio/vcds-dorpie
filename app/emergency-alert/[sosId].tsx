@@ -3,9 +3,9 @@ import { View, Text, ScrollView, StyleSheet, ActivityIndicator } from 'react-nat
 import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Typography } from '../../src/theme';
-import { PlatinumCard, ScreenHeader, Badge } from '../../src/components/ui';
-import { emergencyAlertsAPI } from '../../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { PlatinumCard, ScreenHeader, Badge } from '@/components/ui';
+import { emergencyAlertsAPI } from '@/services/api';
 
 export default function EmergencyAlertDetail() {
   const { sosId } = useLocalSearchParams<{ sosId: string }>();

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Colors } from '../../src/theme';
-import { PlatinumButton, PlatinumInput, ScreenHeader } from '../../src/components/ui';
-import { topicsAPI } from '../../src/services/api';
+import { Colors } from '@/theme';
+import { PlatinumButton, PlatinumInput, ScreenHeader } from '@/components/ui';
+import { topicsAPI } from '@/services/api';
 
 export default function CreateTopic() {
   const router = useRouter();

@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
-import { Colors } from '../../src/theme';
-import { PlatinumButton, PlatinumInput, ScreenHeader } from '../../src/components/ui';
-import { listingsAPI } from '../../src/services/api';
+import { Colors } from '@/theme';
+import { PlatinumButton, PlatinumInput, ScreenHeader } from '@/components/ui';
+import { listingsAPI } from '@/services/api';
 
 const TYPES = ['For Sale', 'Wanted', 'Free', 'Rent', 'Services'];
 
