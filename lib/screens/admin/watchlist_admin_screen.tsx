@@ -95,7 +95,7 @@ export default function WatchlistAdminScreen() {
   const onRefresh = () => { setRefreshing(true); load(); };
 
   const handleAdd = async () => {
-    if (!addValue.trim()) { Alert.alert('Fout', 'Voer 'n waarde in'); return; }
+    if (!addValue.trim()) { Alert.alert('Fout', "Voer 'n waarde in"); return; }
     setSaving(true);
     try {
       await apiFetch('/api/admin/watchlist', {
