@@ -17,12 +17,57 @@ export function GlassCard({ children, style, onPress }: { children: React.ReactN
 }
 
 // ─── PlatinumCard ───────────────────────────────────────────
-export function PlatinumCard({ children, style, onPress, accent }: { children: React.ReactNode; style?: ViewStyle; onPress?: () => void; accent?: boolean }) {
+export function PlatinumCard({
+  children, style, onPress, accent, accentColor,
+}: {
+  children: React.ReactNode; style?: ViewStyle; onPress?: () => void;
+  accent?: boolean; accentColor?: string;
+}) {
   const Wrapper = onPress ? TouchableOpacity : View;
+  const glowStyle = accentColor ? Shadow.glow(accentColor) : {};
+  const borderStyle = accentColor ? { borderColor: accentColor + '33' } : {};
   return (
-    <Wrapper onPress={onPress} activeOpacity={0.85} style={[styles.platinumCard, accent && styles.platinumCardAccent, style]}>
+    <Wrapper
+      onPress={onPress}
+      activeOpacity={0.85}
+      style={[styles.platinumCard, accent && styles.platinumCardAccent, borderStyle, glowStyle, style]}
+    >
       {children}
     </Wrapper>
+  );
+}
+
+// ─── FeatureCard ─────────────────────────────────────────────
+// Premium card for Noodgevalle / Safety feature tiles
+export function FeatureCard({
+  children, style, onPress, accentColor,
+}: {
+  children: React.ReactNode; style?: ViewStyle; onPress?: () => void; accentColor: string;
+}) {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.82}
+      style={[
+        styles.featureCard,
+        {
+          borderColor: accentColor + '28',
+          ...Shadow.glow(accentColor),
+        },
+        style,
+      ]}
+    >
+      {children}
+    </TouchableOpacity>
+  );
+}
+
+// ─── FeatureIconBadge ────────────────────────────────────────
+export function FeatureIconBadge({ icon, color, size = 24 }: { icon: keyof typeof Ionicons.glyphMap; color: string; size?: number }) {
+  return (
+    <View style={[styles.featureIconWrap, { backgroundColor: color + '22', ...Shadow.glow(color) }]}>
+      <Ionicons name={icon} size={size} color={color} />
+    </View>
   );
 }
 
@@ -34,166 +79,178 @@ export function PrimaryButton({ title, onPress, loading, disabled, style, icon, 
   const bgColor = variant === 'accent' ? Colors.accent : variant === 'danger' ? Colors.error : variant === 'ghost' ? 'transparent' : variant === 'outline' ? 'transparent' : Colors.primary;
   const borderColor = variant === 'outline' ? Colors.surfaceBorderStrong : 'transparent';
   const textColor = variant === 'accent' ? Colors.textOnAccent : variant === 'ghost' ? Colors.textBody : Colors.textOnPrimary;
+  const glowStyle = variant === 'primary' ? Shadow.glow(Colors.primary) : variant === 'accent' ? Shadow.glow(Colors.accent) : {};
   return (
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled || loading}
       activeOpacity={0.8}
-      style={[styles.primaryBtn, { backgroundColor: bgColor, borderColor, borderWidth: variant === 'outline' ? 1 : 0 }, (disabled || loading) && styles.btnDisabled, style]}
+      style={[styles.primaryBtn, { backgroundColor: bgColor, borderColor, borderWidth: variant === 'outline' ? 1 : 0 }, (disabled || loading) && styles.btnDisabled, glowStyle, style]}
     >
       {loading ? (
         <ActivityIndicator color={textColor} size="small" />
       ) : (
         <View style={styles.btnRow}>
           {icon && <Ionicons name={icon} size={18} color={textColor} style={{ marginRight: 6 }} />}
-          <Text style={[styles.primaryBtnText, { color: textColor }]}>{title}</Text>
+          <Text style={[Typography.button, { color: textColor }]}>{title}</Text>
         </View>
       )}
     </TouchableOpacity>
   );
 }
 
-// ─── SOSButton ──────────────────────────────────────────────
-export function SOSButton({ onPress, active }: { onPress: () => void; active?: boolean }) {
+// ─── SOSButton ───────────────────────────────────────────────
+export function SOSButton({ onPress, label = 'SOS' }: { onPress: () => void; label?: string }) {
   const pulse = useRef(new Animated.Value(1)).current;
   useEffect(() => {
-    if (active) {
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(pulse, { toValue: 1.15, duration: 600, useNativeDriver: true }),
-          Animated.timing(pulse, { toValue: 1, duration: 600, useNativeDriver: true }),
-        ])
-      ).start();
-    } else {
-      pulse.setValue(1);
-    }
-  }, [active]);
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulse, { toValue: 1.08, duration: 800, useNativeDriver: true }),
+        Animated.timing(pulse, { toValue: 1, duration: 800, useNativeDriver: true }),
+      ])
+    ).start();
+  }, []);
   return (
     <Animated.View style={{ transform: [{ scale: pulse }] }}>
-      <TouchableOpacity onPress={onPress} activeOpacity={0.85} style={[styles.sosBtn, active && styles.sosBtnActive]}>
-        <Ionicons name="warning" size={36} color="#FFFFFF" />
-        <Text style={styles.sosBtnText}>{active ? 'SOS AKTIEF' : 'SOS'}</Text>
+      <TouchableOpacity onPress={onPress} style={styles.sosBtn} activeOpacity={0.85}>
+        <Ionicons name="warning" size={28} color="#fff" />
+        <Text style={styles.sosBtnText}>{label}</Text>
       </TouchableOpacity>
     </Animated.View>
   );
 }
 
-// ─── Badge ──────────────────────────────────────────────────
-export function Badge({ label, color, style }: { label: string; color?: string; style?: ViewStyle }) {
-  return (
-    <View style={[styles.badge, { backgroundColor: color || Colors.primary }, style]}>
-      <Text style={styles.badgeText}>{label}</Text>
-    </View>
-  );
+// ─── Badge ───────────────────────────────────────────────────
+export function Badge({ label, variant = 'primary' }: { label: string; variant?: 'primary' | 'success' | 'warning' | 'error' | 'muted' | 'accent' }) {
+  const bg = variant === 'success' ? Colors.success
+    : variant === 'warning' ? Colors.warning
+    : variant === 'error' ? Colors.red
+    : variant === 'muted' ? Colors.surface
+    : variant === 'accent' ? Colors.accent
+    : Colors.primary;
+  const textColor = variant === 'accent' ? Colors.textOnAccent : '#fff';
+  return <View style={[styles.badge, { backgroundColor: bg }]}><Text style={[styles.badgeText, { color: textColor }]}>{label}</Text></View>;
 }
 
-// ─── SeverityBadge ──────────────────────────────────────────
-export function SeverityBadge({ severity }: { severity: string }) {
-  const colors: Record<string, string> = {
-    critical: Colors.sosRed, high: Colors.error, medium: Colors.warning, low: Colors.success
-  };
-  const labels: Record<string, string> = {
-    critical: 'KRITIEK', high: 'HOOG', medium: 'MEDIUM', low: 'LAAG'
-  };
-  return <Badge label={labels[severity] || severity.toUpperCase()} color={colors[severity] || Colors.textMuted} />;
+// ─── SeverityBadge ───────────────────────────────────────────
+export function SeverityBadge({ level }: { level: 'low' | 'medium' | 'high' | 'critical' }) {
+  const map = { low: Colors.success, medium: Colors.warning, high: Colors.error, critical: Colors.sosRed };
+  return <Badge label={level.toUpperCase()} variant={level === 'low' ? 'success' : level === 'medium' ? 'warning' : 'error'} />;
 }
 
-// ─── InputField ─────────────────────────────────────────────
-export function InputField({ label, value, onChangeText, placeholder, secureTextEntry, keyboardType, multiline, error, icon, style }: {
+// ─── InputField ──────────────────────────────────────────────
+export function InputField({ label, value, onChangeText, placeholder, secureTextEntry, multiline, style, keyboardType, autoCapitalize }: {
   label?: string; value: string; onChangeText: (t: string) => void; placeholder?: string;
-  secureTextEntry?: boolean; keyboardType?: any; multiline?: boolean; error?: string;
-  icon?: keyof typeof Ionicons.glyphMap; style?: ViewStyle;
+  secureTextEntry?: boolean; multiline?: boolean; style?: ViewStyle; keyboardType?: any; autoCapitalize?: any;
 }) {
   return (
-    <View style={[styles.inputWrapper, style]}>
-      {label && <Text style={styles.inputLabel}>{label}</Text>}
-      <View style={[styles.inputContainer, error ? styles.inputError : null]}>
-        {icon && <Ionicons name={icon} size={18} color={Colors.textMuted} style={{ marginRight: 8 }} />}
-        <TextInput
-          value={value}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
-          placeholderTextColor={Colors.textMuted}
-          secureTextEntry={secureTextEntry}
-          keyboardType={keyboardType}
-          multiline={multiline}
-          style={[styles.input, multiline && { height: 100, textAlignVertical: 'top' }]}
-        />
+    <View style={[styles.inputWrap, style]}>
+      {label ? <Text style={styles.inputLabel}>{label}</Text> : null}
+      <TextInput
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        placeholderTextColor={Colors.textMuted}
+        secureTextEntry={secureTextEntry}
+        multiline={multiline}
+        keyboardType={keyboardType}
+        autoCapitalize={autoCapitalize}
+        style={[styles.input, multiline && { height: 100, textAlignVertical: 'top' }]}
+      />
+    </View>
+  );
+}
+
+// ─── Avatar ──────────────────────────────────────────────────
+export function Avatar({ name, size = 40, color }: { name: string; size?: number; color?: string }) {
+  const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  const bg = color || Colors.primary;
+  return (
+    <View style={[styles.avatar, { width: size, height: size, borderRadius: size / 2, backgroundColor: bg }]}>
+      <Text style={{ color: '#fff', fontWeight: '700', fontSize: size * 0.38 }}>{initials}</Text>
+    </View>
+  );
+}
+
+// ─── EmptyState ──────────────────────────────────────────────
+export function EmptyState({ icon = 'folder-open-outline', title, subtitle, actionLabel, onAction }: {
+  icon?: keyof typeof Ionicons.glyphMap; title: string; subtitle?: string; actionLabel?: string; onAction?: () => void;
+}) {
+  return (
+    <View style={styles.emptyWrap}>
+      <View style={styles.emptyIconWrap}>
+        <Ionicons name={icon} size={48} color={Colors.textMuted} />
       </View>
-      {error && <Text style={styles.errorText}>{error}</Text>}
+      <Text style={[Typography.h3, { textAlign: 'center', marginTop: 16 }]}>{title}</Text>
+      {subtitle ? <Text style={[Typography.body, { textAlign: 'center', marginTop: 8, color: Colors.textMuted }]}>{subtitle}</Text> : null}
+      {actionLabel && onAction ? (
+        <TouchableOpacity onPress={onAction} style={styles.emptyBtn}>
+          <Text style={styles.emptyBtnText}>{actionLabel}</Text>
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 }
 
-// ─── Avatar ─────────────────────────────────────────────────
-export function Avatar({ name, size = 40, uri, style }: { name: string; size?: number; uri?: string; style?: ViewStyle }) {
-  const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-  return (
-    <View style={[styles.avatar, { width: size, height: size, borderRadius: size / 2 }, style]}>
-      <Text style={[styles.avatarText, { fontSize: size * 0.38 }]}>{initials}</Text>
-    </View>
-  );
-}
-
-// ─── EmptyState ─────────────────────────────────────────────
-export function EmptyState({ icon, title, subtitle, action, actionLabel }: {
-  icon: keyof typeof Ionicons.glyphMap; title: string; subtitle?: string; action?: () => void; actionLabel?: string;
-}) {
-  return (
-    <View style={styles.emptyState}>
-      <Ionicons name={icon} size={56} color={Colors.textMuted} />
-      <Text style={styles.emptyTitle}>{title}</Text>
-      {subtitle && <Text style={styles.emptySubtitle}>{subtitle}</Text>}
-      {action && actionLabel && (
-        <PrimaryButton title={actionLabel} onPress={action} style={{ marginTop: Spacing.md }} />
-      )}
-    </View>
-  );
-}
-
-// ─── LoadingScreen ──────────────────────────────────────────
+// ─── LoadingScreen ───────────────────────────────────────────
 export function LoadingScreen() {
   return (
-    <View style={styles.loadingScreen}>
+    <View style={styles.loadingWrap}>
       <ActivityIndicator color={Colors.primary} size="large" />
     </View>
   );
 }
 
-// ─── SectionHeader ──────────────────────────────────────────
-export function SectionHeader({ title, action, actionLabel }: { title: string; action?: () => void; actionLabel?: string }) {
+// ─── SectionHeader ───────────────────────────────────────────
+export function SectionHeader({ title, action, onAction }: { title: string; action?: string; onAction?: () => void }) {
   return (
-    <View style={styles.sectionHeader}>
-      <Text style={styles.sectionTitle}>{title}</Text>
-      {action && actionLabel && (
-        <TouchableOpacity onPress={action}>
-          <Text style={styles.sectionAction}>{actionLabel}</Text>
+    <View style={styles.sectionHeaderRow}>
+      <Text style={styles.sectionHeaderText}>{title}</Text>
+      {action && onAction ? (
+        <TouchableOpacity onPress={onAction}>
+          <Text style={styles.sectionHeaderAction}>{action}</Text>
         </TouchableOpacity>
-      )}
+      ) : null}
     </View>
   );
 }
 
-// ─── Divider ────────────────────────────────────────────────
+// ─── Divider ─────────────────────────────────────────────────
 export function Divider({ style }: { style?: ViewStyle }) {
   return <View style={[styles.divider, style]} />;
 }
 
-// ─── StatusDot ──────────────────────────────────────────────
-export function StatusDot({ active, size = 10 }: { active: boolean; size?: number }) {
+// ─── StatusDot ───────────────────────────────────────────────
+export function StatusDot({ active }: { active: boolean }) {
+  return <View style={[styles.statusDot, { backgroundColor: active ? Colors.success : Colors.textMuted }]} />;
+}
+
+// ─── FilterPills ─────────────────────────────────────────────
+export function FilterPill({ label, active, onPress }: { label: string; active: boolean; onPress: () => void }) {
   return (
-    <View style={[styles.statusDot, { width: size, height: size, borderRadius: size / 2, backgroundColor: active ? Colors.success : Colors.textMuted }]} />
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.8}
+      style={[
+        styles.filterPill,
+        active && styles.filterPillActive,
+        active && Shadow.glow(Colors.primary),
+      ]}
+    >
+      <Text style={[styles.filterPillText, active && styles.filterPillTextActive]}>{label}</Text>
+    </TouchableOpacity>
   );
 }
 
+// ─── Styles ──────────────────────────────────────────────────
 const styles = StyleSheet.create({
   glassCard: {
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.glass,
     borderRadius: Radius.lg,
     borderWidth: 1,
-    borderColor: Colors.surfaceBorder,
+    borderColor: Colors.glassBorder,
     padding: Spacing.md,
-    ...Shadow.sm,
+    ...Shadow.md,
   },
   platinumCard: {
     backgroundColor: Colors.surface,
@@ -201,60 +258,104 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.surfaceBorder,
     padding: Spacing.md,
-    ...Shadow.md,
+    marginBottom: Spacing.sm,
+    ...Shadow.card,
   },
   platinumCardAccent: {
-    borderColor: Colors.accent,
-    ...Shadow.glowAccent,
+    borderColor: Colors.primaryLight + '44',
+    backgroundColor: Colors.cardGradientStart,
   },
-  primaryBtn: {
+  featureCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.lg,
+    borderWidth: 1,
+    padding: Spacing.md,
+    marginBottom: Spacing.sm,
+    ...Shadow.md,
+  },
+  featureIconWrap: {
+    width: 48,
+    height: 48,
     borderRadius: Radius.md,
-    paddingVertical: 14,
-    paddingHorizontal: Spacing.lg,
     alignItems: 'center',
     justifyContent: 'center',
-    ...Shadow.sm,
+    marginBottom: Spacing.sm,
   },
-  btnDisabled: { opacity: 0.5 },
+  primaryBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: Radius.lg,
+    minHeight: 52,
+  },
   btnRow: { flexDirection: 'row', alignItems: 'center' },
-  primaryBtnText: { fontSize: 16, fontWeight: '700', letterSpacing: 0.3 },
+  btnDisabled: { opacity: 0.5 },
   sosBtn: {
-    width: 120, height: 120, borderRadius: 60,
     backgroundColor: Colors.sosRed,
-    alignItems: 'center', justifyContent: 'center',
+    borderRadius: Radius.full,
+    width: 80,
+    height: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
     ...Shadow.glowRed,
   },
-  sosBtnActive: { backgroundColor: Colors.sosRedDark },
-  sosBtnText: { color: '#FFF', fontWeight: '800', fontSize: 14, marginTop: 4, letterSpacing: 1 },
-  badge: {
-    paddingHorizontal: 8, paddingVertical: 3,
-    borderRadius: Radius.full,
-  },
-  badgeText: { color: '#FFF', fontSize: 10, fontWeight: '700', letterSpacing: 0.5 },
-  inputWrapper: { marginBottom: Spacing.md },
+  sosBtnText: { color: '#fff', fontWeight: '800', fontSize: 13, marginTop: 2 },
+  badge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: Radius.full, alignSelf: 'flex-start' },
+  badgeText: { fontSize: 11, fontWeight: '600' },
+  inputWrap: { marginBottom: Spacing.md },
   inputLabel: { ...Typography.label, marginBottom: 6 },
-  inputContainer: {
-    flexDirection: 'row', alignItems: 'center',
+  input: {
     backgroundColor: Colors.surface,
     borderRadius: Radius.md,
-    borderWidth: 1, borderColor: Colors.surfaceBorder,
-    paddingHorizontal: Spacing.md, paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: Colors.surfaceBorder,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    color: Colors.textHeading,
+    fontSize: 15,
   },
-  inputError: { borderColor: Colors.error },
-  input: { flex: 1, color: Colors.textHeading, fontSize: 15 },
-  errorText: { color: Colors.error, fontSize: 12, marginTop: 4 },
-  avatar: {
-    backgroundColor: Colors.primaryLight,
-    alignItems: 'center', justifyContent: 'center',
+  avatar: { alignItems: 'center', justifyContent: 'center' },
+  emptyWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 40, minHeight: 300 },
+  emptyIconWrap: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.surfaceBorder,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  avatarText: { color: '#FFF', fontWeight: '700' },
-  emptyState: { alignItems: 'center', justifyContent: 'center', padding: Spacing.xxl },
-  emptyTitle: { ...Typography.h4, marginTop: Spacing.md, textAlign: 'center' },
-  emptySubtitle: { ...Typography.body, textAlign: 'center', marginTop: Spacing.sm, color: Colors.textMuted },
-  loadingScreen: { flex: 1, backgroundColor: Colors.bg, alignItems: 'center', justifyContent: 'center' },
-  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: Spacing.sm },
-  sectionTitle: { ...Typography.h4 },
-  sectionAction: { color: Colors.accent, fontSize: 13, fontWeight: '600' },
+  emptyBtn: {
+    marginTop: 24,
+    backgroundColor: Colors.primary,
+    paddingVertical: 12,
+    paddingHorizontal: 28,
+    borderRadius: Radius.lg,
+    ...Shadow.glow(Colors.primary),
+  },
+  emptyBtnText: { color: '#fff', fontWeight: '700', fontSize: 15 },
+  loadingWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.bg },
+  sectionHeaderRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: Spacing.sm, marginTop: Spacing.md },
+  sectionHeaderText: { fontSize: 13, fontWeight: '700', color: Colors.textMuted, letterSpacing: 1.2, textTransform: 'uppercase' },
+  sectionHeaderAction: { fontSize: 13, fontWeight: '600', color: Colors.accent },
   divider: { height: 1, backgroundColor: Colors.surfaceBorder, marginVertical: Spacing.sm },
-  statusDot: {},
+  statusDot: { width: 8, height: 8, borderRadius: 4 },
+  filterPill: {
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: Radius.full,
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.surfaceBorder,
+    marginRight: Spacing.sm,
+  },
+  filterPillActive: {
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primaryLight,
+  },
+  filterPillText: { fontSize: 13, fontWeight: '600', color: Colors.textMuted },
+  filterPillTextActive: { color: '#fff' },
 });
