@@ -1,0 +1,18 @@
+node_modules/
+.env
+.env.local
+*.log
+.DS_Store
+build/
+dist/
+coverage/
+.expo/
+android/
+ios/
+*.keystore
+
+# ✅ KAN-36: Firebase service account keys — NEVER commit these
+firebase-service-account.json
+fcm-service-account.json
+google-services.json
+*.serviceaccount.json

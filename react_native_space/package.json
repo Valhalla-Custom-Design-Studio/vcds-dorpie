@@ -1,0 +1,11 @@
+{
+  "name": "dorpwag",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo No tests",
+    "lint": "echo No lint"
+  },
+  "dependencies": {
+    "@sentry/react-native": "^5.22.0"
+  }
+}
