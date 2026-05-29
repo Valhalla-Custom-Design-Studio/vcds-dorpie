@@ -128,7 +128,7 @@ export const translations = {
     sessionMode: 'Sessie Modus', home: 'Tuis', travel: 'Reis', walk: 'Stap', patrol: 'Patrollie',
     timeLimit: 'Tydlimiet', noLimit: 'Geen Limiet', heartbeatActive: 'Hartklop Aktief',
     guardianContacts: 'Bewaker Kontakte', emergencyAlert: 'NOODALARM',
-    communityNeedsHelp: ''n Gemeenskapslid het dringende hulp nodig!',
+    communityNeedsHelp: "'n Gemeenskapslid het dringende hulp nodig!",
     iAmResponding: 'Ek Reageer', signalLost: 'Sein Verloor — Moontlike Steursendering',
     deadManSwitch: 'Dooiemansskakelaar™', checkEvery: 'Kontroleer elke',
     gracePeriod: 'Wag voor alarm', areYouOk: 'IS JY OK?',
