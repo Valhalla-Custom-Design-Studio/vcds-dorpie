@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography } from '../../src/theme';
-import { PlatinumCard, Badge, ScreenHeader, EmptyState } from '../../src/components/ui';
-import { listingsAPI } from '../../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { PlatinumCard, Badge, ScreenHeader, EmptyState } from '@/components/ui';
+import { listingsAPI } from '@/services/api';
 
 const TYPES = ['All', 'For Sale', 'Wanted', 'Free', 'Rent', 'Services'];
 

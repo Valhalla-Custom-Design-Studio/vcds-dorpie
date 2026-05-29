@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography } from '../../src/theme';
-import { PlatinumCard, Badge, ScreenHeader, EmptyState, FilterPill } from '../../src/components/ui';
-import { reportsAPI } from '../../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { PlatinumCard, Badge, ScreenHeader, EmptyState, FilterPill } from '@/components/ui';
+import { reportsAPI } from '@/services/api';
 
 const CATS = ['All', 'Theft', 'Break-in', 'Vandalism', 'Suspicious', 'Assault', 'Other'];
 

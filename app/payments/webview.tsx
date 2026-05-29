@@ -4,9 +4,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { WebView } from 'react-native-webview';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography } from '../../src/theme';
-import { useAuthStore } from '../../src/store/auth';
-import { authAPI } from '../../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { useAuthStore } from '@/store/auth';
+import { authAPI } from '@/services/api';
 
 export default function PaymentWebview() {
   const { url } = useLocalSearchParams<{ url: string }>();

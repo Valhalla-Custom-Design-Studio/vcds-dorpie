@@ -3,10 +3,10 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingV
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography, Spacing, Radius } from '../../src/theme';
-import { PrimaryButton, InputField } from '../../src/components/ui';
-import { authAPI } from '../../src/services/api';
-import { useAuthStore } from '../../src/store/auth';
+import { Colors, Typography, Spacing, Radius } from '@/theme';
+import { PrimaryButton, InputField } from '@/components/ui';
+import { authAPI } from '@/services/api';
+import { useAuthStore } from '@/store/auth';
 
 export default function Login() {
   const router = useRouter();

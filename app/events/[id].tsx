@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography } from '../../src/theme';
-import { PlatinumCard, PlatinumButton, ScreenHeader } from '../../src/components/ui';
-import { eventsAPI } from '../../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { PlatinumCard, PlatinumButton, ScreenHeader } from '@/components/ui';
+import { eventsAPI } from '@/services/api';
 
 export default function EventDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();

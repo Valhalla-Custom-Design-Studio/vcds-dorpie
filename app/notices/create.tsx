@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
-import { Colors, Typography } from '../../src/theme';
-import { PlatinumButton, PlatinumInput, ScreenHeader } from '../../src/components/ui';
-import { noticesAPI } from '../../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { PlatinumButton, PlatinumInput, ScreenHeader } from '@/components/ui';
+import { noticesAPI } from '@/services/api';
 
 const CATEGORIES = ['General', 'Safety', 'Events', 'Lost & Found', 'Utility', 'Emergency'];
 

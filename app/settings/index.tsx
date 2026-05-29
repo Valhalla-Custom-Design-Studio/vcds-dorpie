@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Colors, Typography, Spacing, Radius } from '../../src/theme';
-import { useAuthStore } from '../../src/store/auth';
-import { api } from '../../src/services/api';
+import { Colors, Typography, Spacing, Radius } from '@/theme';
+import { useAuthStore } from '@/store/auth';
+import { api } from '@/services/api';
 
 export default function SettingsScreen() {
   const router = useRouter();

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import { Colors } from '../../src/theme';
-import { api } from '../../src/services/api';
-import { useAuthStore } from '../../src/store/auth';
+import { Colors } from '@/theme';
+import { api } from '@/services/api';
+import { useAuthStore } from '@/store/auth';
 import { useRouter } from 'expo-router';
 
 export default function AdminScreen() {

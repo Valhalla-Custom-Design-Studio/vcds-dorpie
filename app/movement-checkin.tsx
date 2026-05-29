@@ -5,9 +5,9 @@ import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
-import { Colors, Typography } from '../src/theme';
-import { PlatinumButton, PlatinumCard } from '../src/components/ui';
-import { movementAPI } from '../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { PlatinumButton, PlatinumCard } from '@/components/ui';
+import { movementAPI } from '@/services/api';
 
 const STATUSES = ['Safe', 'At Home', 'Travelling', 'At Work', 'Out Walking', 'Patrol'];
 

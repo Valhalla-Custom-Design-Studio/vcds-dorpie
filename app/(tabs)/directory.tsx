@@ -3,9 +3,9 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput, Refres
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Typography } from '../../src/theme';
-import { PlatinumCard, Badge } from '../../src/components/ui';
-import { businessesAPI } from '../../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { PlatinumCard, Badge } from '@/components/ui';
+import { businessesAPI } from '@/services/api';
 
 const CATEGORIES = ['All', 'Food', 'Services', 'Health', 'Retail', 'Auto', 'Legal', 'Other'];
 

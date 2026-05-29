@@ -6,9 +6,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { Colors } from '../../src/theme';
-import { useAuthStore } from '../../src/store/auth';
-import { posthog } from '../../src/lib/posthog';
+import { Colors } from '@/theme';
+import { useAuthStore } from '@/store/auth';
+import { posthog } from '@/lib/posthog';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL ?? '';
 

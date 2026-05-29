@@ -3,10 +3,10 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, ActivityIn
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Typography, Spacing, Radius, Shadow } from '../../src/theme';
-import { PlatinumCard, Badge, ScreenHeader } from '../../src/components/ui';
-import { useAuthStore } from '../../src/store/auth';
-import { profileAPI } from '../../src/services/api';
+import { Colors, Typography, Spacing, Radius, Shadow } from '@/theme';
+import { PlatinumCard, Badge, ScreenHeader } from '@/components/ui';
+import { useAuthStore } from '@/store/auth';
+import { profileAPI } from '@/services/api';
 
 export default function ProfileScreen() {
   const router = useRouter();

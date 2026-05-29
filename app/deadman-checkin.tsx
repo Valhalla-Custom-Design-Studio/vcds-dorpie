@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert, Animated, Easing } fro
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Typography } from '../src/theme';
-import { PlatinumButton } from '../src/components/ui';
-import { movementAPI } from '../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { PlatinumButton } from '@/components/ui';
+import { movementAPI } from '@/services/api';
 
 const INTERVALS = [15, 30, 60, 120]; // minutes
 

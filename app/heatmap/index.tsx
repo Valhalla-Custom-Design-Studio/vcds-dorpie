@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Dimensions, ScrollView } from 'react-native';
-import { Colors, Typography } from '../../src/theme';
-import { PlatinumCard, ScreenHeader, Badge } from '../../src/components/ui';
-import { heatmapAPI, reportsAPI } from '../../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { PlatinumCard, ScreenHeader, Badge } from '@/components/ui';
+import { heatmapAPI, reportsAPI } from '@/services/api';
 
 const { width } = Dimensions.get('window');
 

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography, Spacing } from '../../src/theme';
-import { PlatinumCard, Badge, ScreenHeader, EmptyState, FilterPill } from '../../src/components/ui';
-import { noticesAPI } from '../../src/services/api';
-import { useAuthStore } from '../../src/store/auth';
+import { Colors, Typography, Spacing } from '@/theme';
+import { PlatinumCard, Badge, ScreenHeader, EmptyState, FilterPill } from '@/components/ui';
+import { noticesAPI } from '@/services/api';
+import { useAuthStore } from '@/store/auth';
 
 const CATEGORIES = ['All', 'General', 'Safety', 'Events', 'Lost & Found', 'Utility', 'Emergency'];
 

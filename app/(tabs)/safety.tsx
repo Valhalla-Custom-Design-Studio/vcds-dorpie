@@ -3,10 +3,10 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, RefreshControl } 
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Typography, Spacing, Radius, Shadow } from '../../src/theme';
-import { PlatinumCard, FeatureCard, FeatureIconBadge, Badge, EmptyState } from '../../src/components/ui';
-import { reportsAPI, patrols } from '../../src/services/api';
-import { useAuthStore } from '../../src/store/auth';
+import { Colors, Typography, Spacing, Radius, Shadow } from '@/theme';
+import { PlatinumCard, FeatureCard, FeatureIconBadge, Badge, EmptyState } from '@/components/ui';
+import { reportsAPI, patrols } from '@/services/api';
+import { useAuthStore } from '@/store/auth';
 
 const FEATURE_CARDS = [
   {

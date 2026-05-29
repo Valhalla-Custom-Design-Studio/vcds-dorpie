@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography } from '../../src/theme';
-import { PlatinumCard, ScreenHeader, EmptyState } from '../../src/components/ui';
-import { messagesAPI } from '../../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { PlatinumCard, ScreenHeader, EmptyState } from '@/components/ui';
+import { messagesAPI } from '@/services/api';
 
 export default function Messages() {
   const router = useRouter();

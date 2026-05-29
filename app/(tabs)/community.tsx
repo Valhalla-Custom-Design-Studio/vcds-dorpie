@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Typography } from '../../src/theme';
-import { PlatinumCard } from '../../src/components/ui';
+import { Colors, Typography } from '@/theme';
+import { PlatinumCard } from '@/components/ui';
 
 export default function Community() {
   const router = useRouter();

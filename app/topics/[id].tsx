@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography } from '../../src/theme';
-import { PlatinumCard, ScreenHeader } from '../../src/components/ui';
-import { topicsAPI } from '../../src/services/api';
+import { Colors, Typography } from '@/theme';
+import { PlatinumCard, ScreenHeader } from '@/components/ui';
+import { topicsAPI } from '@/services/api';
 
 export default function TopicDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();

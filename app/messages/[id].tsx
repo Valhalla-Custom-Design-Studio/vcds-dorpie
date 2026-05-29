@@ -2,10 +2,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography } from '../../src/theme';
-import { ScreenHeader } from '../../src/components/ui';
-import { messagesAPI } from '../../src/services/api';
-import { useAuthStore } from '../../src/store/auth';
+import { Colors, Typography } from '@/theme';
+import { ScreenHeader } from '@/components/ui';
+import { messagesAPI } from '@/services/api';
+import { useAuthStore } from '@/store/auth';
 
 export default function ThreadDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
