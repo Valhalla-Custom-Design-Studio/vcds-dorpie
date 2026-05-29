@@ -24,9 +24,13 @@
         "NSLocationWhenInUseUsageDescription": "Dorpwag™ gebruik jou ligging vir Guardian Mode™ veiligheidsmonitering.",
         "NSLocationAlwaysUsageDescription": "Dorpwag™ benodig agtergrondligging vir Guardian Mode™.",
         "NSMicrophoneUsageDescription": "Dorpwag™ benodig die mikrofoon vir Witness Mode™ bewyse.",
-        "NSCameraUsageDescription": "Dorpwag™ gebruik die kamera vir foto's."
+        "NSCameraUsageDescription": "Dorpwag™ gebruik die kamera vir foto's.",
+        "ITSAppUsesNonExemptEncryption": false
       },
       "backgroundModes": [
+        "location",
+        "fetch",
+        "remote-notification",
         "location",
         "fetch",
         "remote-notification"
@@ -74,7 +78,12 @@
             "kotlinVersion": "1.9.25"
           }
         }
-      ]
+      ],
+      "@sentry/react-native",
+      "expo-asset",
+      "expo-font",
+      "expo-localization",
+      "expo-secure-store"
     ],
     "scheme": "dorpie",
     "extra": {
