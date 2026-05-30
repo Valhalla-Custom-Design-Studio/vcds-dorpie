@@ -40,6 +40,8 @@ import paymentsRouter from './routes/payments';
 import safetyRouter from './routes/safety';
 import suiteRouter from './routes/suite';
 import lprRouter from './routes/lpr';
+import geofenceRouter from './routes/geofence';
+import moodRouter from './routes/mood';
 import aiCrimeRouter from './routes/ai_crime';
 import areasRouter from './routes/areas';
 import trustScoreRouter from './routes/trustscore.routes';
@@ -87,6 +89,8 @@ app.use(`${API}/safety`, safetyRouter);
 app.use(`${API}/suite`, suiteRouter);
 app.use(`${API}/lpr`, lprRouter);
 app.use(`${API}/ai-crime`, aiCrimeRouter);
+app.use(`${API}/geofence`, geofenceRouter);
+app.use(`${API}/mood`, moodRouter);
 app.use(`${API}/areas`, areasRouter);
 app.use(`${API}/trust-score`, trustScoreRouter);
 
