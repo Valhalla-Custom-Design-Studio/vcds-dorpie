@@ -38,6 +38,7 @@ import pushTokensRouter from './routes/pushTokens';
 import paymentsRouter from './routes/payments';
 import safetyRouter from './routes/safety';
 import suiteRouter from './routes/suite';
+import { runMigrations } from './db/migrate';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -82,5 +83,12 @@ app.use(`${API}/suite`, suiteRouter);
 app.use(Sentry.expressErrorHandler());
 app.use((_req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
 
-app.listen(PORT, () => console.log(`🛡️  Dorpwag™ API v2.0 running on port ${PORT}`));
+runMigrations()
+  .then(() => {
+    app.listen(PORT, () => console.log(`🛡️  Dorpwag™ API v2.0 running on port ${PORT}`));
+  })
+  .catch((err) => {
+    console.error('[STARTUP] ❌ Migration failed, aborting:', err);
+    process.exit(1);
+  });
 export default app;
