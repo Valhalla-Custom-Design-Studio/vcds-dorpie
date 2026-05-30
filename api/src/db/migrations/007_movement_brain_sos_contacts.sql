@@ -38,22 +38,8 @@ ALTER TABLE guardian_sessions
   ADD COLUMN IF NOT EXISTS escalation_count INTEGER DEFAULT 0;
 
 -- Add LPR camera scan table (if not exists from migration 005)
-CREATE TABLE IF NOT EXISTS lpr_scans (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  plate VARCHAR(20) NOT NULL,
-  timestamp TIMESTAMPTZ DEFAULT NOW(),
-  camera_id VARCHAR(100),
-  camera_name VARCHAR(100),
-  location VARCHAR(255),
-  flagged BOOLEAN DEFAULT false,
-  flag_reason TEXT,
-  confidence DECIMAL(5,2) DEFAULT 0.0,
-  image_url TEXT,
-  town_id UUID REFERENCES towns(id),
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-CREATE INDEX IF NOT EXISTS idx_lpr_scans_plate ON lpr_scans(plate);
-CREATE INDEX IF NOT EXISTS idx_lpr_scans_timestamp ON lpr_scans(timestamp DESC);
+-- lpr_scans table already created in 005_lpr_areas_ai_crime.sql
+-- Indexes already exist; skipping duplicate CREATE TABLE and index
 
 -- LPR watchlist
 CREATE TABLE IF NOT EXISTS lpr_watchlist (

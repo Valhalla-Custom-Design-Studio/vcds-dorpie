@@ -19,20 +19,11 @@ CREATE TABLE IF NOT EXISTS lpr_community_reports (
 CREATE INDEX IF NOT EXISTS idx_lpr_community_reports_plate ON lpr_community_reports(plate);
 
 -- LPR scans (from camera or mobile)
-CREATE TABLE IF NOT EXISTS lpr_scans (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  plate VARCHAR(20) NOT NULL,
-  timestamp TIMESTAMPTZ DEFAULT NOW(),
-  camera_id VARCHAR(100),
-  camera_name VARCHAR(200),
-  location TEXT,
-  flagged BOOLEAN DEFAULT false,
-  flag_reason TEXT,
-  confidence FLOAT DEFAULT 0,
-  image_url TEXT
-);
-CREATE INDEX IF NOT EXISTS idx_lpr_scans_plate ON lpr_scans(plate);
-CREATE INDEX IF NOT EXISTS idx_lpr_scans_timestamp ON lpr_scans(timestamp DESC);
+-- lpr_scans table already created in 005_lpr_areas_ai_crime.sql
+-- Adding missing columns if not present
+ALTER TABLE lpr_scans ADD COLUMN IF NOT EXISTS camera_name VARCHAR(200);
+ALTER TABLE lpr_scans ADD COLUMN IF NOT EXISTS location TEXT;
+-- Indexes already exist; skipping duplicate
 
 -- LPR watchlist
 CREATE TABLE IF NOT EXISTS lpr_watchlist (
