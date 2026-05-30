@@ -4,7 +4,7 @@
 CREATE TABLE IF NOT EXISTS watchlist_subscriptions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  area_id UUID REFERENCES areas(id) ON DELETE SET NULL,
+  area_id UUID,
   subscribed_at TIMESTAMPTZ DEFAULT NOW(),
   active BOOLEAN DEFAULT TRUE,
   UNIQUE(user_id)
