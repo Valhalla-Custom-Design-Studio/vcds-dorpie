@@ -24,7 +24,7 @@ export default function Login() {
       const res = await authAPI.login(email.trim().toLowerCase(), password);
       const { user, access_token } = res.data.data;
       setAuth(user, access_token);
-      router.replace('/(tabs)');
+      router.replace('/(tabs)/index');
     } catch (e: any) {
       setError(e.response?.data?.message || 'Aanmelding het misluk. Probeer weer.');
     } finally { setLoading(false); }

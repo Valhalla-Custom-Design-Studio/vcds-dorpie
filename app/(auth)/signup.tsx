@@ -34,7 +34,7 @@ export default function Signup() {
       const res = await authAPI.signup({ name, email: email.trim().toLowerCase(), password, townId: townId || undefined, phone: phone || undefined });
       const { user, access_token } = res.data.data;
       setAuth(user, access_token);
-      router.replace('/(tabs)');
+      router.replace('/(tabs)/index');
     } catch (e: any) {
       setError(e.response?.data?.message || 'Registrasie het misluk. Probeer weer.');
     } finally { setLoading(false); }

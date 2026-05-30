@@ -77,10 +77,10 @@ app.use(`${API}/push-tokens`, pushTokensRouter);
 app.use(`${API}/payments`, paymentsRouter);
 app.use(`${API}/safety`, safetyRouter);
 
+app.use(`${API}/suite`, suiteRouter);
+
 app.use(Sentry.expressErrorHandler());
 app.use((_req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
-
-app.use('/api/suite', suiteRouter);
 
 app.listen(PORT, () => console.log(`🛡️  Dorpwag™ API v2.0 running on port ${PORT}`));
 export default app;

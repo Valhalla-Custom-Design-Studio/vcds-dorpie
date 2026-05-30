@@ -28,7 +28,7 @@ function AuthGate({ children }: { children: React.ReactNode }) {
   const inAuth = segments[0] === '(auth)';
 
   if (!user && !inAuth) return <Redirect href="/(auth)/welcome" />;
-  if (user && inAuth) return <Redirect href="/(tabs)" />;
+  if (user && inAuth) return <Redirect href="/(tabs)/index" />;
 
   return <>{children}</>;
 }
