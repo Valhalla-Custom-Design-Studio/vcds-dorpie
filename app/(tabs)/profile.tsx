@@ -27,7 +27,8 @@ export default function Profile() {
   };
 
   const tier = user?.subscription_tier || 'free';
-  const isPro = tier === 'paid' || tier === 'pro';
+  const isPro = tier === 'paid' || tier === 'pro' || tier === 'platinum';
+  const isPlatinum = tier === 'platinum';
 
   const menuSections = [
     {
@@ -42,7 +43,7 @@ export default function Profile() {
     {
       title: 'Intekening',
       items: [
-        { icon: 'star-outline', label: isPro ? 'Pro Lid ✓' : 'Opgradeer na Pro', route: '/subscribe', badge: isPro ? 'PRO' : 'GRATIS' },
+        { icon: 'star-outline', label: isPlatinum ? 'Platinum Lid ✓' : isPro ? 'Pro Lid ✓' : 'Opgradeer na Pro', route: '/subscribe', badge: isPlatinum ? 'PLATINUM' : isPro ? 'PRO' : 'GRATIS' },
         { icon: 'receipt-outline', label: 'Betalingsgeskiedenis', route: '/settings/payments' },
       ],
     },

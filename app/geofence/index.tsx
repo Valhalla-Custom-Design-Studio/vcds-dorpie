@@ -3,7 +3,7 @@ import {
   View, Text, StyleSheet, TouchableOpacity, Alert,
   ScrollView, Switch, TextInput, ActivityIndicator,
 } from 'react-native';
-import MapView, { Circle, Marker, MapPressEvent } from 'react-native-maps';
+import MapView, { Circle, Marker, MapPressEvent, PROVIDER_GOOGLE } from 'react-native-maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -51,7 +51,7 @@ export default function GeoFenceScreen() {
   };
 
   const saveFence = async () => {
-    if (!newFence?.label) { Alert.alert(t('error'), t('geofenceLabelRequired')); return; }
+    if (!newFence?.label) { Alert.alert(t('common.error'), t('geofence.labelRequired')); return; }
     setSaving(true);
     try {
       await api.post('/geofence', {
@@ -65,9 +65,9 @@ export default function GeoFenceScreen() {
       setNewFence(null);
       setCreating(false);
       await load();
-      Alert.alert(t('success'), t('geofenceSaved'));
+      Alert.alert(t('common.confirm'), t('geofence.saveSuccess'));
     } catch {
-      Alert.alert(t('error'), t('geofenceSaveFailed'));
+      Alert.alert(t('common.error'), t('geofence.saveFailed'));
     } finally { setSaving(false); }
   };
 
@@ -98,6 +98,7 @@ export default function GeoFenceScreen() {
       <View style={styles.mapContainer}>
         <MapView
           ref={mapRef}
+          provider={PROVIDER_GOOGLE}
           style={styles.map}
           onPress={handleMapPress}
           initialRegion={{ latitude: -26.5, longitude: 28.0, latitudeDelta: 0.05, longitudeDelta: 0.05 }}

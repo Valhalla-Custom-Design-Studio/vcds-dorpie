@@ -10,13 +10,13 @@ import { Colors, Typography, Radius, Shadow } from '@/theme';
 import { PlatinumCard, Badge, ScreenHeader } from '@/components/ui';
 import { useAuthStore } from '@/store/auth';
 import { subscriptionsAPI } from '@/services/api';
+import { t } from '@/i18n';
 
 const TIERS = [
   {
     id: 'free',
-    name: 'Gratis',
+    nameKey: 'subscribe.free',
     price: 'R0',
-    period: '/maand',
     color: Colors.textMuted,
     features: [
       '✅ Gemeenskapskenmerke',
@@ -31,11 +31,10 @@ const TIERS = [
   },
   {
     id: 'pro',
-    name: 'Pro',
+    nameKey: 'subscribe.pro',
     price: 'R99',
-    period: '/maand',
     color: Colors.primary,
-    badge: 'GEWILD',
+    badgeKey: 'subscribe.popular',
     features: [
       '✅ Alles in Gratis',
       '✅ SOS Noodknoppie',
@@ -45,6 +44,22 @@ const TIERS = [
       '✅ LPR Kamera',
       '✅ AI Misdaadanalise',
       '✅ Dooie Man Skakelaar',
+    ],
+  },
+  {
+    id: 'platinum',
+    nameKey: 'subscribe.platinum',
+    price: 'R199',
+    color: Colors.accent,
+    badgeKey: 'subscribe.bestValue',
+    features: [
+      '✅ Alles in Pro',
+      '✅ GeoFence Wagposte',
+      '✅ Gesigsgemoedopsporing',
+      '✅ HOA Admin Paneel',
+      '✅ Multi-kamera bestuur',
+      '✅ Gevorderde analise',
+      '✅ Prioriteit ondersteuning',
     ],
   },
 ];
@@ -60,6 +75,7 @@ export default function Subscribe() {
 
   const handleSubscribe = async () => {
     if (selected === 'free') { router.back(); return; }
+    if (selected === currentTier) { router.back(); return; }
     setLoading(true);
     try {
       const { data } = await subscriptionsAPI.create({ tier: selected });
@@ -67,82 +83,83 @@ export default function Subscribe() {
         router.push({ pathname: '/payments/webview', params: { url: data.paymentUrl } });
       }
     } catch (e: any) {
-      Alert.alert('Fout', e.response?.data?.message || 'Betaling kon nie verwerk word nie');
+      Alert.alert('Fout', e.response?.data?.message || t('subscribe.paymentFailed'));
     } finally { setLoading(false); }
+  };
+
+  const tierColor = (id: string) => {
+    if (id === 'platinum') return Colors.accent;
+    if (id === 'pro') return Colors.primary;
+    return Colors.textMuted;
   };
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.bg }}>
-      <ScreenHeader title="Kies Jou Plan" showBack />
+      <ScreenHeader title={t('subscribe.title')} showBack />
       <ScrollView contentContainerStyle={[s.scroll, { paddingBottom: insets.bottom + 32 }]}>
         <LinearGradient colors={[Colors.primaryDark + '80', Colors.bg]} style={s.hero}>
-          <Text style={[Typography.h2, { textAlign: 'center' }]}>🛡️ Dorpwag™ Pro</Text>
+          <Text style={[Typography.h2, { textAlign: 'center' }]}>🛡️ Dorpwag™</Text>
           <Text style={[Typography.caption, { color: Colors.textMuted, textAlign: 'center', marginTop: 8 }]}>
-            Volledige veiligheidsbeskerming vir jou en jou gesin
+            {t('subscribe.subtitle')}
           </Text>
         </LinearGradient>
 
-        {TIERS.map(tier => (
-          <TouchableOpacity key={tier.id} onPress={() => setSelected(tier.id)}>
-            <PlatinumCard
-              accentColor={selected === tier.id ? tier.color : undefined}
-              style={[s.tierCard, selected === tier.id && { borderColor: tier.color + '60', borderWidth: 1.5 }]}
-            >
-              <View style={s.tierHeader}>
-                <View>
-                  <Text style={Typography.h3}>{tier.name}</Text>
-                  <View style={s.priceRow}>
-                    <Text style={[Typography.h1, { color: tier.color }]}>{tier.price}</Text>
-                    <Text style={[Typography.caption, { alignSelf: 'flex-end', marginBottom: 4 }]}>{tier.period}</Text>
+        {TIERS.map(tier => {
+          const isSelected = selected === tier.id;
+          const isCurrent = currentTier === tier.id;
+          return (
+            <TouchableOpacity key={tier.id} onPress={() => setSelected(tier.id)} activeOpacity={0.85}>
+              <PlatinumCard
+                accentColor={isSelected ? tierColor(tier.id) : undefined}
+                style={[s.tierCard, isSelected && { borderColor: tierColor(tier.id), borderWidth: 2 }]}
+              >
+                <View style={s.tierHeader}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={[Typography.h3, { color: tierColor(tier.id) }]}>{t(tier.nameKey)}</Text>
+                    <Text style={[Typography.h2, { color: Colors.textPrimary, marginTop: 2 }]}>
+                      {tier.price}<Text style={[Typography.caption, { color: Colors.textMuted }]}>{t('subscribe.perMonth')}</Text>
+                    </Text>
+                  </View>
+                  <View style={{ alignItems: 'flex-end', gap: 6 }}>
+                    {tier.badgeKey && <Badge label={t(tier.badgeKey)} color={tierColor(tier.id)} />}
+                    {isCurrent && <Badge label={t('subscribe.currentPlan')} color={Colors.accentGreen} />}
+                    {isSelected && <Ionicons name="checkmark-circle" size={24} color={tierColor(tier.id)} />}
                   </View>
                 </View>
-                <View style={s.tierRight}>
-                  {tier.badge && <Badge label={tier.badge} color={tier.color} />}
-                  <View style={[s.radio, { borderColor: tier.color }, selected === tier.id && { backgroundColor: tier.color }]}>
-                    {selected === tier.id && <Ionicons name="checkmark" size={14} color="#fff" />}
-                  </View>
-                </View>
-              </View>
-              <View style={s.featureList}>
-                {tier.features.map(f => (
-                  <Text key={f} style={[Typography.bodySmall, { marginBottom: 4 }]}>{f}</Text>
+                <View style={s.divider} />
+                {tier.features.map((f, i) => (
+                  <Text key={i} style={[Typography.caption, s.feature]}>{f}</Text>
                 ))}
-              </View>
-              {currentTier === tier.id && (
-                <Badge label="HUIDIGE PLAN" color={Colors.success} />
-              )}
-            </PlatinumCard>
-          </TouchableOpacity>
-        ))}
+              </PlatinumCard>
+            </TouchableOpacity>
+          );
+        })}
 
         <TouchableOpacity
-          style={[s.ctaBtn, { backgroundColor: selected === 'free' ? Colors.surface : Colors.primary }]}
+          style={[s.cta, { backgroundColor: tierColor(selected), opacity: loading ? 0.7 : 1 }]}
           onPress={handleSubscribe}
           disabled={loading}
         >
-          {loading ? <ActivityIndicator color="#fff" /> : (
-            <Text style={[Typography.button, { color: '#fff' }]}>
-              {selected === 'free' ? 'Bly op Gratis Plan' : 'Inteken vir R99/maand'}
-            </Text>
-          )}
+          {loading
+            ? <ActivityIndicator color="#fff" />
+            : <Text style={s.ctaText}>{selected === currentTier ? t('subscribe.currentPlan') : t('subscribe.subscribe')}</Text>
+          }
         </TouchableOpacity>
-
-        <Text style={[Typography.caption, { textAlign: 'center', color: Colors.textMuted, marginTop: 12 }]}>
-          Kanselleer enige tyd · Veilige betaling via PayFast
-        </Text>
       </ScrollView>
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  scroll: { paddingHorizontal: 16 },
-  hero: { paddingVertical: 24, paddingHorizontal: 16, borderRadius: 16, marginBottom: 20 },
-  tierCard: { marginBottom: 12 },
-  tierHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 },
-  priceRow: { flexDirection: 'row', alignItems: 'baseline', gap: 4 },
-  tierRight: { alignItems: 'flex-end', gap: 8 },
-  radio: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
-  featureList: { gap: 2 },
-  ctaBtn: { paddingVertical: 16, borderRadius: 14, alignItems: 'center', marginTop: 8 },
+  scroll: { padding: 16, gap: 12 },
+  hero: { borderRadius: 16, padding: 24, marginBottom: 8, alignItems: 'center' },
+  tierCard: { marginBottom: 4 },
+  tierHeader: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: 12 },
+  divider: { height: 1, backgroundColor: '#ffffff15', marginBottom: 10 },
+  feature: { marginBottom: 4, color: Colors.textBody },
+  cta: {
+    marginTop: 16, borderRadius: 14, paddingVertical: 16,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  ctaText: { color: '#fff', fontSize: 16, fontWeight: '700', letterSpacing: 0.5 },
 });

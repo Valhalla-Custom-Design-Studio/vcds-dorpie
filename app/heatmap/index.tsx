@@ -94,6 +94,7 @@ export default function Heatmap() {
         <View style={s.mapContainer}>
           <MapView
             provider={PROVIDER_GOOGLE}
+            onMapReady={() => setMapReady(true)}
             style={s.map}
             initialRegion={DEFAULT_REGION}
             onMapReady={() => setMapReady(true)}
