@@ -269,7 +269,7 @@ export default function WatchlistAdminScreen() {
             <View style={s.typeToggle}>
               {(['plate', 'face'] as const).map(t => (
                 <TouchableOpacity key={t} style={[s.typeBtn, addType === t && s.typeBtnActive]} onPress={() => setAddType(t)}>
-                  <Text style={[s.typeBtnTxt, addType === t && s.typeBtnTxtActive]}>{t === 'plate' ? '🚗 Plaat' : '👤' Gesig'}</Text>
+                  <Text style={[s.typeBtnTxt, addType === t && s.typeBtnTxtActive]}>{t === 'plate' ? '🚗 Plaat' : '👤 Gesig'}</Text>
                 </TouchableOpacity>
               ))}
             </View>
