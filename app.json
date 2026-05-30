@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Dorpwag\u2122",
+    "name": "Dorpwag™",
     "slug": "dorpwag",
     "version": "2.0.0",
     "orientation": "portrait",
@@ -21,10 +21,10 @@
       "supportsTablet": true,
       "bundleIdentifier": "co.za.vcds.dorpwag",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Dorpwag\u2122 gebruik jou ligging vir Guardian Mode\u2122 veiligheidsmonitering.",
-        "NSLocationAlwaysUsageDescription": "Dorpwag\u2122 benodig agtergrondligging vir Guardian Mode\u2122.",
-        "NSMicrophoneUsageDescription": "Dorpwag\u2122 benodig die mikrofoon vir Witness Mode\u2122 bewyse.",
-        "NSCameraUsageDescription": "Dorpwag\u2122 gebruik die kamera vir foto's.",
+        "NSLocationWhenInUseUsageDescription": "Dorpwag™ gebruik jou ligging vir Guardian Mode™ veiligheidsmonitering.",
+        "NSLocationAlwaysUsageDescription": "Dorpwag™ benodig agtergrondligging vir Guardian Mode™.",
+        "NSMicrophoneUsageDescription": "Dorpwag™ benodig die mikrofoon vir Witness Mode™ bewyse.",
+        "NSCameraUsageDescription": "Dorpwag™ gebruik die kamera vir foto's.",
         "ITSAppUsesNonExemptEncryption": false
       },
       "backgroundModes": [
@@ -34,7 +34,10 @@
         "location",
         "fetch",
         "remote-notification"
-      ]
+      ],
+      "config": {
+        "googleMapsApiKey": "AIzaSyBIZnxrIO0Am1CHXPH1NgIyHbVmtXTilks"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -55,7 +58,12 @@
         "FOREGROUND_SERVICE",
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
-      ]
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBIZnxrIO0Am1CHXPH1NgIyHbVmtXTilks"
+        }
+      }
     },
     "web": {
       "favicon": "./src/assets/favicon.png",
@@ -68,7 +76,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow Dorpwag\u2122 to use your location for Guardian Mode\u2122 safety monitoring."
+          "locationAlwaysAndWhenInUsePermission": "Allow Dorpwag™ to use your location for Guardian Mode™ safety monitoring."
         }
       ],
       [
@@ -89,7 +97,13 @@
       "expo-asset",
       "expo-font",
       "expo-localization",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "react-native-maps",
+        {
+          "googleMapsApiKey": "AIzaSyBIZnxrIO0Am1CHXPH1NgIyHbVmtXTilks"
+        }
+      ]
     ],
     "scheme": "dorpie",
     "extra": {
