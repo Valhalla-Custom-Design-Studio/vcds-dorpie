@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, Switch } from 'react-native';
+import {
+  View, Text, ScrollView, StyleSheet, TouchableOpacity,
+  Alert, Switch, Dimensions,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Typography } from '@/theme';
-import { PlatinumCard, Badge } from '@/components/ui';
+import { Colors, Typography, Radius, Shadow } from '@/theme';
+import { PlatinumCard, Badge, SectionHeader } from '@/components/ui';
 import { useAuthStore } from '@/store/auth';
+
+const { width } = Dimensions.get('window');
 
 export default function Profile() {
   const router = useRouter();
@@ -14,37 +20,38 @@ export default function Profile() {
   const [notifs, setNotifs] = useState(true);
 
   const handleLogout = () => {
-    Alert.alert('Log Out', 'Are you sure you want to log out?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Log Out', style: 'destructive', onPress: () => { logout(); router.replace('/(auth)/welcome'); } },
+    Alert.alert('Teken Uit', 'Is jy seker jy wil uitlog?', [
+      { text: 'Kanselleer', style: 'cancel' },
+      { text: 'Uitlog', style: 'destructive', onPress: () => { logout(); router.replace('/(auth)/welcome'); } },
     ]);
   };
 
   const tier = user?.subscription_tier || 'free';
+  const isPro = tier === 'paid' || tier === 'pro';
 
   const menuSections = [
     {
-      title: 'Account',
+      title: 'Rekening',
       items: [
-        { icon: 'person-outline', label: 'Edit Profile', route: '/settings/edit-profile' },
-        { icon: 'lock-closed-outline', label: 'Change Password', route: '/settings/change-password' },
-        { icon: 'notifications-outline', label: 'Notifications', route: '/settings/notifications' },
-        { icon: 'language-outline', label: 'Language (EN/AF)', route: '/settings/language' },
+        { icon: 'person-outline', label: 'Wysig Profiel', route: '/settings/edit-profile' },
+        { icon: 'lock-closed-outline', label: 'Verander Wagwoord', route: '/settings/change-password' },
+        { icon: 'notifications-outline', label: 'Kennisgewings', route: '/settings/notifications' },
+        { icon: 'language-outline', label: 'Taal (EN/AF)', route: '/settings/language' },
       ],
     },
     {
-      title: 'Subscription',
+      title: 'Intekening',
       items: [
-        { icon: 'star-outline', label: tier === 'paid' ? 'Pro Member ✓' : 'Upgrade to Pro', route: '/subscribe', badge: tier === 'paid' ? 'PRO' : 'FREE' },
-        { icon: 'receipt-outline', label: 'Payment History', route: '/settings/payments' },
+        { icon: 'star-outline', label: isPro ? 'Pro Lid ✓' : 'Opgradeer na Pro', route: '/subscribe', badge: isPro ? 'PRO' : 'GRATIS' },
+        { icon: 'receipt-outline', label: 'Betalingsgeskiedenis', route: '/settings/payments' },
       ],
     },
     {
-      title: 'Help & Legal',
+      title: 'Hulp & Regsake',
       items: [
-        { icon: 'help-circle-outline', label: 'Help & Support', route: '/settings/help' },
-        { icon: 'document-text-outline', label: 'Terms of Service', route: '/settings/terms' },
-        { icon: 'shield-outline', label: 'Privacy Policy', route: '/settings/privacy' },
+        { icon: 'help-circle-outline', label: 'Hulp & Ondersteuning', route: '/settings/help' },
+        { icon: 'document-text-outline', label: 'Diensvoorwaardes', route: '/settings/terms' },
+        { icon: 'shield-outline', label: 'Privaatheidsbeleid', route: '/settings/privacy' },
       ],
     },
   ];
@@ -52,81 +59,120 @@ export default function Profile() {
   return (
     <ScrollView
       style={s.container}
-      contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 32, paddingHorizontal: 16 }}
+      contentContainerStyle={{ paddingBottom: 40 }}
     >
-      {/* Avatar + Info */}
-      <View style={s.avatarWrap}>
-        <View style={s.avatar}>
-          <Text style={{ fontSize: 40 }}>👤</Text>
-        </View>
-        <Text style={Typography.h1}>{user?.name}</Text>
-        <Text style={[Typography.caption, { color: Colors.textMuted }]}>{user?.email}</Text>
-        {user?.town_name ? <Text style={[Typography.caption, { color: Colors.accent, marginTop: 2 }]}>📍 {user.town_name}</Text> : null}
-        <View style={s.tierBadge}>
-          <Badge label={tier === 'paid' ? '⭐ PRO MEMBER' : 'FREE PLAN'} color={tier === 'paid' ? Colors.success : Colors.textMuted} />
-        </View>
-      </View>
-
-      {/* Stats */}
-      <PlatinumCard style={s.statsCard}>
-        {[
-          { label: 'Role', value: user?.role || 'Resident' },
-          { label: 'Town', value: user?.town_name || 'Not set' },
-          { label: 'Tier', value: tier === 'paid' ? 'Pro' : 'Free' },
-        ].map((stat, i) => (
-          <View key={stat.label} style={[s.statItem, i < 2 && s.statBorder]}>
-            <Text style={[Typography.caption, { color: Colors.textMuted }]}>{stat.label}</Text>
-            <Text style={Typography.bodySemi}>{stat.value}</Text>
+      {/* Hero Avatar */}
+      <LinearGradient colors={[Colors.primaryDark + 'CC', Colors.bg]} style={[s.hero, { paddingTop: insets.top + 16 }]}>
+        <View style={s.avatarWrap}>
+          <View style={[s.avatarGlow, { ...Shadow.glow(Colors.primary) }]}>
+            <View style={s.avatar}>
+              <Text style={{ fontSize: 44 }}>👤</Text>
+            </View>
           </View>
-        ))}
-      </PlatinumCard>
+          <Text style={[Typography.h2, { marginTop: 12 }]}>{user?.name || 'Inwoner'}</Text>
+          <Text style={[Typography.caption, { color: Colors.textMuted }]}>{user?.email}</Text>
+          {user?.town_name ? (
+            <View style={s.townRow}>
+              <Ionicons name="location" size={12} color={Colors.accent} />
+              <Text style={[Typography.caption, { color: Colors.accent, marginLeft: 4 }]}>{user.town_name}</Text>
+            </View>
+          ) : null}
+          <View style={{ marginTop: 8 }}>
+            <Badge label={isPro ? '⭐ PRO LID' : 'GRATIS PLAN'} color={isPro ? Colors.success : Colors.textMuted} />
+          </View>
+        </View>
 
-      {/* Menu Sections */}
-      {menuSections.map(section => (
-        <View key={section.title} style={s.section}>
-          <Text style={[Typography.caption, s.sectionLabel]}>{section.title.toUpperCase()}</Text>
-          <PlatinumCard style={{ padding: 0, overflow: 'hidden' }}>
-            {section.items.map((item, i) => (
-              <TouchableOpacity key={item.label} onPress={() => router.push(item.route as any)} style={[s.menuItem, i > 0 && s.menuBorder]}>
-                <Ionicons name={item.icon as any} size={20} color={Colors.textMuted} />
-                <Text style={[Typography.body, { flex: 1, marginLeft: 12 }]}>{item.label}</Text>
-                {(item as any).badge ? <Badge label={(item as any).badge} variant={(item as any).badge === 'PRO' ? 'success' : 'muted'} /> : null}
-                <Ionicons name="chevron-forward" size={16} color={Colors.textMuted} />
+        {/* Stats Row */}
+        <View style={s.statsRow}>
+          {[
+            { label: 'Rol', value: user?.role || 'Inwoner' },
+            { label: 'Dorp', value: user?.town_name || '—' },
+            { label: 'Plan', value: isPro ? 'Pro' : 'Gratis' },
+          ].map(stat => (
+            <View key={stat.label} style={s.statItem}>
+              <Text style={[Typography.bodySemi, { fontSize: 13 }]}>{stat.value}</Text>
+              <Text style={Typography.caption}>{stat.label}</Text>
+            </View>
+          ))}
+        </View>
+      </LinearGradient>
+
+      <View style={s.content}>
+        {/* Upgrade Banner (free users) */}
+        {!isPro && (
+          <TouchableOpacity onPress={() => router.push('/subscribe')}>
+            <LinearGradient colors={[Colors.primary, Colors.primaryDark]} style={s.upgradeBanner}>
+              <Ionicons name="star" size={20} color={Colors.accent} />
+              <View style={{ flex: 1, marginLeft: 12 }}>
+                <Text style={[Typography.bodySemi, { color: '#fff' }]}>Opgradeer na Pro</Text>
+                <Text style={[Typography.caption, { color: 'rgba(255,255,255,0.7)' }]}>Ontsluit alle veiligheidskenmerke</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={Colors.accent} />
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
+
+        {/* Notifications Toggle */}
+        <PlatinumCard style={s.notifsCard}>
+          <View style={s.notifsRow}>
+            <Ionicons name="notifications" size={20} color={Colors.primary} />
+            <Text style={[Typography.bodySemi, { flex: 1, marginLeft: 12 }]}>Kennisgewings</Text>
+            <Switch
+              value={notifs}
+              onValueChange={setNotifs}
+              trackColor={{ true: Colors.primary, false: Colors.surface }}
+              thumbColor={notifs ? Colors.accent : Colors.textMuted}
+            />
+          </View>
+        </PlatinumCard>
+
+        {/* Menu Sections */}
+        {menuSections.map(section => (
+          <View key={section.title} style={s.section}>
+            <SectionHeader title={section.title} />
+            {section.items.map(item => (
+              <TouchableOpacity key={item.label} onPress={() => router.push(item.route as any)}>
+                <PlatinumCard style={s.menuItem}>
+                  <View style={s.menuRow}>
+                    <View style={[s.menuIcon, { backgroundColor: Colors.surface }]}>
+                      <Ionicons name={item.icon as any} size={18} color={Colors.textBody} />
+                    </View>
+                    <Text style={[Typography.body, { flex: 1 }]}>{item.label}</Text>
+                    {(item as any).badge && <Badge label={(item as any).badge} color={isPro ? Colors.success : Colors.textMuted} />}
+                    <Ionicons name="chevron-forward" size={16} color={Colors.textMuted} />
+                  </View>
+                </PlatinumCard>
               </TouchableOpacity>
             ))}
-          </PlatinumCard>
-        </View>
-      ))}
+          </View>
+        ))}
 
-      {/* Logout */}
-      <TouchableOpacity onPress={handleLogout} style={s.logout}>
-        <Ionicons name="log-out-outline" size={20} color={Colors.red} />
-        <Text style={[Typography.bodySemi, { color: Colors.red, marginLeft: 8 }]}>Log Out</Text>
-      </TouchableOpacity>
-      <Text style={[Typography.caption, { textAlign: 'center', color: Colors.textMuted, marginTop: 8 }]}>Dorpwag™ v2.0.0 · VCDS™ 2026</Text>
+        {/* Logout */}
+        <TouchableOpacity onPress={handleLogout} style={s.logoutBtn}>
+          <Ionicons name="log-out-outline" size={18} color={Colors.accentRed} />
+          <Text style={[Typography.bodySemi, { color: Colors.accentRed, marginLeft: 8 }]}>Teken Uit</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
 
 const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.bg },
-  avatarWrap: { alignItems: 'center', marginBottom: 24 },
-  avatar: {
-    width: 96, height: 96, borderRadius: 48,
-    backgroundColor: Colors.surface, borderWidth: 2, borderColor: Colors.primary,
-    alignItems: 'center', justifyContent: 'center', marginBottom: 12,
-  },
-  tierBadge: { marginTop: 8 },
-  statsCard: { flexDirection: 'row', padding: 0, marginBottom: 24, overflow: 'hidden' },
-  statItem: { flex: 1, alignItems: 'center', paddingVertical: 16 },
-  statBorder: { borderRightWidth: 1, borderRightColor: Colors.surfaceBorder },
-  section: { marginBottom: 20 },
-  sectionLabel: { color: Colors.textMuted, letterSpacing: 1, marginBottom: 8, marginLeft: 4 },
-  menuItem: { flexDirection: 'row', alignItems: 'center', padding: 16 },
-  menuBorder: { borderTopWidth: 1, borderTopColor: Colors.surfaceBorder },
-  logout: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    padding: 16, borderRadius: 12, borderWidth: 1, borderColor: Colors.red + '40',
-    marginTop: 8, marginBottom: 16,
-  },
+  hero: { paddingHorizontal: 16, paddingBottom: 24 },
+  avatarWrap: { alignItems: 'center', marginBottom: 20 },
+  avatarGlow: { borderRadius: 50, padding: 3 },
+  avatar: { width: 88, height: 88, borderRadius: 44, backgroundColor: Colors.surface, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: Colors.primary + '60' },
+  townRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
+  statsRow: { flexDirection: 'row', gap: 8 },
+  statItem: { flex: 1, backgroundColor: Colors.surface, borderRadius: 12, padding: 12, alignItems: 'center', gap: 2, borderWidth: 1, borderColor: Colors.surfaceBorder },
+  content: { paddingHorizontal: 16, paddingTop: 8 },
+  upgradeBanner: { flexDirection: 'row', alignItems: 'center', padding: 16, borderRadius: 14, marginBottom: 16 },
+  notifsCard: { marginBottom: 16 },
+  notifsRow: { flexDirection: 'row', alignItems: 'center' },
+  section: { marginBottom: 16 },
+  menuItem: { marginBottom: 6 },
+  menuRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  menuIcon: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  logoutBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 16, marginTop: 8, borderRadius: 12, borderWidth: 1, borderColor: Colors.accentRed + '40', backgroundColor: Colors.accentRed + '10' },
 });

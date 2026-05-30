@@ -206,3 +206,21 @@ export const aiCrimeAPI = {
 export const analyticsAPI = {
   admin: () => api.get('/admin/analytics'),
 };
+
+// ─── SOS Contacts (user-managed emergency contacts) ───────────
+export const sosContactsAPI = {
+  list: () => api.get('/sos/contacts'),
+  add: (d: { name: string; phone: string; email?: string; isPrimary?: boolean }) => api.post('/sos/contacts', d),
+  update: (id: string, d: any) => api.put(`/sos/contacts/${id}`, d),
+  delete: (id: string) => api.delete(`/sos/contacts/${id}`),
+};
+
+// ─── Movement Brain™ (pattern learning + dead man) ────────────
+export const movementBrainAPI = {
+  checkin: (lat: number, lng: number, status: string) => api.post('/movement/checkin', { lat, lng, status }),
+  history: () => api.get('/movement/history'),
+  patterns: () => api.get('/movement/patterns'),
+  deadmanPing: () => api.post('/movement/deadman', {}),
+  deadmanStart: (intervalMinutes: number) => api.post('/movement/deadman/start', { intervalMinutes }),
+  deadmanEnd: () => api.post('/movement/deadman/end', {}),
+};

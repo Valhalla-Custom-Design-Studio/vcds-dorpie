@@ -1,98 +1,148 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import {
+  View, Text, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, Alert,
+} from 'react-native';
 import { useRouter } from 'expo-router';
-import { Colors } from '@/theme';
-import { api } from '@/services/api';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Colors, Typography, Radius, Shadow } from '@/theme';
+import { PlatinumCard, Badge, ScreenHeader } from '@/components/ui';
 import { useAuthStore } from '@/store/auth';
-import { TIERS, Tier } from '@/constants/tiers';
+import { subscriptionsAPI } from '@/services/api';
 
-export default function SubscribeScreen() {
+const TIERS = [
+  {
+    id: 'free',
+    name: 'Gratis',
+    price: 'R0',
+    period: '/maand',
+    color: Colors.textMuted,
+    features: [
+      '✅ Gemeenskapskenmerke',
+      '✅ Basiese kennisgewings',
+      '✅ Markplek toegang',
+      '✅ Forum & gebeure',
+      '❌ SOS Noodknoppie',
+      '❌ Bewakermodus™',
+      '❌ LPR Kamera',
+      '❌ AI Misdaadanalise',
+    ],
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    price: 'R99',
+    period: '/maand',
+    color: Colors.primary,
+    badge: 'GEWILD',
+    features: [
+      '✅ Alles in Gratis',
+      '✅ SOS Noodknoppie',
+      '✅ Bewakermodus™',
+      '✅ Phantom Alert™',
+      '✅ Bewegings-DNA™',
+      '✅ LPR Kamera',
+      '✅ AI Misdaadanalise',
+      '✅ Dooie Man Skakelaar',
+    ],
+  },
+];
+
+export default function Subscribe() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { user } = useAuthStore();
-  const [loading, setLoading] = useState<string | null>(null);
-  const [lang, setLang] = useState<'af' | 'en'>('af');
+  const [selected, setSelected] = useState('pro');
+  const [loading, setLoading] = useState(false);
 
-  const subscribe = async (tierId: Tier) => {
-    if (tierId === 'free') { router.back(); return; }
-    setLoading(tierId);
+  const currentTier = user?.subscription_tier || 'free';
+
+  const handleSubscribe = async () => {
+    if (selected === 'free') { router.back(); return; }
+    setLoading(true);
     try {
-      const { data } = await api.post('/payments/subscribe', { tier: tierId });
-      if (data.data?.payment_url) {
-        router.push({ pathname: '/payments/webview', params: { url: data.data.payment_url } });
+      const { data } = await subscriptionsAPI.create({ tier: selected });
+      if (data.paymentUrl) {
+        router.push({ pathname: '/payments/webview', params: { url: data.paymentUrl } });
       }
-    } catch {
-      Alert.alert(lang === 'af' ? 'Fout' : 'Error', lang === 'af' ? 'Kon nie inteken nie. Probeer weer.' : 'Could not subscribe. Please try again.');
-    } finally {
-      setLoading(null);
-    }
+    } catch (e: any) {
+      Alert.alert('Fout', e.response?.data?.message || 'Betaling kon nie verwerk word nie');
+    } finally { setLoading(false); }
   };
 
-  const tierList = Object.values(TIERS);
-
   return (
-    <ScrollView style={s.container} contentContainerStyle={s.content}>
-      <View style={s.langRow}>
-        <TouchableOpacity onPress={() => setLang('af')} style={[s.langBtn, lang === 'af' && s.langActive]}>
-          <Text style={[s.langText, lang === 'af' && s.langActiveText]}>AF</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setLang('en')} style={[s.langBtn, lang === 'en' && s.langActive]}>
-          <Text style={[s.langText, lang === 'en' && s.langActiveText]}>EN</Text>
-        </TouchableOpacity>
-      </View>
-      <Text style={s.title}>{lang === 'af' ? 'Kies Jou Plan' : 'Choose Your Plan'}</Text>
-      <Text style={s.sub}>{lang === 'af' ? 'Ondersteun jou gemeenskap en kry meer toegang' : 'Support your community and unlock more access'}</Text>
-      {tierList.map((tier) => (
-        <View key={tier.id} style={[s.card, { borderColor: tier.color }, tier.recommended && s.recommended]}>
-          {tier.recommended && (
-            <View style={[s.badge, { backgroundColor: tier.color }]}>
-              <Text style={s.badgeText}>{lang === 'af' ? '⭐ Gewild' : '⭐ Popular'}</Text>
-            </View>
-          )}
-          <Text style={[s.tierName, { color: tier.color }]}>{lang === 'af' ? tier.name_af : tier.name_en}</Text>
-          <Text style={s.price}>{tier.price === 0 ? (lang === 'af' ? 'Gratis' : 'Free') : `R${tier.price}/maand`}</Text>
-          <Text style={s.desc}>{lang === 'af' ? tier.description_af : tier.description_en}</Text>
-          {(lang === 'af' ? tier.features_af : tier.features_en).map((f) => (
-            <Text key={f} style={s.feature}>✓ {f}</Text>
-          ))}
-          <TouchableOpacity
-            style={[s.btn, { backgroundColor: tier.color }]}
-            onPress={() => subscribe(tier.id)}
-            disabled={loading === tier.id || user?.subscription_tier === tier.id}
-          >
-            {loading === tier.id ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={s.btnText}>
-                {user?.subscription_tier === tier.id
-                  ? (lang === 'af' ? 'Huidige Plan' : 'Current Plan')
-                  : (lang === 'af' ? 'Kies Hierdie' : 'Choose This')}
-              </Text>
-            )}
+    <View style={{ flex: 1, backgroundColor: Colors.bg }}>
+      <ScreenHeader title="Kies Jou Plan" showBack />
+      <ScrollView contentContainerStyle={[s.scroll, { paddingBottom: insets.bottom + 32 }]}>
+        <LinearGradient colors={[Colors.primaryDark + '80', Colors.bg]} style={s.hero}>
+          <Text style={[Typography.h2, { textAlign: 'center' }]}>🛡️ Dorpwag™ Pro</Text>
+          <Text style={[Typography.caption, { color: Colors.textMuted, textAlign: 'center', marginTop: 8 }]}>
+            Volledige veiligheidsbeskerming vir jou en jou gesin
+          </Text>
+        </LinearGradient>
+
+        {TIERS.map(tier => (
+          <TouchableOpacity key={tier.id} onPress={() => setSelected(tier.id)}>
+            <PlatinumCard
+              accentColor={selected === tier.id ? tier.color : undefined}
+              style={[s.tierCard, selected === tier.id && { borderColor: tier.color + '60', borderWidth: 1.5 }]}
+            >
+              <View style={s.tierHeader}>
+                <View>
+                  <Text style={Typography.h3}>{tier.name}</Text>
+                  <View style={s.priceRow}>
+                    <Text style={[Typography.h1, { color: tier.color }]}>{tier.price}</Text>
+                    <Text style={[Typography.caption, { alignSelf: 'flex-end', marginBottom: 4 }]}>{tier.period}</Text>
+                  </View>
+                </View>
+                <View style={s.tierRight}>
+                  {tier.badge && <Badge label={tier.badge} color={tier.color} />}
+                  <View style={[s.radio, { borderColor: tier.color }, selected === tier.id && { backgroundColor: tier.color }]}>
+                    {selected === tier.id && <Ionicons name="checkmark" size={14} color="#fff" />}
+                  </View>
+                </View>
+              </View>
+              <View style={s.featureList}>
+                {tier.features.map(f => (
+                  <Text key={f} style={[Typography.bodySmall, { marginBottom: 4 }]}>{f}</Text>
+                ))}
+              </View>
+              {currentTier === tier.id && (
+                <Badge label="HUIDIGE PLAN" color={Colors.success} />
+              )}
+            </PlatinumCard>
           </TouchableOpacity>
-        </View>
-      ))}
-    </ScrollView>
+        ))}
+
+        <TouchableOpacity
+          style={[s.ctaBtn, { backgroundColor: selected === 'free' ? Colors.surface : Colors.primary }]}
+          onPress={handleSubscribe}
+          disabled={loading}
+        >
+          {loading ? <ActivityIndicator color="#fff" /> : (
+            <Text style={[Typography.button, { color: '#fff' }]}>
+              {selected === 'free' ? 'Bly op Gratis Plan' : 'Inteken vir R99/maand'}
+            </Text>
+          )}
+        </TouchableOpacity>
+
+        <Text style={[Typography.caption, { textAlign: 'center', color: Colors.textMuted, marginTop: 12 }]}>
+          Kanselleer enige tyd · Veilige betaling via PayFast
+        </Text>
+      </ScrollView>
+    </View>
   );
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.bg },
-  content: { padding: 20, paddingBottom: 40 },
-  langRow: { flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 12, gap: 8 },
-  langBtn: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 20, borderWidth: 1, borderColor: Colors.muted },
-  langActive: { backgroundColor: Colors.primary, borderColor: Colors.primary },
-  langText: { color: Colors.muted, fontWeight: '600', fontSize: 12 },
-  langActiveText: { color: '#fff' },
-  title: { fontSize: 28, fontWeight: '700', color: Colors.text, textAlign: 'center', marginBottom: 8 },
-  sub: { fontSize: 14, color: Colors.muted, textAlign: 'center', marginBottom: 24 },
-  card: { backgroundColor: Colors.surface || '#1a1a1a', borderWidth: 2, borderRadius: 16, padding: 20, marginBottom: 16 },
-  recommended: { shadowColor: '#3B82F6', shadowOpacity: 0.4, shadowRadius: 12, elevation: 8 },
-  badge: { alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 20, marginBottom: 8 },
-  badgeText: { color: '#fff', fontWeight: '700', fontSize: 11 },
-  tierName: { fontSize: 22, fontWeight: '800', marginBottom: 4 },
-  price: { fontSize: 20, fontWeight: '700', color: Colors.text, marginBottom: 6 },
-  desc: { fontSize: 13, color: Colors.muted, marginBottom: 12, lineHeight: 18 },
-  feature: { fontSize: 14, color: Colors.text, marginBottom: 4 },
-  btn: { marginTop: 16, borderRadius: 12, paddingVertical: 14, alignItems: 'center' },
-  btnText: { color: '#fff', fontWeight: '700', fontSize: 16 },
+  scroll: { paddingHorizontal: 16 },
+  hero: { paddingVertical: 24, paddingHorizontal: 16, borderRadius: 16, marginBottom: 20 },
+  tierCard: { marginBottom: 12 },
+  tierHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 },
+  priceRow: { flexDirection: 'row', alignItems: 'baseline', gap: 4 },
+  tierRight: { alignItems: 'flex-end', gap: 8 },
+  radio: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
+  featureList: { gap: 2 },
+  ctaBtn: { paddingVertical: 16, borderRadius: 14, alignItems: 'center', marginTop: 8 },
 });

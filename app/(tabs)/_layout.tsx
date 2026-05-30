@@ -2,8 +2,7 @@ import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/theme';
-import { BlurView } from 'expo-blur';
-import { Platform, View, StyleSheet } from 'react-native';
+import { t } from '@/i18n';
 
 const TAB_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
   index: 'home',
@@ -36,11 +35,11 @@ export default function TabsLayout() {
         },
       })}
     >
-      <Tabs.Screen name="index" options={{ title: 'Home' }} />
-      <Tabs.Screen name="safety" options={{ title: 'Safety' }} />
-      <Tabs.Screen name="community" options={{ title: 'Community' }} />
-      <Tabs.Screen name="directory" options={{ title: 'Directory' }} />
-      <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
+      <Tabs.Screen name="index" options={{ title: t('tabs.home') }} />
+      <Tabs.Screen name="safety" options={{ title: t('tabs.safety') }} />
+      <Tabs.Screen name="community" options={{ title: t('tabs.community') }} />
+      <Tabs.Screen name="directory" options={{ title: t('tabs.directory') }} />
+      <Tabs.Screen name="profile" options={{ title: t('tabs.profile') }} />
     </Tabs>
   );
 }
