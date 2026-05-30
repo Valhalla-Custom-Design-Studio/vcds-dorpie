@@ -9,6 +9,7 @@ import { useRouter } from 'expo-router';
 import { Colors } from '@/theme';
 import { useAuthStore } from '@/store/auth';
 import { posthog } from '@/lib/posthog';
+import * as ImagePicker from 'expo-image-picker';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL ?? '';
 
@@ -90,6 +91,39 @@ export default function LPRScreen() {
     setRefreshing(true);
     fetchLiveFeed();
     fetchWatchlist();
+  };
+
+
+  const scanPlateFromCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') { Alert.alert('Camera permission required'); return; }
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.8,
+      base64: true,
+    });
+    if (!result.canceled && result.assets[0].base64) {
+      setSubmitting(true);
+      try {
+        // Send to Google Vision OCR via backend
+        const res = await fetch(`${API_URL}/api/lpr/scan-image`, {
+          method: 'POST',
+          headers: { ...headers, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageBase64: result.assets[0].base64 }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.plate) {
+            setNewPlate(data.plate.toUpperCase());
+            setActiveTab('watchlist');
+            Alert.alert('✅ Plate Detected', `Plate: ${data.plate}\nConfidence: ${Math.round((data.confidence || 0) * 100)}%`);
+          } else {
+            Alert.alert('No plate detected', 'Could not read a plate from this image. Try again.');
+          }
+        }
+      } catch { Alert.alert('Scan failed. Please try again.'); }
+      finally { setSubmitting(false); }
+    }
   };
 
   const addToWatchlist = async () => {

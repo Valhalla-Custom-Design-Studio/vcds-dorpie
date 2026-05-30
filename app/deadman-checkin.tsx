@@ -1,114 +1,123 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Animated, Easing } from 'react-native';
+import {
+  View, Text, StyleSheet, TouchableOpacity, Alert, Animated,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Typography } from '@/theme';
-import { PlatinumButton } from '@/components/ui';
-import { movementAPI } from '@/services/api';
+import { Colors, Typography, Radius } from '@/theme';
+import { ScreenHeader } from '@/components/ui';
+import { useAuthStore } from '@/store/auth';
 
-const INTERVALS = [15, 30, 60, 120]; // minutes
+const API_URL = process.env.EXPO_PUBLIC_API_URL ?? '';
 
 export default function DeadmanCheckin() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const [interval, setInterval_] = useState(30);
+  const { token } = useAuthStore();
+  const [timeLeft, setTimeLeft] = useState(3600); // 1 hour default
   const [active, setActive] = useState(false);
-  const [remaining, setRemaining] = useState(0);
   const [loading, setLoading] = useState(false);
-  const timerRef = useRef<any>(null);
-  const progressAnim = useRef(new Animated.Value(1)).current;
+  const pulse = useRef(new Animated.Value(1)).current;
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const start = () => {
-    setActive(true);
-    setRemaining(interval * 60);
-    Animated.timing(progressAnim, {
-      toValue: 0, duration: interval * 60 * 1000, useNativeDriver: false,
-    }).start();
-    timerRef.current = setInterval(() => {
-      setRemaining(r => {
-        if (r <= 1) {
-          clearInterval(timerRef.current);
-          Alert.alert('⚠️ TIMER EXPIRED', 'No check-in received. Sending alert to your community.', [{ text: 'OK' }]);
-          setActive(false);
-          return 0;
-        }
-        return r - 1;
-      });
-    }, 1000);
-  };
+  useEffect(() => {
+    if (active) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulse, { toValue: 1.08, duration: 800, useNativeDriver: true }),
+          Animated.timing(pulse, { toValue: 1, duration: 800, useNativeDriver: true }),
+        ])
+      ).start();
+      intervalRef.current = setInterval(() => {
+        setTimeLeft(t => {
+          if (t <= 1) {
+            clearInterval(intervalRef.current!);
+            setActive(false);
+            Alert.alert('⚠️ Tyd Verstreke', 'Jy het nie ingeskake nie. SOS is gestuur.');
+            return 0;
+          }
+          return t - 1;
+        });
+      }, 1000);
+    } else {
+      pulse.stopAnimation();
+      pulse.setValue(1);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    }
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [active]);
 
   const checkin = async () => {
     setLoading(true);
     try {
-      await movementAPI.deadman();
-      clearInterval(timerRef.current);
-      progressAnim.setValue(1);
-      setActive(false);
-      Alert.alert('✅ Check-in confirmed!', "Timer reset. You're safe.");
-    } catch { Alert.alert('Check-in failed'); }
-    finally { setLoading(false); }
+      await fetch(`${API_URL}/api/deadman/checkin`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      });
+      setTimeLeft(3600);
+      Alert.alert('✅ Ingeskake', 'Jou timer is herlaai. Jy is veilig.');
+    } catch {
+      Alert.alert('Fout', 'Kon nie inskakel nie. Probeer weer.');
+    } finally { setLoading(false); }
   };
 
-  useEffect(() => () => clearInterval(timerRef.current), []);
-
-  const mins = Math.floor(remaining / 60);
-  const secs = remaining % 60;
+  const fmt = (s: number) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+  const pct = timeLeft / 3600;
+  const timerColor = pct > 0.5 ? Colors.accentGreen : pct > 0.25 ? Colors.accentYellow : Colors.accentRed;
 
   return (
-    <View style={[s.container, { paddingTop: insets.top + 16, paddingBottom: insets.bottom + 32 }]}>
-      <TouchableOpacity onPress={() => { clearInterval(timerRef.current); router.back(); }} style={s.close}>
-        <Ionicons name="close" size={24} color={Colors.textHeading} />
-      </TouchableOpacity>
+    <View style={[s.container, { paddingTop: insets.top }]}>
+      <ScreenHeader title="Dooie Man Skakelaar" showBack />
       <View style={s.content}>
-        <Text style={{ fontSize: 56, textAlign: 'center', marginBottom: 16 }}>⏱️</Text>
-        <Text style={[Typography.display, { textAlign: 'center' }]}>Dead Man Timer</Text>
-        <Text style={[Typography.body, { color: Colors.textMuted, textAlign: 'center', marginTop: 8, marginBottom: 32 }]}>
-          If you don't check in, your community will be alerted
+        <Text style={[Typography.caption, { color: Colors.textMuted, textAlign: 'center', marginBottom: 32 }]}>
+          As jy nie binne die tyd inskakel nie, word 'n outomatiese SOS gestuur na jou noodkontakte.
         </Text>
-        {!active ? (
-          <View>
-            <Text style={[Typography.caption, { color: Colors.textMuted, textAlign: 'center', marginBottom: 12 }]}>SELECT INTERVAL</Text>
-            <View style={s.intervals}>
-              {INTERVALS.map(m => (
-                <TouchableOpacity key={m} onPress={() => setInterval_(m)} style={[s.intPill, interval === m && s.intActive]}>
-                  <Text style={[s.intText, interval === m && { color: '#fff' }]}>{m}m</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-            <PlatinumButton label="Start Timer" onPress={start} style={{ marginTop: 24 }} />
+
+        {/* Timer Circle */}
+        <Animated.View style={[s.timerWrap, { transform: [{ scale: pulse }] }]}>
+          <View style={[s.timerCircle, { borderColor: timerColor }]}>
+            <Text style={[Typography.h1, { fontSize: 48, color: timerColor }]}>{fmt(timeLeft)}</Text>
+            <Text style={Typography.caption}>tyd oor</Text>
           </View>
-        ) : (
-          <View style={s.activeWrap}>
-            <View style={s.timerCircle}>
-              <Text style={s.timerText}>{String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}</Text>
-              <Text style={[Typography.caption, { color: Colors.textMuted }]}>remaining</Text>
-            </View>
-            <PlatinumButton label="✅ I'm Safe — Check In" onPress={checkin} loading={loading} variant="secondary" style={{ marginTop: 32 }} />
-            <TouchableOpacity onPress={() => { clearInterval(timerRef.current); progressAnim.setValue(1); setActive(false); }} style={s.stopBtn}>
-              <Text style={{ color: Colors.textMuted }}>Stop Timer</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        </Animated.View>
+
+        {/* Status */}
+        <View style={[s.statusBadge, { backgroundColor: active ? Colors.accentGreen + '20' : Colors.surface }]}>
+          <View style={[s.statusDot, { backgroundColor: active ? Colors.accentGreen : Colors.textMuted }]} />
+          <Text style={[Typography.bodySemi, { color: active ? Colors.accentGreen : Colors.textMuted }]}>
+            {active ? 'AKTIEF — Timer Loop' : 'INAKTIEF'}
+          </Text>
+        </View>
+
+        {/* Checkin Button */}
+        <TouchableOpacity onPress={checkin} disabled={loading || !active} style={s.checkinBtn}>
+          <LinearGradient colors={[Colors.accentGreen, Colors.accentGreen + 'AA']} style={s.checkinBtnInner}>
+            <Ionicons name="checkmark-circle" size={24} color="#fff" />
+            <Text style={[Typography.button, { marginLeft: 8 }]}>Ek is Veilig — Inskakel</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+
+        {/* Toggle */}
+        <TouchableOpacity onPress={() => setActive(a => !a)} style={[s.toggleBtn, { borderColor: active ? Colors.accentRed + '60' : Colors.primary + '60' }]}>
+          <Text style={[Typography.bodySemi, { color: active ? Colors.accentRed : Colors.primary }]}>
+            {active ? '⏹ Stop Timer' : '▶ Begin Timer'}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.bg, paddingHorizontal: 24 },
-  close: { alignSelf: 'flex-end', padding: 8 },
-  content: { flex: 1, justifyContent: 'center' },
-  intervals: { flexDirection: 'row', justifyContent: 'center', gap: 12 },
-  intPill: { paddingHorizontal: 20, paddingVertical: 12, borderRadius: 24, backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.surfaceBorder },
-  intActive: { backgroundColor: Colors.primary, borderColor: Colors.primary },
-  intText: { color: Colors.textBody, fontWeight: '700', fontSize: 16 },
-  activeWrap: { alignItems: 'center' },
-  timerCircle: {
-    width: 180, height: 180, borderRadius: 90,
-    borderWidth: 4, borderColor: Colors.warning,
-    alignItems: 'center', justifyContent: 'center',
-  },
-  timerText: { fontSize: 48, fontWeight: '800', color: Colors.textHeading },
-  stopBtn: { marginTop: 16, padding: 12 },
+  container: { flex: 1, backgroundColor: Colors.bg },
+  content: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 },
+  timerWrap: { marginBottom: 32 },
+  timerCircle: { width: 200, height: 200, borderRadius: 100, borderWidth: 4, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.surface },
+  statusBadge: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, paddingVertical: 8, borderRadius: Radius.full, marginBottom: 32 },
+  statusDot: { width: 8, height: 8, borderRadius: 4 },
+  checkinBtn: { width: '100%', marginBottom: 12, borderRadius: 14, overflow: 'hidden' },
+  checkinBtnInner: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 16 },
+  toggleBtn: { width: '100%', paddingVertical: 14, borderRadius: 14, borderWidth: 1.5, alignItems: 'center' },
 });
