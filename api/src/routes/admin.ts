@@ -198,7 +198,7 @@ router.get('/system', requireSuperAdmin, async (req: AuthRequest, res: Response)
     const [dbCheck, guardianSessions, deadmanActive] = await Promise.all([
       pool.query('SELECT NOW() as db_time'),
       pool.query('SELECT COUNT(*) FROM guardian_sessions WHERE is_active = true'),
-      pool.query('SELECT COUNT(*) FROM guardian_sessions WHERE is_active = true AND last_ping_at < NOW() - INTERVAL '30 minutes''),
+      pool.query("SELECT COUNT(*) FROM guardian_sessions WHERE is_active = true AND last_ping_at < NOW() - INTERVAL '30 minutes'"),
     ]);
     res.json({
       success: true,
