@@ -141,7 +141,7 @@ export default function Safety() {
         <>
           <Text style={[Typography.label, { marginBottom: 12, marginTop: 16 }]}>Onlangse Voorvalle</Text>
           {reports.map(r => (
-            <PlatinumCard key={r.id} onPress={() => router.push(\`/incidents/${r.id}\` as any)}>
+            <PlatinumCard key={r.id} onPress={() => router.push(`/incidents/${r.id}` as any)}>
               <View style={s.incidentRow}>
                 <Badge label={r.category || 'Incident'} variant={r.severity === 'high' ? 'error' : r.severity === 'medium' ? 'warning' : 'muted'} />
                 <Text style={[Typography.bodySmall, { flex: 1, marginLeft: 8 }]} numberOfLines={1}>{r.description}</Text>
