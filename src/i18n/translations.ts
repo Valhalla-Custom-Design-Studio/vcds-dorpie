@@ -83,6 +83,26 @@ export const translations = {
     // Upgrade
     upgradeToPaid: 'Upgrade to Dorpwag Veilig™', monthlyPlan: 'R49/month', annualPlan: 'R490/year',
     twoMonthsFree: '2 months free',
+
+    // GeoFence
+    geofenceTitle: 'Geo-Omheining', geofenceAdd: 'Voeg Omheining By', geofenceNew: 'Nuwe Omheining',
+    geofenceLabelRequired: 'Voer 'n naam in vir die omheining', geofenceLabelPlaceholder: 'Naam (bv. Huis, Skool)',
+    geofenceRadius: 'Radius', geofenceSave: 'Stoor Omheining', geofenceSaved: 'Omheining gestoor',
+    geofenceSaveFailed: 'Kon nie omheining stoor nie', geofenceToggleFailed: 'Kon nie omheining wissel nie',
+    geofenceDeleteConfirm: 'Is jy seker jy wil hierdie omheining verwyder?',
+    geofenceDeleteFailed: 'Kon nie omheining verwyder nie',
+    geofenceEmpty: 'Geen Omheinings', geofenceEmptySubtitle: 'Voeg 'n geo-omheining by om beweging te monitor',
+    // Mood
+    moodTitle: 'Gesigsuitdrukking Skandering', moodScan: 'Skandeer Gesig', moodScanFailed: 'Skandering misluk',
+    moodAlertTitle: 'Bekommernis Bespeur', moodHistory: 'Geskiedenis',
+    confidence: 'sekerheid',
+    // LPR
+    lprTitle: 'Nommerbord Herkenning', lprScan: 'Skandeer Nommerbord',
+    // Camera
+    cameraPermRequired: 'Kamera toegang benodig vir hierdie funksie',
+    grantPermission: 'Verleen Toegang',
+    // SOS
+    sosActivate: 'Aktiveer SOS',
   },
   af: {
     notices: 'Kennisgewings', marketplace: 'Koop & Verkoop', events: 'Gebeure',

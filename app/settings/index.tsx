@@ -6,6 +6,11 @@ import { Colors, Typography, Radius } from '@/theme';
 import { PlatinumCard, ScreenHeader, SectionHeader } from '@/components/ui';
 
 const SETTINGS = [
+  { section: 'Veiligheid & Gesondheid', items: [
+    { icon: 'location-outline', label: 'Geo-Omheinings', route: '/geofence' },
+    { icon: 'happy-outline', label: 'Gesigstemming Skandering', route: '/mood' },
+    { icon: 'people-outline', label: 'SOS Noodkontakte', route: '/sos-contacts' },
+  ]},
   { section: 'Rekening', items: [
     { icon: 'person-outline', label: 'Wysig Profiel', route: '/settings/edit-profile' },
     { icon: 'lock-closed-outline', label: 'Verander Wagwoord', route: '/settings/change-password' },

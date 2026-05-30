@@ -8,6 +8,8 @@ import { guardianAPI } from '@/services/api';
 
 export default function Guardian() {
   const router = useRouter();
+
+  const goToGeofence = () => router.push('/geofence');
   const [devices, setDevices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -34,6 +36,14 @@ export default function Guardian() {
       <ScreenHeader title="Guardian Tracking" showBack right={
         <TouchableOpacity onPress={() => router.push('/guardian/add-device')}><Ionicons name="add-circle" size={28} color={Colors.primary} /></TouchableOpacity>
       } />
+      <TouchableOpacity
+        style={{ flexDirection: 'row', alignItems: 'center', gap: 8, padding: 12, marginHorizontal: 16, marginBottom: 8, backgroundColor: 'rgba(99,102,241,0.1)', borderRadius: 12, borderWidth: 1, borderColor: 'rgba(99,102,241,0.3)' }}
+        onPress={goToGeofence}
+      >
+        <Ionicons name="location-outline" size={20} color="#6366f1" />
+        <Text style={{ color: '#6366f1', fontWeight: '700', flex: 1 }}>Geo-Omheinings Bestuur</Text>
+        <Ionicons name="chevron-forward" size={16} color="#6366f1" />
+      </TouchableOpacity>
       <FlatList
         data={devices}
         keyExtractor={i => i.id}
