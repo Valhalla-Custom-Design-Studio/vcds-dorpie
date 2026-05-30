@@ -62,5 +62,4 @@ CREATE TABLE IF NOT EXISTS daily_checkins (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS idx_daily_checkins_user ON daily_checkins(user_id);
-CREATE INDEX IF NOT EXISTS idx_daily_checkins_date ON daily_checkins((created_at::date));
-CREATE UNIQUE INDEX IF NOT EXISTS idx_daily_checkins_user_date ON daily_checkins(user_id, (created_at::date));
+CREATE INDEX IF NOT EXISTS idx_daily_checkins_created ON daily_checkins(created_at);
