@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS daily_checkins (
   mood VARCHAR(20) DEFAULT 'good',  -- 'good', 'okay', 'bad'
   notes TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS idx_daily_checkins_user ON daily_checkins(user_id);
 CREATE INDEX IF NOT EXISTS idx_daily_checkins_date ON daily_checkins(DATE(created_at));
