@@ -236,7 +236,16 @@
     "status": "Status",
     "open": "Oop",
     "resolved": "Opgelos",
-    "investigating": "Ondersoek"
+    "investigating": "Ondersoek",
+    "categories": {
+      "all": "Alles",
+      "theft": "Diefstal",
+      "breakIn": "Inbraak",
+      "vandalism": "Vandalisme",
+      "suspicious": "Verdagte Aktiwiteit",
+      "assault": "Aanranding",
+      "other": "Ander"
+    }
   },
   "profile": {
     "title": "Profiel",
@@ -352,5 +361,84 @@
     "addSuccess": "Kontakt bygevoeg",
     "updateSuccess": "Kontakt opgedateer",
     "deleteSuccess": "Kontakt verwyder"
+  },
+  "geofence": {
+    "title": "GeoFence Sones",
+    "subtitle": "Stel veilige sones in — word gewaarsku as dit oorgesteek word",
+    "addZone": "Voeg Sone By",
+    "noZones": "Geen GeoFence-sones nie",
+    "noZonesDesc": "Tik op die kaart om 'n sone te plaas en jou geliefdes te beskerm",
+    "createFirst": "Skep Eerste Sone",
+    "label": "Sonenaam",
+    "radius": "Radius (meter)",
+    "notifyEnter": "Waarsku by Ingang",
+    "notifyExit": "Waarsku by Uitgang",
+    "linkedUser": "Gekoppelde Persoon",
+    "active": "Aktief",
+    "inactive": "Nie Aktief",
+    "save": "Stoor Sone",
+    "delete": "Verwyder Sone",
+    "labelRequired": "Voer asseblief 'n sonenaam in",
+    "saveFailed": "Kon nie sone stoor nie. Probeer weer.",
+    "saveSuccess": "Sone suksesvol gestoor",
+    "deleteFailed": "Kon nie sone verwyder nie",
+    "deleteSuccess": "Sone verwyder",
+    "toggleFailed": "Kon nie sone opdateer nie"
+  },
+  "mood": {
+    "title": "Gemoedsaanmelding",
+    "subtitle": "Hoe voel jy vandag?",
+    "great": "Uitstekend",
+    "good": "Goed",
+    "okay": "Okay",
+    "stressed": "Gestres",
+    "unsafe": "Onveilig",
+    "logMood": "Meld Gemoed",
+    "history": "Gemoedshistorie",
+    "noHistory": "Geen gemoedsaanmeldings nie",
+    "logSuccess": "Gemoed aangemeld",
+    "logFailed": "Kon nie gemoed aanteken nie"
+  },
+  "subscribe": {
+    "title": "Kies Jou Plan",
+    "subtitle": "Volledige veiligheidsbeskerming vir jou en jou gesin",
+    "free": "Gratis",
+    "pro": "Pro",
+    "platinum": "Platinum",
+    "perMonth": "/maand",
+    "popular": "GEWILD",
+    "bestValue": "BESTE WAARDE",
+    "currentPlan": "Huidige Plan",
+    "upgrade": "Opgradeer",
+    "subscribe": "Teken Nou In",
+    "processing": "Verwerk...",
+    "paymentFailed": "Betaling kon nie verwerk word nie",
+    "features": {
+      "free": [
+        "Gemeenskapskenmerke",
+        "Basiese kennisgewings",
+        "Markplek toegang",
+        "Forum & gebeure"
+      ],
+      "pro": [
+        "Alles in Gratis",
+        "SOS Noodknoppie",
+        "Bewakermodus™",
+        "Phantom Alert™",
+        "Bewegings-DNA™",
+        "LPR Kamera",
+        "AI Misdaadanalise",
+        "Dooie Man Skakelaar"
+      ],
+      "platinum": [
+        "Alles in Pro",
+        "GeoFence Wagposte",
+        "Gesigsgemoedopsporing",
+        "HOA Admin Paneel",
+        "Multi-kamera bestuur",
+        "Gevorderde analise",
+        "Prioriteit ondersteuning"
+      ]
+    }
   }
 }

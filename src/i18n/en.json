@@ -236,7 +236,16 @@
     "status": "Status",
     "open": "Open",
     "resolved": "Resolved",
-    "investigating": "Investigating"
+    "investigating": "Investigating",
+    "categories": {
+      "all": "All",
+      "theft": "Theft",
+      "breakIn": "Break-in",
+      "vandalism": "Vandalism",
+      "suspicious": "Suspicious Activity",
+      "assault": "Assault",
+      "other": "Other"
+    }
   },
   "profile": {
     "title": "Profile",
@@ -352,5 +361,84 @@
     "addSuccess": "Contact added",
     "updateSuccess": "Contact updated",
     "deleteSuccess": "Contact removed"
+  },
+  "geofence": {
+    "title": "GeoFence Zones",
+    "subtitle": "Set safe zones — get alerted when crossed",
+    "addZone": "Add Zone",
+    "noZones": "No GeoFence zones",
+    "noZonesDesc": "Tap the map to place a zone and protect your loved ones",
+    "createFirst": "Create First Zone",
+    "label": "Zone Name",
+    "radius": "Radius (metres)",
+    "notifyEnter": "Alert on Enter",
+    "notifyExit": "Alert on Exit",
+    "linkedUser": "Linked Person",
+    "active": "Active",
+    "inactive": "Inactive",
+    "save": "Save Zone",
+    "delete": "Delete Zone",
+    "labelRequired": "Please enter a zone name",
+    "saveFailed": "Failed to save zone. Please try again.",
+    "saveSuccess": "Zone saved successfully",
+    "deleteFailed": "Failed to delete zone",
+    "deleteSuccess": "Zone deleted",
+    "toggleFailed": "Failed to update zone"
+  },
+  "mood": {
+    "title": "Mood Check-In",
+    "subtitle": "How are you feeling today?",
+    "great": "Great",
+    "good": "Good",
+    "okay": "Okay",
+    "stressed": "Stressed",
+    "unsafe": "Unsafe",
+    "logMood": "Log Mood",
+    "history": "Mood History",
+    "noHistory": "No mood logs yet",
+    "logSuccess": "Mood logged",
+    "logFailed": "Failed to log mood"
+  },
+  "subscribe": {
+    "title": "Choose Your Plan",
+    "subtitle": "Full safety protection for you and your family",
+    "free": "Free",
+    "pro": "Pro",
+    "platinum": "Platinum",
+    "perMonth": "/month",
+    "popular": "POPULAR",
+    "bestValue": "BEST VALUE",
+    "currentPlan": "Current Plan",
+    "upgrade": "Upgrade",
+    "subscribe": "Subscribe Now",
+    "processing": "Processing...",
+    "paymentFailed": "Payment could not be processed",
+    "features": {
+      "free": [
+        "Community features",
+        "Basic notices",
+        "Marketplace access",
+        "Forum & events"
+      ],
+      "pro": [
+        "Everything in Free",
+        "SOS Emergency Button",
+        "Guardian Mode™",
+        "Phantom Alert™",
+        "Movement DNA™",
+        "LPR Camera",
+        "AI Crime Analysis",
+        "Dead Man Switch"
+      ],
+      "platinum": [
+        "Everything in Pro",
+        "GeoFence Zones",
+        "Facial Mood Detection",
+        "HOA Admin Panel",
+        "Multi-camera management",
+        "Advanced analytics",
+        "Priority support"
+      ]
+    }
   }
 }

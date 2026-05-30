@@ -6,19 +6,24 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors, Typography, Radius } from '@/theme';
 import { PlatinumCard, SectionHeader } from '@/components/ui';
+import { PaywallGate } from '@/components/PaywallGate';
+import { useAuthStore } from '@/store/auth';
 
 const SECTIONS = [
   { icon: 'document-text', label: 'Kennisgewingsbord', sub: 'Dorpsaankondigings & nuus', route: '/notices', color: Colors.primary },
   { icon: 'calendar', label: 'Gebeure', sub: "Wat gebeur in jou area", route: '/events', color: Colors.accent },
   { icon: 'chatbubbles', label: 'Forum', sub: 'Besprekings & gemeenskapstopieke', route: '/topics', color: Colors.success },
   { icon: 'bag', label: 'Markplek', sub: 'Koop, verkoop & ruil plaaslik', route: '/listings', color: Colors.warning },
-  { icon: 'chatbubble-ellipses', label: 'Boodskappe', sub: 'Privaat gesprekke', route: '/messages', color: Colors.primaryLight },
+  { icon: 'chatbubble-ellipses', label: 'Boodskappe', sub: 'Privaat gesprekke', route: '/messages', color: Colors.primaryLight, proOnly: true },
   { icon: 'storefront', label: 'Besigheidsgids', sub: 'Plaaslike besighede & dienste', route: '/(tabs)/directory', color: Colors.accentBlue },
 ];
 
 export default function Community() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const user = useAuthStore(s => s.user);
+  const tier = user?.subscription_tier || 'free';
+  const isPaid = tier === 'pro' || tier === 'platinum' || tier === 'paid';
 
   return (
     <ScrollView style={s.container} contentContainerStyle={{ paddingBottom: 40 }}>
@@ -31,7 +36,7 @@ export default function Community() {
         <SectionHeader title="Gemeenskapskenmerke" />
         <View style={s.list}>
           {SECTIONS.map(item => (
-            <TouchableOpacity key={item.label} onPress={() => router.push(item.route as any)}>
+            <TouchableOpacity key={item.label} onPress={() => { if ((item as any).proOnly && !isPaid) { router.push('/subscribe'); return; } router.push(item.route as any); }}>
               <PlatinumCard style={s.card} accentColor={item.color}>
                 <View style={s.row}>
                   <View style={[s.icon, { backgroundColor: item.color + '20', borderColor: item.color + '40' }]}>
