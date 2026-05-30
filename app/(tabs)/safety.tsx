@@ -10,8 +10,7 @@ import { useAuthStore } from '@/store/auth';
 
 const FEATURE_CARDS = [
   {
-    key: 'bewakermodus',
-    icon: 'shield-checkmark' as const,
+    key: 'bewakermodus',    icon: 'shield-checkmark' as const,
     title: 'Bewakermodus™',
     subtitle: 'Deurlopende agtergrondbeskerming',
     color: Colors.accentGreen,
@@ -20,7 +19,7 @@ const FEATURE_CARDS = [
   {
     key: 'hittemap',
     icon: 'map' as const,
-    title: 'Straat Hittemap™',
+    title: 'Straat Hittemap•',
     subtitle: 'Lewende veiligheidskaart vir jou area',
     color: Colors.accentRed,
     route: '/heatmap',
@@ -150,7 +149,7 @@ export default function Safety() {
             </PlatinumCard>
           ))}
         </>
-      )}
+        )}
     </ScrollView>
   );
 }
