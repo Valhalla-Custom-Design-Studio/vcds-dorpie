@@ -4,7 +4,7 @@ COPY package*.json tsconfig.json ./
 RUN npm install
 COPY src ./src
 RUN node_modules/.bin/tsc
-RUN cp -r src/db/migrations dist/db/migrations
+RUN mkdir -p dist/db/migrations && cp -r src/db/migrations/. dist/db/migrations/
 
 FROM node:20-alpine
 WORKDIR /app
