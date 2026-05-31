@@ -35,9 +35,7 @@
         "fetch",
         "remote-notification"
       ],
-      "config": {
-        "googleMapsApiKey": "AIzaSyBIZnxrIO0Am1CHXPH1NgIyHbVmtXTilks"
-      }
+      "config": {}
     },
     "android": {
       "adaptiveIcon": {
