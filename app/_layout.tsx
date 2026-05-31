@@ -8,6 +8,7 @@ import { Colors } from '@/theme';
 import { useAuthStore } from '@/store/auth';
 import { posthog } from '@/lib/posthog';
 import { initSentry } from '@/lib/sentry';
+import AnimatedSplash from '../src/components/AnimatedSplash';
 
 initSentry();
 posthog.capture('app_opened');
@@ -34,6 +35,8 @@ function AuthGate({ children }: { children: React.ReactNode }) {
 }
 
 export default function RootLayout() {
+  const [splashDone, setSplashDone] = React.useState(false);
+  if (!splashDone) return <AnimatedSplash onFinish={() => setSplashDone(true)} />;
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
