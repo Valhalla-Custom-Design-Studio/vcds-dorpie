@@ -46,8 +46,8 @@ export default function HOAAdminScreen() {
   const fetchData = async () => {
     try {
       const [statsRes, alertsRes] = await Promise.all([
-        fetch(`${API_BASE}/api/admin/hoa/stats`, { headers: { Authorization: `Bearer ${token}` } }),
-        fetch(`${API_BASE}/api/admin/hoa/alerts?limit=20`, { headers: { Authorization: `Bearer ${token}` } }),
+        await fetch(`${API_BASE}/api/admin/hoa/stats`, { headers: { Authorization: `Bearer ${token}` } }),
+        await fetch(`${API_BASE}/api/admin/hoa/alerts?limit=20`, { headers: { Authorization: `Bearer ${token}` } }),
       ]);
       if (statsRes.ok) setStats(await statsRes.json());
       if (alertsRes.ok) setAlerts((await alertsRes.json()).alerts || []);
