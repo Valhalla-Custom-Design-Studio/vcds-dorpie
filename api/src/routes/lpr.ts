@@ -3,6 +3,7 @@
  * Platinum-only — HOA Admin access required
  */
 import { Router, Request, Response } from 'express';
+import { testHikvisionCamera, subscribeHikvisionWebhook, processWebhookEvent } from '../services/HikvisionISAPI';
 import { authenticate as requireAuth } from '../middleware/auth';
 import { requireTier } from '../middleware/requireTier';
 import { db } from '../db';
@@ -209,6 +210,96 @@ router.get('/hoa/alerts', async (req: Request, res: Response) => {
     res.json({ alerts: alerts.rows });
   } catch (e) {
     res.status(500).json({ error: 'Failed to fetch alerts' });
+  }
+});
+
+
+// ── Hikvision ISAPI Webhook receiver ────────────────────────
+// Camera POSTs XML to this endpoint when it detects a plate
+// No API key needed — camera pushes directly to your server
+import { testHikvisionCamera, subscribeHikvisionWebhook, processWebhookEvent } from '../services/HikvisionISAPI';
+
+router.post('/hikvision/webhook/:cameraId', async (req: Request, res: Response) => {
+  try {
+    const { cameraId } = req.params;
+
+    // Lookup camera to get community_id
+    const cam = await db.query('SELECT * FROM lpr_cameras WHERE id = $1', [cameraId]);
+    if (!cam.rows[0]) return res.status(404).json({ error: 'Camera not found' });
+
+    const xml = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+    const result = await processWebhookEvent(xml, cameraId, cam.rows[0].community_id);
+
+    if (!result) return res.status(200).send('OK'); // No plate in event, ignore
+
+    res.status(200).send('OK');
+  } catch (e) {
+    console.error('Webhook error:', e);
+    res.status(500).json({ error: 'Webhook processing failed' });
+  }
+});
+
+// ── Test camera connectivity ─────────────────────────────────
+router.get('/hikvision/test/:cameraId', async (req: Request, res: Response) => {
+  try {
+    const cam = await db.query('SELECT * FROM lpr_cameras WHERE id = $1', [req.params.cameraId]);
+    if (!cam.rows[0]) return res.status(404).json({ error: 'Camera not found' });
+
+    const { ip, port, username, password } = cam.rows[0];
+    const result = await testHikvisionCamera(ip, port, username, password);
+
+    // Update online status
+    await db.query(
+      'UPDATE lpr_cameras SET is_online = $1, last_seen = NOW() WHERE id = $2',
+      [result.online, req.params.cameraId]
+    );
+
+    res.json(result);
+  } catch (e) {
+    res.status(500).json({ error: 'Test failed' });
+  }
+});
+
+// ── Subscribe camera to push events to our webhook ───────────
+// Call this once after adding a camera to configure it to push events
+router.post('/hikvision/subscribe/:cameraId', async (req: Request, res: Response) => {
+  try {
+    const cam = await db.query('SELECT * FROM lpr_cameras WHERE id = $1', [req.params.cameraId]);
+    if (!cam.rows[0]) return res.status(404).json({ error: 'Camera not found' });
+
+    const { ip, port, username, password, id } = cam.rows[0];
+    const webhookUrl = `${process.env.API_BASE_URL}/api/lpr/hikvision/webhook/${id}`;
+
+    const success = await subscribeHikvisionWebhook(ip, port, username, password, webhookUrl);
+
+    res.json({
+      success,
+      webhookUrl,
+      message: success
+        ? 'Kamera is nou gekonfigureer om gebeure te stuur'
+        : 'Kon nie kamera konfigureer nie — kontroleer IP en geloofsbriewe',
+    });
+  } catch (e) {
+    res.status(500).json({ error: 'Subscribe failed' });
+  }
+});
+
+// ── Live feed (all sources) ──────────────────────────────────
+router.get('/feed', async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.id;
+    const { limit = 50 } = req.query;
+    const result = await db.query(
+      `SELECT e.*, c.name as camera_name, c.location as camera_location
+       FROM lpr_events e
+       LEFT JOIN lpr_cameras c ON e.camera_id = c.id
+       WHERE e.community_id = (SELECT community_id FROM users WHERE id = $1)
+       ORDER BY e.timestamp DESC LIMIT $2`,
+      [userId, limit]
+    );
+    res.json({ entries: result.rows });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to fetch feed' });
   }
 });
 

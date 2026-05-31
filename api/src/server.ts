@@ -89,6 +89,7 @@ app.use(`${API}/files`, filesRouter);
 app.use(`${API}/push-tokens`, pushTokensRouter);
 app.use(`${API}/payments`, paymentsRouter);
 app.use(`${API}/safety`, safetyRouter);
+app.use(`${API}/lpr`, lprRouter);
 app.use(`${API}/suite`, suiteRouter);
 app.use(`${API}/lpr`, lprRouter);
 app.use(`${API}/ai-crime`, aiCrimeRouter);
