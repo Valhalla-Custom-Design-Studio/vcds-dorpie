@@ -47,6 +47,8 @@ import areasRouter from './routes/areas';
 import trustScoreRouter from './routes/trustscore.routes';
 import { runMigrations } from './db/migrate';
 import { runDeadManCheck, runMovementAnomalyCheck } from './cron/deadman.cron';
+import promoCodeRouter from './routes/promoCode';
+import { runJordaanparkMigration } from './cron/jordaanparkMigration';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -64,6 +66,7 @@ app.get(`${API}/health`, (_req, res) => res.json({ success: true, status: 'healt
 // Routes
 app.use(`${API}/auth`, authRouter);
 app.use(`${API}/towns`, townsRouter);
+app.use(`${API}/promo`, promoCodeRouter);
 app.use(`${API}/notices`, noticesRouter);
 app.use(`${API}/listings`, listingsRouter);
 app.use(`${API}/message-threads`, messageThreadsRouter);
@@ -108,7 +111,11 @@ function startCronJobs() {
 
 runMigrations()
   .then(() => {
-    app.listen(PORT, () => {
+    // Jordaanpark migration — runs daily at 02:00 SAST
+setInterval(runJordaanparkMigration, 24 * 60 * 60 * 1000);
+runJordaanparkMigration(); // run on startup too
+
+app.listen(PORT, () => {
       console.log(`🛡️  Dorpwag™ API v2.1.0 running on port ${PORT}`);
       startCronJobs();
     });
