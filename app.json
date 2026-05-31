@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Dorpwag\u2122",
+    "name": "Dorpwag™",
     "slug": "dorpwag",
     "version": "2.0.0",
     "orientation": "portrait",
@@ -21,10 +21,10 @@
       "supportsTablet": true,
       "bundleIdentifier": "co.za.vcds.dorpwag",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Dorpwag\u2122 gebruik jou ligging vir Guardian Mode\u2122 veiligheidsmonitering.",
-        "NSLocationAlwaysUsageDescription": "Dorpwag\u2122 benodig agtergrondligging vir Guardian Mode\u2122.",
-        "NSMicrophoneUsageDescription": "Dorpwag\u2122 benodig die mikrofoon vir Witness Mode\u2122 bewyse.",
-        "NSCameraUsageDescription": "Dorpwag\u2122 gebruik die kamera vir foto's.",
+        "NSLocationWhenInUseUsageDescription": "Dorpwag™ gebruik jou ligging vir Guardian Mode™ veiligheidsmonitering.",
+        "NSLocationAlwaysUsageDescription": "Dorpwag™ benodig agtergrondligging vir Guardian Mode™.",
+        "NSMicrophoneUsageDescription": "Dorpwag™ benodig die mikrofoon vir Witness Mode™ bewyse.",
+        "NSCameraUsageDescription": "Dorpwag™ gebruik die kamera vir foto's.",
         "ITSAppUsesNonExemptEncryption": false
       },
       "backgroundModes": [
@@ -36,7 +36,7 @@
         "remote-notification"
       ],
       "config": {
-        "googleMapsApiKey": "AIzaSyA4BdW-z28E9-diJ8fXbfM2-2asRZrx5_E"
+        "googleMapsApiKey": "AIzaSyBIZnxrIO0Am1CHXPH1NgIyHbVmtXTilks"
       }
     },
     "android": {
@@ -61,7 +61,7 @@
       ],
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyA4BdW-z28E9-diJ8fXbfM2-2asRZrx5_E"
+          "apiKey": "AIzaSyBIZnxrIO0Am1CHXPH1NgIyHbVmtXTilks"
         }
       }
     },
@@ -76,7 +76,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow Dorpwag\u2122 to use your location for Guardian Mode\u2122 safety monitoring."
+          "locationAlwaysAndWhenInUsePermission": "Allow Dorpwag™ to use your location for Guardian Mode™ safety monitoring."
         }
       ],
       [
@@ -101,7 +101,7 @@
       [
         "react-native-maps",
         {
-          "googleMapsApiKey": "AIzaSyA4BdW-z28E9-diJ8fXbfM2-2asRZrx5_E"
+          "googleMapsApiKey": "AIzaSyBIZnxrIO0Am1CHXPH1NgIyHbVmtXTilks"
         }
       ]
     ],
