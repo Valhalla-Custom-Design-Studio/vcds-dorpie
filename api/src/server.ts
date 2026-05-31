@@ -124,8 +124,12 @@ app.listen(PORT, () => {
     });
   })
   .catch((err) => {
-    console.error('[STARTUP] ❌ Migration failed, aborting:', err);
-    process.exit(1);
+    console.error('[STARTUP] ⚠️ Migration error (non-fatal) — server starting anyway:', err);
+    // Start server even if migrations fail — prevents full outage on DB schema issues
+    app.listen(PORT, () => {
+      console.log(`🛡️  Dorpwag™ API v2.1.0 running on port ${PORT} (migration skipped)`);
+      startCronJobs();
+    });
   });
 
 export default app;
