@@ -96,12 +96,6 @@
       "expo-font",
       "expo-localization",
       "expo-secure-store",
-      [
-        "react-native-maps",
-        {
-          "googleMapsApiKey": "AIzaSyBIZnxrIO0Am1CHXPH1NgIyHbVmtXTilks"
-        }
-      ]
     ],
     "scheme": "dorpie",
     "extra": {
