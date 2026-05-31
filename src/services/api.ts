@@ -79,6 +79,8 @@ export const businessesAPI = {
   create: (d: any) => api.post('/businesses', d),
   reviews: (id: string) => api.get(`/businesses/${id}/reviews`),
   review: (id: string, d: any) => api.post(`/businesses/${id}/reviews`, d),
+  getClaim: (id: string) => api.get(`/businesses/${id}/claim`),
+  submitClaim: (id: string, data: { proof_document_url: string; proof_type: string }) => api.post(`/businesses/${id}/claim`, data),
 };
 
 export const messagesAPI = {
