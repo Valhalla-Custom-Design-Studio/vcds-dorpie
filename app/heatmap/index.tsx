@@ -8,6 +8,19 @@ import { Colors, Typography, Radius } from '@/theme';
 import { PlatinumCard, ScreenHeader, Badge, SectionHeader } from '@/components/ui';
 import { heatmapAPI, reportsAPI } from '@/services/api';
 
+
+// Dark map style for platinum UI
+const DARK_MAP_STYLE = [
+  { elementType: 'geometry', stylers: [{ color: '#0a1628' }] },
+  { elementType: 'labels.text.fill', stylers: [{ color: '#8ec3b9' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#1a3c34' }] },
+  { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#1a2744' }] },
+  { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#0d1f3c' }] },
+  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#021A1A' }] },
+  { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+  { featureType: 'transit', stylers: [{ visibility: 'off' }] },
+];
+
 const { width } = Dimensions.get('window');
 const MAP_HEIGHT = 260;
 
@@ -94,6 +107,7 @@ export default function Heatmap() {
         <View style={s.mapContainer}>
           <MapView
             provider={PROVIDER_GOOGLE}
+            customMapStyle={DARK_MAP_STYLE}
             onMapReady={() => setMapReady(true)}
             style={s.map}
             initialRegion={DEFAULT_REGION}
