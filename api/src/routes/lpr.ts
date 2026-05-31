@@ -217,7 +217,6 @@ router.get('/hoa/alerts', async (req: Request, res: Response) => {
 // ── Hikvision ISAPI Webhook receiver ────────────────────────
 // Camera POSTs XML to this endpoint when it detects a plate
 // No API key needed — camera pushes directly to your server
-import { testHikvisionCamera, subscribeHikvisionWebhook, processWebhookEvent } from '../services/HikvisionISAPI';
 
 router.post('/hikvision/webhook/:cameraId', async (req: Request, res: Response) => {
   try {
