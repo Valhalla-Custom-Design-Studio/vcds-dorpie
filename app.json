@@ -25,16 +25,13 @@
         "NSLocationAlwaysUsageDescription": "Dorpwag™ benodig agtergrondligging vir Guardian Mode™.",
         "NSMicrophoneUsageDescription": "Dorpwag™ benodig die mikrofoon vir Witness Mode™ bewyse.",
         "NSCameraUsageDescription": "Dorpwag™ gebruik die kamera vir foto's.",
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIBackgroundModes": [
+          "location",
+          "fetch",
+          "remote-notification"
+        ]
       },
-      "backgroundModes": [
-        "location",
-        "fetch",
-        "remote-notification",
-        "location",
-        "fetch",
-        "remote-notification"
-      ],
       "config": {}
     },
     "android": {
@@ -95,7 +92,7 @@
       "expo-asset",
       "expo-font",
       "expo-localization",
-      "expo-secure-store",
+      "expo-secure-store"
     ],
     "scheme": "dorpie",
     "extra": {
@@ -107,9 +104,6 @@
         "projectId": "d3584967-0809-49bd-a13b-9ef5915eebdd"
       }
     },
-    "owner": "valhalla-custom-design-studios-org",
-    "eas": {
-      "projectId": "d3584967-0809-49bd-a13b-9ef5915eebdd"
-    }
+    "owner": "valhalla-custom-design-studios-org"
   }
 }
