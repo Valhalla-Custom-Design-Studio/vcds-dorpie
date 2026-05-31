@@ -25,3 +25,17 @@ export const requirePaid = (req: AuthRequest, res: Response, next: NextFunction)
   if (req.user?.tier === 'free') { res.status(402).json({ success: false, message: 'Paid subscription required', upgrade: true }); return; }
   next();
 };
+
+// Alias for lpr.ts compatibility
+export const requireAuth = authenticate;
+
+// Tier-based access control
+export const requireTier = (minTier: string) => (req: AuthRequest, res: Response, next: NextFunction): void => {
+  const tierOrder: Record<string, number> = { free: 0, basic: 1, standard: 2, premium: 3, platinum: 4 };
+  const userTier = req.user?.tier || 'free';
+  if ((tierOrder[userTier] ?? 0) < (tierOrder[minTier] ?? 99)) {
+    res.status(402).json({ success: false, message: `${minTier} subscription required`, upgrade: true });
+    return;
+  }
+  next();
+};

@@ -3,7 +3,7 @@
  * Platinum-only — HOA Admin access required
  */
 import { Router, Request, Response } from 'express';
-import { requireAuth } from '../middleware/auth';
+import { authenticate as requireAuth } from '../middleware/auth';
 import { requireTier } from '../middleware/requireTier';
 import { db } from '../db';
 
