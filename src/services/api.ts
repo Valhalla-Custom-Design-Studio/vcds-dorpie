@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/auth';
 
-const BASE = process.env.EXPO_PUBLIC_API_URL || 'https://vcds-dorpwag.onrender.com/api';
+const BASE = process.env.EXPO_PUBLIC_API_URL || 'dorpwag-api.onrender.com';
 
 export const api = axios.create({ baseURL: BASE, timeout: 15000 });
 
