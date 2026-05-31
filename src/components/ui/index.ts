@@ -22,3 +22,5 @@ export {
 export { PlatinumButton } from './PlatinumButton';
 export { PlatinumInput } from './PlatinumInput';
 export { ScreenHeader } from './ScreenHeader';
+
+export { VerifiedBadge } from './VerifiedBadge';
