@@ -4,12 +4,12 @@
     "slug": "dorpwag",
     "version": "2.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/icon.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./src/assets/splash.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#001122"
+      "backgroundColor": "#021A1A"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -41,8 +41,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.png",
-        "backgroundColor": "#0B0612"
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#021A1A"
       },
       "package": "co.za.vcds.dorpwag",
       "permissions": [
