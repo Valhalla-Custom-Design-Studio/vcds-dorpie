@@ -1,18 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import {
+  View, Text, StyleSheet, ScrollView, TouchableOpacity,
+  KeyboardAvoidingView, Platform, Modal, TextInput, FlatList,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
-import { Colors, Typography, Spacing, Radius } from '@/theme';
+import { Colors, Typography, Spacing } from '@/theme';
 import { PrimaryButton, InputField } from '@/components/ui';
 import { authAPI, townsAPI } from '@/services/api';
 import { useAuthStore } from '@/store/auth';
 
-// Jordaanpark promo code config
+// Jordaanpark promo config
 const JPF_PROMO_CODE = '#JPF2026';
-const JPF_PROMO_EXPIRY = new Date('2026-06-30T23:59:59+02:00'); // Midnight SAST 30 June 2026
-const JORDAANPARK_SLUG = 'jordaanpark'; // match against town name (lowercase)
+const JPF_PROMO_EXPIRY = new Date('2026-06-30T23:59:59+02:00');
+const JORDAANPARK_SLUG = 'jordaanpark';
+
+// Fallback towns — used if API is slow/offline
+const FALLBACK_TOWNS = [
+  { id: 'jordaanpark', name: 'Jordaanpark', province: 'Gauteng' },
+  { id: 'heidelberg-gp', name: 'Heidelberg', province: 'Gauteng' },
+  { id: 'nigel', name: 'Nigel', province: 'Gauteng' },
+  { id: 'alberton', name: 'Alberton', province: 'Gauteng' },
+  { id: 'vereeniging', name: 'Vereeniging', province: 'Gauteng' },
+];
 
 function isJordaanpark(towns: any[], townId: string): boolean {
   if (!townId) return false;
@@ -28,27 +39,50 @@ export default function Signup() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const setAuth = useAuthStore(s => s.setAuth);
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [townId, setTownId] = useState('');
-  const [towns, setTowns] = useState<any[]>([]);
+  const [towns, setTowns] = useState<any[]>(FALLBACK_TOWNS);
   const [promoCode, setPromoCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Town picker modal state
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const [townSearch, setTownSearch] = useState('');
+
   useEffect(() => {
-    townsAPI.list().then(r => setTowns(r.data.data || [])).catch(() => {});
+    townsAPI.list()
+      .then(r => {
+        const apiTowns = r.data.data || [];
+        if (apiTowns.length > 0) {
+          // Merge: ensure Jordaanpark always present
+          const hasJP = apiTowns.some((t: any) =>
+            t.name.toLowerCase().replace(/\s/g, '') === JORDAANPARK_SLUG
+          );
+          setTowns(hasJP ? apiTowns : [...FALLBACK_TOWNS.slice(0, 1), ...apiTowns]);
+        }
+      })
+      .catch(() => {}); // keep fallback list on error
   }, []);
 
+  const filteredTowns = useMemo(() =>
+    towns.filter(t =>
+      `${t.name} ${t.province}`.toLowerCase().includes(townSearch.toLowerCase())
+    ),
+    [towns, townSearch]
+  );
+
+  const selectedTown = towns.find(t => t.id === townId);
   const showPromo = isJordaanpark(towns, townId);
 
   const handleSignup = async () => {
     if (!name || !email || !password) { setError('Naam, e-pos en wagwoord is verpligtend.'); return; }
     if (password.length < 8) { setError('Wagwoord moet minstens 8 karakters wees.'); return; }
 
-    // Jordaanpark promo code validation
     if (showPromo) {
       if (!promoCode.trim()) {
         setError('Voer asseblief die Jordaanpark promosiekode in om te registreer.');
@@ -102,13 +136,15 @@ export default function Signup() {
         <InputField label="Selfoon (opsioneel)" value={phone} onChangeText={setPhone} placeholder="+27 82 000 0000" keyboardType="phone-pad" icon="call-outline" />
         <InputField label="Wagwoord" value={password} onChangeText={setPassword} placeholder="Min. 8 karakters" secureTextEntry icon="lock-closed-outline" />
 
+        {/* Searchable town picker */}
         <Text style={s.pickerLabel}>DORP</Text>
-        <View style={s.pickerContainer}>
-          <Picker selectedValue={townId} onValueChange={setTownId} style={s.picker} dropdownIconColor={Colors.textMuted}>
-            <Picker.Item label="Kies jou dorp..." value="" color={Colors.textMuted} />
-            {towns.map(t => <Picker.Item key={t.id} label={`${t.name}, ${t.province}`} value={t.id} color={Colors.textHeading} />)}
-          </Picker>
-        </View>
+        <TouchableOpacity style={s.pickerContainer} onPress={() => setPickerVisible(true)} activeOpacity={0.8}>
+          <Ionicons name="location-outline" size={18} color={Colors.textMuted} style={{ marginRight: 8 }} />
+          <Text style={selectedTown ? s.pickerValue : s.pickerPlaceholder}>
+            {selectedTown ? `${selectedTown.name}, ${selectedTown.province}` : 'Kies jou dorp...'}
+          </Text>
+          <Ionicons name="chevron-down" size={18} color={Colors.textMuted} />
+        </TouchableOpacity>
 
         {showPromo && (
           <View style={s.promoContainer}>
@@ -137,6 +173,48 @@ export default function Signup() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* Town search modal */}
+      <Modal visible={pickerVisible} animationType="slide" transparent>
+        <View style={s.modalOverlay}>
+          <View style={s.modalSheet}>
+            <View style={s.modalHeader}>
+              <Text style={s.modalTitle}>Kies Dorp</Text>
+              <TouchableOpacity onPress={() => { setPickerVisible(false); setTownSearch(''); }}>
+                <Ionicons name="close" size={24} color={Colors.textBody} />
+              </TouchableOpacity>
+            </View>
+            <View style={s.searchRow}>
+              <Ionicons name="search" size={18} color={Colors.textMuted} style={{ marginRight: 8 }} />
+              <TextInput
+                style={s.searchInput}
+                placeholder="Soek dorp..."
+                placeholderTextColor={Colors.textMuted}
+                value={townSearch}
+                onChangeText={setTownSearch}
+                autoFocus
+              />
+            </View>
+            <FlatList
+              data={filteredTowns}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={[s.townItem, item.id === townId && s.townItemSelected]}
+                  onPress={() => { setTownId(item.id); setPickerVisible(false); setTownSearch(''); }}
+                >
+                  <Text style={[s.townName, item.id === townId && s.townNameSelected]}>
+                    {item.name}
+                  </Text>
+                  <Text style={s.townProvince}>{item.province}</Text>
+                </TouchableOpacity>
+              )}
+              ListEmptyComponent={<Text style={s.noResults}>Geen dorpe gevind nie</Text>}
+              keyboardShouldPersistTaps="handled"
+            />
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 }
@@ -151,8 +229,9 @@ const s = StyleSheet.create({
   errorBanner: { backgroundColor: 'rgba(239,68,68,0.15)', borderRadius: 8, padding: Spacing.md, marginBottom: Spacing.md, borderWidth: 1, borderColor: Colors.error },
   errorText: { color: Colors.error, fontSize: 14 },
   pickerLabel: { ...Typography.label, marginBottom: 6 },
-  pickerContainer: { backgroundColor: Colors.surface, borderRadius: 12, borderWidth: 1, borderColor: Colors.surfaceBorder, marginBottom: Spacing.md, overflow: 'hidden' },
-  picker: { color: Colors.textHeading, height: 50 },
+  pickerContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.surface, borderRadius: 12, borderWidth: 1, borderColor: Colors.surfaceBorder, padding: 14, marginBottom: Spacing.md },
+  pickerPlaceholder: { flex: 1, color: Colors.textMuted, fontSize: 15 },
+  pickerValue: { flex: 1, color: Colors.textHeading, fontSize: 15 },
   promoContainer: { backgroundColor: 'rgba(255,180,0,0.07)', borderRadius: 12, borderWidth: 1, borderColor: 'rgba(255,180,0,0.3)', padding: Spacing.md, marginBottom: Spacing.md },
   promoHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: Spacing.sm },
   promoLabel: { ...Typography.label, color: Colors.accent, fontSize: 11 },
@@ -160,4 +239,17 @@ const s = StyleSheet.create({
   loginRow: { flexDirection: 'row', justifyContent: 'center', marginTop: Spacing.lg },
   loginText: { color: Colors.textMuted, fontSize: 14 },
   loginLink: { color: Colors.accent, fontSize: 14, fontWeight: '600' },
+  // Modal
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'flex-end' },
+  modalSheet: { backgroundColor: Colors.bg, borderTopLeftRadius: 20, borderTopRightRadius: 20, maxHeight: '80%', paddingBottom: 32 },
+  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: Spacing.lg, borderBottomWidth: 1, borderBottomColor: Colors.surfaceBorder },
+  modalTitle: { ...Typography.h3 },
+  searchRow: { flexDirection: 'row', alignItems: 'center', margin: Spacing.md, backgroundColor: Colors.surface, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, borderWidth: 1, borderColor: Colors.surfaceBorder },
+  searchInput: { flex: 1, color: Colors.textHeading, fontSize: 15 },
+  townItem: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: Spacing.lg, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: Colors.surfaceBorder },
+  townItemSelected: { backgroundColor: 'rgba(255,180,0,0.08)' },
+  townName: { color: Colors.textHeading, fontSize: 15 },
+  townNameSelected: { color: Colors.accent, fontWeight: '600' },
+  townProvince: { color: Colors.textMuted, fontSize: 13 },
+  noResults: { color: Colors.textMuted, textAlign: 'center', padding: Spacing.xl },
 });

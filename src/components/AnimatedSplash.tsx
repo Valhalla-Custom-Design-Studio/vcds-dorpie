@@ -25,7 +25,6 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
     // Hide native splash only after our image is ready — prevents black frame
     SplashScreen.hideAsync().catch(() => {});
 
-    // Fade + scale in
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -39,14 +38,13 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
         useNativeDriver: true,
       }),
     ]).start(() => {
-      // Hold then fade out
       setTimeout(() => {
         Animated.timing(fadeOut, {
           toValue: 0,
           duration: 500,
           useNativeDriver: true,
         }).start(() => onFinish());
-      }, 4200);
+      }, 2800);
     });
   }, [imageLoaded]);
 
@@ -61,14 +59,11 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
         }}
       >
         <Image
-          source={require('../../assets/splash-animated.webp')}
+          source={require('../../assets/splash-frame1.png')}
           style={styles.splash}
           resizeMode="cover"
           onLoad={() => setImageLoaded(true)}
-          onError={() => {
-            // Fallback: if webp fails, still proceed
-            setImageLoaded(true);
-          }}
+          onError={() => setImageLoaded(true)}
         />
       </Animated.View>
     </Animated.View>
