@@ -110,7 +110,7 @@ export const translations = {
     welcome: 'Welkom', signUp: 'Registreer', login: 'Teken In', logout: 'Teken Uit',
     joinYourDorpwag: 'Sluit Aan by Jou Dorpwag', email: 'E-pos', password: 'Wagwoord',
     confirmPassword: 'Bevestig Wagwoord', fullName: 'Volle Naam', selectTown: 'Kies Dorp',
-    searchTowns: 'Soek dorpe...`, dontHaveAccount: "Het jy nie 'n rekening nie?",`
+    searchTowns: 'Soek dorpe...', dontHaveAccount: "Het jy nie 'n rekening nie?",`
     alreadyHaveAccount: "Het jy reeds 'n rekening?",
     passwordMin8: 'Wagwoord moet ten minste 8 karakters wees',
     passwordsNoMatch: 'Wagwoorde stem nie ooreen nie', emailRequired: 'E-pos is verpligtend',
@@ -128,16 +128,16 @@ export const translations = {
     postListing: 'Plaas Advertensie', contactSeller: 'Kontak Verkoper', markSold: 'Merk as Verkoop',
     sold: 'VERKOOP', noListings: 'Nog geen advertensies nie', addPhotos: 'Voeg Fotos By',
     maxPhotos: 'Maks 6 fotos', new: 'Nuut', likeNew: 'Soos Nuut', good: 'Goed', fair: 'Redelik',
-    messages: 'Boodskappe`, typeMessage: "Tik 'n boodskap...",`
+    messages: 'Boodskappe', typeMessage: "Tik 'n boodskap...",`
     newEvent: 'Nuwe Gebeurtenis', date: 'Datum', time: 'Tyd', location: 'Ligging',
     rsvp: 'RSVP', cancelRsvp: 'Kanselleer RSVP', attending: 'bywoon',
     createEvent: 'Skep Gebeurtenis', noEvents: 'Nog geen gebeure nie', list: 'Lys', calendar: 'Kalender',
     newBusiness: 'Nuwe Besigheid', businessName: 'Besigheidsnaam', address: 'Adres',
     phone: 'Telefoon', whatsapp: 'WhatsApp', operatingHours: 'Besigheidsure',
-    openNow: 'Nou Oop', closed: 'Gesluit', call: 'Bel`, becomeOwner: "Word 'n Besigheidseienaar",`
+    openNow: 'Nou Oop', closed: 'Gesluit', call: 'Bel', becomeOwner: "Word 'n Besigheidseienaar",`
     requestUpgrade: 'Versoek Opgradering', requestSubmitted: 'Jou versoek is ingedien!',
     newTopic: 'Nuwe Onderwerp', postTopic: 'Plaas Onderwerp', noTopics: 'Nog geen besprekings nie',
-    replies: 'antwoorde', reply: 'Antwoord`, writeReply: "Skryf 'n antwoord...", report: 'Rapporteer`,
+    replies: 'antwoorde', reply: 'Antwoord', writeReply: "Skryf 'n antwoord...", report: 'Rapporteer',
     newest: 'Nuutste', mostActive: 'Mees Aktief',
     sos: 'SOS — Tik vir Noodgeval', emergencyContacts: 'Noodkontakte',
     recentAlerts: 'Onlangse Waarskuwings', newAlert: 'Nuwe Waarskuwing', alertType: 'Waarskuwingstipe',
