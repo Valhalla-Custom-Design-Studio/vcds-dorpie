@@ -2,7 +2,7 @@ import request from 'supertest';
 import app from '../../api/src/server';
 
 describe('Dorpwag Auth API', () => {
-  const user = { email: \`test_\${Date.now()}@dorpwag.co.za\`, password: 'TestPass123!', firstName: 'Test', lastName: 'User' };
+  const user = { email: `test_${Date.now()}@dorpwag.co.za`, password: 'TestPass123!', firstName: 'Test', lastName: 'User' };
 
   it('POST /register — creates user', async () => {
     const res = await request(app).post('/api/v1/auth/register').send(user);
