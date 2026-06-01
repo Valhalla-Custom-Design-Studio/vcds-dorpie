@@ -5,7 +5,7 @@ import { authenticate, AuthRequest } from '../middleware/auth';
 const r = Router();
 
 r.get('/health', (_req: Request, res: Response) => {
-  res.json({ success: true, service: 'Dorpwag\u2122 Safety Module', status: 'operational', ts: new Date().toISOString() });
+  res.json({ success: true, service: 'Dorpwag™ Safety Module', status: 'operational', ts: new Date().toISOString() });
 });
 
 r.get('/stats', authenticate, async (req: AuthRequest, res: Response) => {
