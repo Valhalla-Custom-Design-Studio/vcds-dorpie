@@ -4,7 +4,7 @@ import { Colors, Typography, Spacing } from '@/theme';
 import { ScreenHeader, PlatinumCard } from '@/components/ui';
 
 const NOTIF_SETTINGS = [
-  { key: 'sos_alerts', label: 'SOS Noodalarms', desc: "Ontvang kennisgewings wanneer 'n SOS in jou dorp geaktiveer word" },
+  { key: 'sos_alerts', label: 'SOS Noodalarms`, desc: "Ontvang kennisgewings wanneer 'n SOS in jou dorp geaktiveer word" },`
   { key: 'incidents', label: 'Voorvalle', desc: 'Nuwe misdaadverslae naby jou' },
   { key: 'notices', label: 'Kennisgewings', desc: 'Gemeenskap kennisgewings en aankondigings' },
   { key: 'events', label: 'Geleenthede', desc: 'Plaaslike geleenthede in jou dorp' },
