@@ -10,7 +10,7 @@ export default function Terms() {
       <ScrollView contentContainerStyle={s.scroll}>
         {[
           { title: '1. Aanvaarding van Voorwaardes', body: 'Deur Dorpwag™ te gebruik, stem jy in tot hierdie voorwaardes. As jy nie saamstem nie, gebruik asseblief nie die app nie.' },
-          { title: '2. Gebruiksregte', body: "Dorpwag™ word deur VCDS™ voorsien. Alle regte voorbehou. Jy kry 'n nie-eksklusiewe lisensie om die app te gebruik." },
+          { title: '2. Gebruiksregte`, body: "Dorpwag™ word deur VCDS™ voorsien. Alle regte voorbehou. Jy kry 'n nie-eksklusiewe lisensie om die app te gebruik." },`
           { title: '3. SOS & Noodfunksies', body: 'Die SOS-funksie is bedoel vir egte noodgevalle. Misbruik kan tot terminasie van jou rekening lei.' },
           { title: '4. Privaatheid', body: 'Jou persoonlike data word beskerm ingevolge die POPI-wet. Sien ons Privaatheidsbeleid vir besonderhede.' },
           { title: '5. Betalings', body: 'Betalings word verwerk deur PayFast™. Terugbetalings word oorweeg geval per geval.' },
