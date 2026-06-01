@@ -19,7 +19,7 @@
       "env": {
         "SENTRY_ORG": "valhalla-custom-design-studios",
         "SENTRY_PROJECT": "dorpwag",
-        "SENTRY_AUTH_TOKEN": "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",
+        "SENTRY_AUTH_TOKEN": "6b0950bef485a8fc6ec0b0e148043a4ab4a2950dc7875cd2f6ca5ac233ab8c8d",
         "EXPO_PUBLIC_API_URL": "https://vcds-dorpie.onrender.com",
         "EXPO_PUBLIC_PAYFAST_API_URL": "https://www.payfast.co.za",
         "EXPO_PUBLIC_POSTHOG_KEY": "phc_w8M2RMQe86ghfbEgYUu4TWhgxZyL9EHDvPVLJBUcoxHC",
@@ -39,7 +39,7 @@
       "env": {
         "SENTRY_ORG": "valhalla-custom-design-studios",
         "SENTRY_PROJECT": "dorpwag",
-        "SENTRY_AUTH_TOKEN": "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",
+        "SENTRY_AUTH_TOKEN": "6b0950bef485a8fc6ec0b0e148043a4ab4a2950dc7875cd2f6ca5ac233ab8c8d",
         "EXPO_PUBLIC_API_URL": "https://vcds-dorpie.onrender.com",
         "EXPO_PUBLIC_PAYFAST_API_URL": "https://www.payfast.co.za",
         "EXPO_PUBLIC_POSTHOG_KEY": "phc_w8M2RMQe86ghfbEgYUu4TWhgxZyL9EHDvPVLJBUcoxHC",
@@ -58,7 +58,7 @@
       "env": {
         "SENTRY_ORG": "valhalla-custom-design-studios",
         "SENTRY_PROJECT": "dorpwag",
-        "SENTRY_AUTH_TOKEN": "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",
+        "SENTRY_AUTH_TOKEN": "6b0950bef485a8fc6ec0b0e148043a4ab4a2950dc7875cd2f6ca5ac233ab8c8d",
         "EXPO_PUBLIC_API_URL": "https://vcds-dorpie.onrender.com",
         "EXPO_PUBLIC_PAYFAST_API_URL": "https://www.payfast.co.za",
         "EXPO_PUBLIC_POSTHOG_KEY": "phc_w8M2RMQe86ghfbEgYUu4TWhgxZyL9EHDvPVLJBUcoxHC",
