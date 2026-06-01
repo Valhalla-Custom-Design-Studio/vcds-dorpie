@@ -49,6 +49,11 @@ import trustScoreRouter from './routes/trustscore.routes';
 import { runMigrations } from './db/migrate';
 import { runDeadManCheck, runMovementAnomalyCheck } from './cron/deadman.cron';
 import promoCodeRouter from './routes/promoCode';
+import patrolsRouter from './routes/patrols';
+import subscriptionsRouter from './routes/subscriptions';
+import careRouter from './routes/care';
+import incidentsRouter from './routes/incidents';
+import watchlistRouter from './routes/watchlist';
 import { runJordaanparkMigration } from './cron/jordaanparkMigration';
 
 const app = express();
@@ -93,12 +98,18 @@ app.use(`${API}/payments`, paymentsRouter);
 app.use(`${API}/safety`, safetyRouter);
 app.use(`${API}/lpr`, lprRouter);
 app.use(`${API}/suite`, suiteRouter);
-app.use(`${API}/lpr`, lprRouter);
+
 app.use(`${API}/ai-crime`, aiCrimeRouter);
 app.use(`${API}/geofence`, geofenceRouter);
 app.use(`${API}/mood`, moodRouter);
 app.use(`${API}/areas`, areasRouter);
 app.use(`${API}/trust-score`, trustScoreRouter);
+
+app.use(`${API}/patrols`, patrolsRouter);
+app.use(`${API}/subscriptions`, subscriptionsRouter);
+app.use(`${API}/care`, careRouter);
+app.use(`${API}/incidents`, incidentsRouter);
+app.use(`${API}/watchlist`, watchlistRouter);
 
 app.use(Sentry.expressErrorHandler());
 app.use((_req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
