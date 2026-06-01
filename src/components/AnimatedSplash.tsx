@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  View,
   StyleSheet,
   Animated,
   Dimensions,
@@ -18,9 +17,13 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.92)).current;
   const fadeOut = useRef(new Animated.Value(1)).current;
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
-    SplashScreen.hideAsync();
+    if (!imageLoaded) return;
+
+    // Hide native splash only after our image is ready — prevents black frame
+    SplashScreen.hideAsync().catch(() => {});
 
     // Fade + scale in
     Animated.parallel([
@@ -36,7 +39,7 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
         useNativeDriver: true,
       }),
     ]).start(() => {
-      // Hold for animation duration then fade out
+      // Hold then fade out
       setTimeout(() => {
         Animated.timing(fadeOut, {
           toValue: 0,
@@ -45,7 +48,7 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
         }).start(() => onFinish());
       }, 4200);
     });
-  }, []);
+  }, [imageLoaded]);
 
   return (
     <Animated.View style={[styles.container, { opacity: fadeOut, backgroundColor: '#021A1A' }]}>
@@ -61,6 +64,11 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
           source={require('../../assets/splash-animated.webp')}
           style={styles.splash}
           resizeMode="cover"
+          onLoad={() => setImageLoaded(true)}
+          onError={() => {
+            // Fallback: if webp fails, still proceed
+            setImageLoaded(true);
+          }}
         />
       </Animated.View>
     </Animated.View>
