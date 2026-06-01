@@ -10,7 +10,7 @@ const NOTIF_SETTINGS = [
   { key: 'events', label: 'Geleenthede', desc: 'Plaaslike geleenthede in jou dorp' },
   { key: 'patrols', label: 'Patrollies', desc: 'Patrollie skedule-opdaterings' },
   { key: 'messages', label: 'Boodskappe', desc: 'Nuwe privaat boodskappe' },
-  { key: 'guardian', label: 'Guardian Mode™', desc: 'Guardian ping-opdaterings' },
+  { key: 'guardian', label: 'Guardian Mode\u2122', desc: 'Guardian ping-opdaterings' },
 ];
 
 export default function NotificationsSettings() {

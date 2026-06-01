@@ -13,8 +13,8 @@ export default function Terms() {
           { title: '2. Gebruiksregte', body: "Dorpwag™ word deur VCDS™ voorsien. Alle regte voorbehou. Jy kry 'n nie-eksklusiewe lisensie om die app te gebruik." },`
           { title: '3. SOS & Noodfunksies', body: 'Die SOS-funksie is bedoel vir egte noodgevalle. Misbruik kan tot terminasie van jou rekening lei.' },
           { title: '4. Privaatheid', body: 'Jou persoonlike data word beskerm ingevolge die POPI-wet. Sien ons Privaatheidsbeleid vir besonderhede.' },
-          { title: '5. Betalings', body: 'Betalings word verwerk deur PayFast™. Terugbetalings word oorweeg geval per geval.' },
-          { title: '6. Aanspreeklikheid', body: 'VCDS™ is nie aanspreeklik vir skade voortspruitend uit die gebruik van Dorpwag™ nie.' },
+          { title: '5. Betalings', body: 'Betalings word verwerk deur PayFast\u2122. Terugbetalings word oorweeg geval per geval.' },
+          { title: '6. Aanspreeklikheid', body: 'VCDS\u2122 is nie aanspreeklik vir skade voortspruitend uit die gebruik van Dorpwag\u2122 nie.' },
           { title: '7. Wysigings', body: 'Ons behou die reg voor om hierdie voorwaardes te wysig. Voortgesette gebruik impliseer aanvaarding.' },
         ].map(s2 => (
           <View key={s2.title} style={{ marginBottom: Spacing.lg }}>
@@ -22,7 +22,7 @@ export default function Terms() {
             <Text style={Typography.body}>{s2.body}</Text>
           </View>
         ))}
-        <Text style={[Typography.caption, { marginTop: Spacing.md }]}>Laas opgedateer: Mei 2026 · VCDS Holdings</Text>
+        <Text style={[Typography.caption, { marginTop: Spacing.md }]}>Laas opgedateer: Mei 2026 \u00B7 VCDS Holdings</Text>
       </ScrollView>
     </View>
   );

@@ -60,7 +60,7 @@ export default function ProfileScreen() {
     {
       title: t('profile.subscription'),
       items: [
-        { icon: 'star-outline', label: tier !== 'free' ? `${tierLabel} ✓` : 'Opgradeer na Pro', route: '/subscribe', badge: tierLabel, badgeColor: tierColor },
+        { icon: 'star-outline', label: tier !== 'free' ? `${tierLabel} \u2713` : 'Opgradeer na Pro', route: '/subscribe', badge: tierLabel, badgeColor: tierColor },
         { icon: 'receipt-outline', label: t('profile.paymentHistory'), route: '/settings/payments' },
       ],
     },

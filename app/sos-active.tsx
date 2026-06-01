@@ -98,7 +98,7 @@ export default function SOSActive() {
           {status === 'idle' && 'Tap the button to alert your community immediately'}
           {status === 'locating' && 'Fetching your GPS coordinates'}
           {status === 'sending' && 'Notifying community members...'}
-          {status === 'active' && `SOS #${sosId?.slice(0,8)} • Your community has been alerted`}
+          {status === 'active' && `SOS #${sosId?.slice(0,8)} \u2022 Your community has been alerted`}
           {status === 'error' && 'Could not send SOS. Check your connection.'}
         </Text>
 

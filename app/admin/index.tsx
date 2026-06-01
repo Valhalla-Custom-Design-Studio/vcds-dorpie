@@ -64,7 +64,7 @@ export default function SuperAdminScreen() {
   };
 
   const changeRole = (userId: string, userName: string) => {
-    Alert.alert(`Change Role — ${userName}`, 'Select new role:', [
+    Alert.alert(`Change Role \u2014 ${userName}`, 'Select new role:', [
       { text: 'Resident', onPress: () => updateRole(userId, 'resident') },
       { text: 'HOA Member', onPress: () => updateRole(userId, 'hoa') },
       { text: 'Admin', onPress: () => updateRole(userId, 'admin') },
