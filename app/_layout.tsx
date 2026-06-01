@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Stack, Redirect, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -27,9 +27,12 @@ function AuthGate({ children }: { children: React.ReactNode }) {
   }
 
   const inAuth = segments[0] === '(auth)';
+  const inTabs = segments[0] === '(tabs)';
 
+  // Not logged in and not in auth flow → go to welcome
   if (!user && !inAuth) return <Redirect href="/(auth)/welcome" />;
-  if (user && inAuth) return <Redirect href="/(tabs)/index" />;
+  // Logged in but stuck in auth flow → go to tabs root
+  if (user && inAuth) return <Redirect href="/(tabs)" />;
 
   return <>{children}</>;
 }
@@ -45,6 +48,7 @@ export default function RootLayout() {
           <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: Colors.bg }, animation: 'slide_from_right' }}>
             <Stack.Screen name="(auth)" />
             <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="index" />
             <Stack.Screen name="sos-active" options={{ presentation: 'fullScreenModal', animation: 'fade' }} />
             <Stack.Screen name="emergency-alert/[sosId]" options={{ presentation: 'fullScreenModal' }} />
             <Stack.Screen name="deadman-checkin" options={{ presentation: 'fullScreenModal' }} />

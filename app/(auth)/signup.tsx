@@ -9,6 +9,21 @@ import { PrimaryButton, InputField } from '@/components/ui';
 import { authAPI, townsAPI } from '@/services/api';
 import { useAuthStore } from '@/store/auth';
 
+// Jordaanpark promo code config
+const JPF_PROMO_CODE = '#JPF2026';
+const JPF_PROMO_EXPIRY = new Date('2026-06-30T23:59:59+02:00'); // Midnight SAST 30 June 2026
+const JORDAANPARK_SLUG = 'jordaanpark'; // match against town name (lowercase)
+
+function isJordaanpark(towns: any[], townId: string): boolean {
+  if (!townId) return false;
+  const town = towns.find(t => t.id === townId);
+  return !!town && town.name.toLowerCase().replace(/\s/g, '') === JORDAANPARK_SLUG;
+}
+
+function isPromoValid(): boolean {
+  return new Date() <= JPF_PROMO_EXPIRY;
+}
+
 export default function Signup() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -19,6 +34,7 @@ export default function Signup() {
   const [password, setPassword] = useState('');
   const [townId, setTownId] = useState('');
   const [towns, setTowns] = useState<any[]>([]);
+  const [promoCode, setPromoCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -26,15 +42,41 @@ export default function Signup() {
     townsAPI.list().then(r => setTowns(r.data.data || [])).catch(() => {});
   }, []);
 
+  const showPromo = isJordaanpark(towns, townId);
+
   const handleSignup = async () => {
     if (!name || !email || !password) { setError('Naam, e-pos en wagwoord is verpligtend.'); return; }
     if (password.length < 8) { setError('Wagwoord moet minstens 8 karakters wees.'); return; }
+
+    // Jordaanpark promo code validation
+    if (showPromo) {
+      if (!promoCode.trim()) {
+        setError('Voer asseblief die Jordaanpark promosiekode in om te registreer.');
+        return;
+      }
+      if (promoCode.trim().toUpperCase() !== JPF_PROMO_CODE.toUpperCase()) {
+        setError('Ongeldige promosiekode. Gebruik #JPF2026.');
+        return;
+      }
+      if (!isPromoValid()) {
+        setError('Hierdie promosiekode het verval. Kontak jou dorpsadministrateur.');
+        return;
+      }
+    }
+
     setLoading(true); setError('');
     try {
-      const res = await authAPI.signup({ name, email: email.trim().toLowerCase(), password, townId: townId || undefined, phone: phone || undefined });
+      const res = await authAPI.signup({
+        name,
+        email: email.trim().toLowerCase(),
+        password,
+        townId: townId || undefined,
+        phone: phone || undefined,
+        promoCode: showPromo && promoCode ? promoCode.trim() : undefined,
+      });
       const { user, access_token } = res.data.data;
       setAuth(user, access_token);
-      router.replace('/(tabs)/index');
+      router.replace('/(tabs)');
     } catch (e: any) {
       setError(e.response?.data?.message || 'Registrasie het misluk. Probeer weer.');
     } finally { setLoading(false); }
@@ -68,6 +110,24 @@ export default function Signup() {
           </Picker>
         </View>
 
+        {showPromo && (
+          <View style={s.promoContainer}>
+            <View style={s.promoHeader}>
+              <Ionicons name="ticket-outline" size={18} color={Colors.accent} />
+              <Text style={s.promoLabel}>JORDAANPARK PROMOSIEKODE (VERPLIGTEND)</Text>
+            </View>
+            <InputField
+              label=""
+              value={promoCode}
+              onChangeText={setPromoCode}
+              placeholder="#JPF2026"
+              icon="key-outline"
+              autoCapitalize="characters"
+            />
+            <Text style={s.promoHint}>Voer jou Jordaanpark Fees 2026 promosiekode in vir gratis volledige toegang.</Text>
+          </View>
+        )}
+
         <PrimaryButton title="Registreer Gratis" onPress={handleSignup} loading={loading} variant="accent" style={{ marginTop: Spacing.md }} />
 
         <View style={s.loginRow}>
@@ -93,6 +153,10 @@ const s = StyleSheet.create({
   pickerLabel: { ...Typography.label, marginBottom: 6 },
   pickerContainer: { backgroundColor: Colors.surface, borderRadius: 12, borderWidth: 1, borderColor: Colors.surfaceBorder, marginBottom: Spacing.md, overflow: 'hidden' },
   picker: { color: Colors.textHeading, height: 50 },
+  promoContainer: { backgroundColor: 'rgba(255,180,0,0.07)', borderRadius: 12, borderWidth: 1, borderColor: 'rgba(255,180,0,0.3)', padding: Spacing.md, marginBottom: Spacing.md },
+  promoHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: Spacing.sm },
+  promoLabel: { ...Typography.label, color: Colors.accent, fontSize: 11 },
+  promoHint: { color: Colors.textMuted, fontSize: 12, marginTop: 4 },
   loginRow: { flexDirection: 'row', justifyContent: 'center', marginTop: Spacing.lg },
   loginText: { color: Colors.textMuted, fontSize: 14 },
   loginLink: { color: Colors.accent, fontSize: 14, fontWeight: '600' },
