@@ -7,7 +7,7 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "node": "24.14.0",
+      "node": "20.19.4",
       "android": {
         "image": "latest",
         "buildType": "apk"
@@ -28,7 +28,7 @@
     },
     "preview": {
       "distribution": "internal",
-      "node": "24.14.0",
+      "node": "20.19.4",
       "android": {
         "image": "latest",
         "buildType": "apk"
@@ -47,7 +47,7 @@
       }
     },
     "production": {
-      "node": "24.14.0",
+      "node": "20.19.4",
       "android": {
         "image": "latest",
         "buildType": "app-bundle"
