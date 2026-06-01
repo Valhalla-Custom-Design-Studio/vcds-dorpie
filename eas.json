@@ -19,7 +19,11 @@
       "env": {
         "SENTRY_ORG": "valhalla-custom-design-studios",
         "SENTRY_PROJECT": "dorpwag",
-        "SENTRY_AUTH_TOKEN": "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"
+        "SENTRY_AUTH_TOKEN": "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",
+        "EXPO_PUBLIC_API_URL": "https://vcds-dorpie.onrender.com",
+        "EXPO_PUBLIC_PAYFAST_API_URL": "https://www.payfast.co.za",
+        "EXPO_PUBLIC_POSTHOG_KEY": "phc_w8M2RMQe86ghfbEgYUu4TWhgxZyL9EHDvPVLJBUcoxHC",
+        "EXPO_PUBLIC_SENTRY_DSN": "https://7dca735993b17022163cd1d56bb26937@o4511432712650752.ingest.de.sentry.io/4511461329338448"
       }
     },
     "preview": {
@@ -35,7 +39,11 @@
       "env": {
         "SENTRY_ORG": "valhalla-custom-design-studios",
         "SENTRY_PROJECT": "dorpwag",
-        "SENTRY_AUTH_TOKEN": "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"
+        "SENTRY_AUTH_TOKEN": "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",
+        "EXPO_PUBLIC_API_URL": "https://vcds-dorpie.onrender.com",
+        "EXPO_PUBLIC_PAYFAST_API_URL": "https://www.payfast.co.za",
+        "EXPO_PUBLIC_POSTHOG_KEY": "phc_w8M2RMQe86ghfbEgYUu4TWhgxZyL9EHDvPVLJBUcoxHC",
+        "EXPO_PUBLIC_SENTRY_DSN": "https://7dca735993b17022163cd1d56bb26937@o4511432712650752.ingest.de.sentry.io/4511461329338448"
       }
     },
     "production": {
@@ -50,7 +58,11 @@
       "env": {
         "SENTRY_ORG": "valhalla-custom-design-studios",
         "SENTRY_PROJECT": "dorpwag",
-        "SENTRY_AUTH_TOKEN": "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"
+        "SENTRY_AUTH_TOKEN": "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",
+        "EXPO_PUBLIC_API_URL": "https://vcds-dorpie.onrender.com",
+        "EXPO_PUBLIC_PAYFAST_API_URL": "https://www.payfast.co.za",
+        "EXPO_PUBLIC_POSTHOG_KEY": "phc_w8M2RMQe86ghfbEgYUu4TWhgxZyL9EHDvPVLJBUcoxHC",
+        "EXPO_PUBLIC_SENTRY_DSN": "https://7dca735993b17022163cd1d56bb26937@o4511432712650752.ingest.de.sentry.io/4511461329338448"
       }
     }
   },
