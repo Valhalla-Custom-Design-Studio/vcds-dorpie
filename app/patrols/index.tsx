@@ -159,8 +159,7 @@ export default function PatrolsScreen() {
             <View style={s.center}>
               <Ionicons name="shield-outline" size={48} color={Colors.textMuted} />
               <Text style={[Typography.body, { color: Colors.textMuted, marginTop: 12, textAlign: 'center' }]}>
-                Geen aktiewe patrollies nie.{'
-'}Wees die eerste om te begin!
+                Geen aktiewe patrollies nie.{' '}Wees die eerste om te begin!
               </Text>
             </View>
           )}
