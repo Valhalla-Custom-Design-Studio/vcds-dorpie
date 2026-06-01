@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Dorpwag™",
+    "name": "Dorpwag\u2122",
     "slug": "dorpwag",
     "version": "2.0.0",
     "orientation": "portrait",
@@ -21,10 +21,10 @@
       "supportsTablet": true,
       "bundleIdentifier": "co.za.vcds.dorpwag",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Dorpwag™ gebruik jou ligging vir Guardian Mode™ veiligheidsmonitering.",
-        "NSLocationAlwaysUsageDescription": "Dorpwag™ benodig agtergrondligging vir Guardian Mode™.",
-        "NSMicrophoneUsageDescription": "Dorpwag™ benodig die mikrofoon vir Witness Mode™ bewyse.",
-        "NSCameraUsageDescription": "Dorpwag™ gebruik die kamera vir foto's.",
+        "NSLocationWhenInUseUsageDescription": "Dorpwag\u2122 gebruik jou ligging vir Guardian Mode\u2122 veiligheidsmonitering.",
+        "NSLocationAlwaysUsageDescription": "Dorpwag\u2122 benodig agtergrondligging vir Guardian Mode\u2122.",
+        "NSMicrophoneUsageDescription": "Dorpwag\u2122 benodig die mikrofoon vir Witness Mode\u2122 bewyse.",
+        "NSCameraUsageDescription": "Dorpwag\u2122 gebruik die kamera vir foto's.",
         "ITSAppUsesNonExemptEncryption": false,
         "UIBackgroundModes": [
           "location",
@@ -71,15 +71,13 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow Dorpwag™ to use your location for Guardian Mode™ safety monitoring."
+          "locationAlwaysAndWhenInUsePermission": "Allow Dorpwag\u2122 to use your location for Guardian Mode\u2122 safety monitoring."
         }
       ],
       [
         "expo-build-properties",
         {
-          "android": {
-            "kotlinVersion": "1.9.25"
-          }
+          "android": {}
         }
       ],
       [
