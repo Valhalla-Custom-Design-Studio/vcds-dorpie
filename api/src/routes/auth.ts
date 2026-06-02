@@ -39,14 +39,27 @@ r.post('/signup', async (req: Request, res: Response) => {
         );
         user.registered_apps = [...user.registered_apps, app];
       }
+      // Fetch with town_name for existing user
+      const existingWithTown = await pool.query(
+        `SELECT u.id,u.email,u.name,u.role,u.subscription_tier,u.town_id,u.registered_apps,t.name as town_name
+         FROM users u LEFT JOIN towns t ON t.id=u.town_id WHERE u.id=$1`,
+        [user.id]
+      );
+      const safeExisting = existingWithTown.rows[0] || user;
       const token = jwt.sign({ id: user.id, email: user.email, role: user.role, tier: user.subscription_tier, app }, process.env.JWT_SECRET!, { expiresIn: '7d' });
-      res.status(200).json({ success: true, existing: true, data: { user, access_token: token } });
+      res.status(200).json({ success: true, existing: true, data: { user: safeExisting, access_token: token } });
       return;
     }
     const hash = await bcrypt.hash(password, 12);
-    const { rows } = await pool.query(
-      'INSERT INTO users (email,password,name,town_id,phone,registered_apps) VALUES($1,$2,$3,$4,$5,$6) RETURNING id,email,name,role,subscription_tier,town_id,registered_apps',
+    const insertRes = await pool.query(
+      'INSERT INTO users (email,password,name,town_id,phone,registered_apps) VALUES($1,$2,$3,$4,$5,$6) RETURNING id',
       [email.toLowerCase(), hash, name, resolvedTownId, phone || null, [app]]
+    );
+    const newUserId = insertRes.rows[0].id;
+    const { rows } = await pool.query(
+      `SELECT u.id,u.email,u.name,u.role,u.subscription_tier,u.town_id,u.registered_apps,t.name as town_name
+       FROM users u LEFT JOIN towns t ON t.id=u.town_id WHERE u.id=$1`,
+      [newUserId]
     );
     const user = rows[0];
     await pool.query('INSERT INTO notification_preferences (user_id) VALUES($1) ON CONFLICT DO NOTHING', [user.id]);
