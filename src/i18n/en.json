@@ -52,7 +52,8 @@
     "safety": "Safety",
     "community": "Community",
     "directory": "Directory",
-    "profile": "Profile"
+    "profile": "Profile",
+    "marketplace": "Marketplace"
   },
   "home": {
     "greeting_morning": "Good morning",

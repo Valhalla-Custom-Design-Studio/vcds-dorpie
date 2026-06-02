@@ -18,7 +18,7 @@ const FEATURE_CARDS = [
   { key: 'bewakermodus', icon: 'shield-checkmark' as const, title: 'Bewakermodus™', subtitle: 'Deurlopende agtergrondbeskerming', color: Colors.accentGreen, route: '/guardian' },
   { key: 'hittemap', icon: 'map' as const, title: 'Straat Hittemap', subtitle: 'Lewende veiligheidskaart vir jou area', color: Colors.accentRed, route: '/heatmap' },
   { key: 'bewegingsdna', icon: 'analytics' as const, title: 'Bewegings-DNA™', subtitle: 'Leer jou patrone — waarsku as iets abnormaal is', color: Colors.accentPurple, route: '/movement-checkin' },
-  { key: 'phantom', icon: 'eye-off' as const, title: 'Phantom Alert™', subtitle: 'Geheime noodsnellers — niks wys op jou foon nie', color: Colors.accentViolet, route: '/sos-active' },
+  { key: 'phantom', icon: 'eye-off' as const, title: 'Phantom Alert™', subtitle: 'Geheime noodsnellers — niks wys op jou foon nie', color: Colors.accentViolet, route: '/phantom-alert' },
   { key: 'sosgeskiedenis', icon: 'time' as const, title: 'SOS Geskiedenis', subtitle: 'Bekyk vorige noodgevalle en bewyse', color: Colors.accentYellow, route: '/sos-evidence/history' },
   { key: 'lpr', icon: 'car' as const, title: 'LPR Kamera', subtitle: 'Nommerbord herkenning & waglyslys', color: Colors.accentBlue, route: '/lpr' },
   { key: 'ai-crime', icon: 'brain' as const, title: 'AI Misdaadanalise', subtitle: 'AI-aangedrewe misdaadvoorspelling', color: Colors.accentOrange, route: '/ai-crime' },

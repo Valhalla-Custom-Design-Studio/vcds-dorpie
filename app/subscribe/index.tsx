@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import {
-  View, Text, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, Alert,
+  View, Text, ScrollView, StyleSheet, TouchableOpacity,
+  ActivityIndicator, Alert, TextInput,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Typography, Radius, Shadow } from '@/theme';
+import { Colors, Typography, Radius, Shadow, Spacing } from '@/theme';
 import { PlatinumCard, Badge, ScreenHeader } from '@/components/ui';
 import { useAuthStore } from '@/store/auth';
-import { subscriptionsAPI } from '@/services/api';
+import { subscriptionsAPI, api } from '@/services/api';
 import { t } from '@/i18n';
 
 const TIERS = [
@@ -67,11 +68,55 @@ const TIERS = [
 export default function Subscribe() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
   const [selected, setSelected] = useState('pro');
   const [loading, setLoading] = useState(false);
 
+  // Promo code state
+  const [promoCode, setPromoCode] = useState('');
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [promoSuccess, setPromoSuccess] = useState(false);
+
   const currentTier = user?.subscription_tier || 'free';
+
+  const tierColor = (id: string) => {
+    if (id === 'platinum') return Colors.accent;
+    if (id === 'pro') return Colors.primary;
+    return Colors.textMuted;
+  };
+
+  const handlePromoRedeem = async () => {
+    const code = promoCode.trim();
+    if (!code) {
+      Alert.alert('Fout', 'Voer asseblief 'n promosiekode in.');
+      return;
+    }
+    if (!user?.town_id) {
+      Alert.alert('Fout', 'Jou dorp is nie gestel nie. Gaan na Profiel en stel jou dorp eers.');
+      return;
+    }
+    setPromoLoading(true);
+    try {
+      const { data } = await api.post('/promo/redeem', { code, townId: user.town_id });
+      if (data.success) {
+        setPromoSuccess(true);
+        // Update local user tier
+        if (setUser && user) {
+          setUser({ ...user, subscription_tier: data.tier });
+        }
+        Alert.alert(
+          '🎉 Welkom by Jordaanpark!',
+          data.message + '\n\nJou toegang is geldig tot 30 Junie 2026.',
+          [{ text: 'Dankie!', onPress: () => router.back() }]
+        );
+      }
+    } catch (e: any) {
+      const msg = e.response?.data?.message || 'Ongeldige kode. Probeer weer.';
+      Alert.alert('Kode Ongeldig', msg);
+    } finally {
+      setPromoLoading(false);
+    }
+  };
 
   const handleSubscribe = async () => {
     if (selected === 'free') { router.back(); return; }
@@ -87,12 +132,6 @@ export default function Subscribe() {
     } finally { setLoading(false); }
   };
 
-  const tierColor = (id: string) => {
-    if (id === 'platinum') return Colors.accent;
-    if (id === 'pro') return Colors.primary;
-    return Colors.textMuted;
-  };
-
   return (
     <View style={{ flex: 1, backgroundColor: Colors.bg }}>
       <ScreenHeader title={t('subscribe.title')} showBack />
@@ -104,6 +143,50 @@ export default function Subscribe() {
           </Text>
         </LinearGradient>
 
+        {/* ── Promo Code Section ─────────────────────────────────────── */}
+        <PlatinumCard style={s.promoCard}>
+          <View style={s.promoHeader}>
+            <Ionicons name="ticket" size={20} color={Colors.accentGreen} />
+            <Text style={[Typography.body, { color: Colors.textPrimary, fontWeight: '700', marginLeft: 8 }]}>
+              Het jy 'n promosiekode?
+            </Text>
+          </View>
+          <Text style={[Typography.caption, { color: Colors.textMuted, marginBottom: 12 }]}>
+            Jordaanpark-inwoners: gebruik kode <Text style={{ color: Colors.accentGreen, fontWeight: '700' }}>#JPF2026</Text> vir gratis toegang tot 30 Junie 2026.
+          </Text>
+          {promoSuccess ? (
+            <View style={s.promoSuccessRow}>
+              <Ionicons name="checkmark-circle" size={20} color={Colors.accentGreen} />
+              <Text style={[Typography.caption, { color: Colors.accentGreen, marginLeft: 8, fontWeight: '600' }]}>
+                Kode suksesvol toegepas!
+              </Text>
+            </View>
+          ) : (
+            <View style={s.promoRow}>
+              <TextInput
+                style={s.promoInput}
+                value={promoCode}
+                onChangeText={setPromoCode}
+                placeholder="#JPF2026"
+                placeholderTextColor={Colors.textMuted}
+                autoCapitalize="characters"
+                autoCorrect={false}
+              />
+              <TouchableOpacity
+                style={[s.promoBtn, { opacity: promoLoading ? 0.7 : 1 }]}
+                onPress={handlePromoRedeem}
+                disabled={promoLoading}
+              >
+                {promoLoading
+                  ? <ActivityIndicator color="#fff" size="small" />
+                  : <Text style={s.promoBtnText}>Gebruik</Text>
+                }
+              </TouchableOpacity>
+            </View>
+          )}
+        </PlatinumCard>
+
+        {/* ── Tier Cards ─────────────────────────────────────────────── */}
         {TIERS.map(tier => {
           const isSelected = selected === tier.id;
           const isCurrent = currentTier === tier.id;
@@ -153,6 +236,21 @@ export default function Subscribe() {
 const s = StyleSheet.create({
   scroll: { padding: 16, gap: 12 },
   hero: { borderRadius: 16, padding: 24, marginBottom: 8, alignItems: 'center' },
+  promoCard: { marginBottom: 4 },
+  promoHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
+  promoRow: { flexDirection: 'row', gap: 10, alignItems: 'center' },
+  promoInput: {
+    flex: 1, backgroundColor: Colors.surface, borderRadius: Radius.md,
+    paddingHorizontal: 14, paddingVertical: 10, color: Colors.textPrimary,
+    borderWidth: 1, borderColor: Colors.surfaceBorder, fontSize: 14, fontWeight: '600',
+    letterSpacing: 1,
+  },
+  promoBtn: {
+    backgroundColor: Colors.accentGreen, borderRadius: Radius.md,
+    paddingHorizontal: 18, paddingVertical: 10,
+  },
+  promoBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
+  promoSuccessRow: { flexDirection: 'row', alignItems: 'center' },
   tierCard: { marginBottom: 4 },
   tierHeader: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: 12 },
   divider: { height: 1, backgroundColor: '#ffffff15', marginBottom: 10 },
