@@ -1,18 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/theme';
 import { t } from '@/i18n';
+import { useLanguageStore } from '@/store/language';
 
 const TAB_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
   index: 'home',
   safety: 'shield',
   community: 'people',
   directory: 'storefront',
+  marketplace: 'cart',
   profile: 'person-circle',
 };
 
 export default function TabsLayout() {
+  const { locale, init } = useLanguageStore();
+
+  useEffect(() => { init(); }, []);
+
+  // locale is in state — any language change re-renders this component
+  // so t() calls below always reflect the current language
   return (
     <Tabs
       screenOptions={({ route }) => ({
@@ -39,6 +47,7 @@ export default function TabsLayout() {
       <Tabs.Screen name="safety" options={{ title: t('tabs.safety') }} />
       <Tabs.Screen name="community" options={{ title: t('tabs.community') }} />
       <Tabs.Screen name="directory" options={{ title: t('tabs.directory') }} />
+      <Tabs.Screen name="marketplace" options={{ title: t('tabs.marketplace') }} />
       <Tabs.Screen name="profile" options={{ title: t('tabs.profile') }} />
     </Tabs>
   );

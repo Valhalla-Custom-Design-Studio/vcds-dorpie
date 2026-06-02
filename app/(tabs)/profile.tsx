@@ -48,6 +48,14 @@ export default function Profile() {
       ],
     },
     {
+      title: 'Veiligheid',
+      items: [
+        { icon: 'people-outline', label: 'SOS Kontakte', route: '/sos-contacts' },
+        { icon: 'medkit-outline', label: 'Mediese Profiel', route: '/settings/medical-profile' },
+        { icon: 'eye-off-outline', label: 'Phantom Alert™ Instellings', route: '/settings/phantom' },
+      ],
+    },
+    {
       title: 'Hulp & Regsake',
       items: [
         { icon: 'help-circle-outline', label: 'Hulp & Ondersteuning', route: '/settings/help' },
