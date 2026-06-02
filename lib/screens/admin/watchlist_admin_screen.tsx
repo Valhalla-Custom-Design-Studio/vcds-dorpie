@@ -113,9 +113,10 @@ export default function WatchlistAdminScreen() {
   };
 
   const handleToggle = async (entry: WatchlistEntry) => {
+    const toggleLabel = entry.active ? 'Deaktiveer' : 'Aktiveer';
     Alert.alert(
-      entry.active ? 'Deaktiveer' : 'Aktiveer',
-      `${entry.active ? 'Deaktiveer' : 'Aktiveer'} waglysinskrywing vir ${entry.value}?`,
+      toggleLabel,
+      `${toggleLabel} waglysinskrywing vir ${entry.value}?`,
       [
         { text: 'Kanselleer', style: 'cancel' },
         { text: 'Bevestig', onPress: async () => {
