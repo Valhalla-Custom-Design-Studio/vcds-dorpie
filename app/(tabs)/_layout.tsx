@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/theme';
@@ -16,11 +16,16 @@ const TAB_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
 
 export default function TabsLayout() {
   const { locale, init } = useLanguageStore();
+  const [ready, setReady] = useState(false);
 
-  useEffect(() => { init(); }, []);
+  useEffect(() => {
+    init().finally(() => setReady(true));
+  }, []);
 
-  // locale is in state — any language change re-renders this component
-  // so t() calls below always reflect the current language
+  // Wait for persisted language to load before rendering tabs
+  // This prevents the flash of English labels on Afrikaans devices
+  if (!ready) return null;
+
   return (
     <Tabs
       screenOptions={({ route }) => ({
@@ -43,12 +48,12 @@ export default function TabsLayout() {
         },
       })}
     >
-      <Tabs.Screen name="index" options={{ title: t('tabs.home') }} />
-      <Tabs.Screen name="safety" options={{ title: t('tabs.safety') }} />
-      <Tabs.Screen name="community" options={{ title: t('tabs.community') }} />
-      <Tabs.Screen name="directory" options={{ title: t('tabs.directory') }} />
-      <Tabs.Screen name="marketplace" options={{ title: t('tabs.marketplace') }} />
-      <Tabs.Screen name="profile" options={{ title: t('tabs.profile') }} />
+      <Tabs.Screen name="index" options={{ title: t('tabs.home', { locale }) }} />
+      <Tabs.Screen name="safety" options={{ title: t('tabs.safety', { locale }) }} />
+      <Tabs.Screen name="community" options={{ title: t('tabs.community', { locale }) }} />
+      <Tabs.Screen name="directory" options={{ title: t('tabs.directory', { locale }) }} />
+      <Tabs.Screen name="marketplace" options={{ title: t('tabs.marketplace', { locale }) }} />
+      <Tabs.Screen name="profile" options={{ title: t('tabs.profile', { locale }) }} />
     </Tabs>
   );
 }
