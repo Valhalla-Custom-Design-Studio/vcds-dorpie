@@ -8,7 +8,23 @@ r.use(authenticate);
 // Cross-app push dispatch: sends to ALL tokens for this user regardless of which app registered them
 async function triggerSOSAlarm(sosId: string, userId: string, userName: string, lat: number|null, lng: number|null, triggerMethod: string, sourceApp: string = 'dorpwag') {
   const coords = lat && lng ? `GPS: https://maps.google.com?q=${lat},${lng}` : 'GPS nie beskikbaar nie';
-  const smsText = `🚨 DORPWAG™ NOODALARM — ${userName} het 'n SOS geaktiveer (${triggerMethod}). ${coords}. Reageer onmiddellik!`;
+
+  // Fetch medical profile to include in SOS dispatch
+  const medResult = await pool.query('SELECT * FROM user_medical_profiles WHERE user_id=$1', [userId]);
+  const med = medResult.rows[0];
+  let medInfo = '';
+  if (med) {
+    const parts: string[] = [];
+    if (med.blood_type) parts.push(`Bloedgroep: ${med.blood_type}`);
+    if (med.allergies) parts.push(`Allergieë: ${med.allergies}`);
+    if (med.medical_conditions) parts.push(`Toestande: ${med.medical_conditions}`);
+    if (med.current_medications) parts.push(`Medikasie: ${med.current_medications}`);
+    if (med.medical_aid_name) parts.push(`Mediese Hulp: ${med.medical_aid_name} (${med.medical_aid_number || 'geen nommer'})`);
+    if (med.doctor_name) parts.push(`Dokter: ${med.doctor_name} ${med.doctor_phone || ''}`);
+    if (parts.length) medInfo = ` | MEDIESE INFO: ${parts.join(', ')}`;
+  }
+
+  const smsText = `🚨 DORPWAG™ NOODALARM — ${userName} het 'n SOS geaktiveer (${triggerMethod}). ${coords}${medInfo}. Reageer onmiddellik!`;
 
   // Get guardian contacts + trusted contacts
   const contacts = await pool.query(
