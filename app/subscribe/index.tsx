@@ -88,7 +88,7 @@ export default function Subscribe() {
   const handlePromoRedeem = async () => {
     const code = promoCode.trim();
     if (!code) {
-      Alert.alert('Fout', 'Voer asseblief 'n promosiekode in.');
+      Alert.alert('Fout', `Voer asseblief 'n promosiekode in.`);
       return;
     }
     if (!user?.town_id) {
