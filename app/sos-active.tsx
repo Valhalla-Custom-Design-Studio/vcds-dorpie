@@ -34,7 +34,7 @@ export default function SOSActive() {
       if (perm !== 'granted') { Alert.alert('Location permission required'); setStatus('idle'); return; }
       const loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
       setStatus('sending');
-      const { data } = await sosAPI.trigger(loc.coords.latitude, loc.coords.longitude);
+      const { data } = await sosAPI.trigger({ lat: loc.coords.latitude, lng: loc.coords.longitude, source: 'manual', triggerMethod: 'button', appName: 'dorpwag' });
       setSosId(data.data?.id);
       setStatus('active');
     } catch (e) {

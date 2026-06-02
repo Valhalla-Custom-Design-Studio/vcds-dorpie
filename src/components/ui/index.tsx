@@ -139,24 +139,34 @@ export function SeverityBadge({ level }: { level: 'low' | 'medium' | 'high' | 'c
 }
 
 // ─── InputField ──────────────────────────────────────────────
-export function InputField({ label, value, onChangeText, placeholder, secureTextEntry, multiline, style, keyboardType, autoCapitalize }: {
+export function InputField({ label, value, onChangeText, placeholder, secureTextEntry, multiline, style, keyboardType, autoCapitalize, icon }: {
   label?: string; value: string; onChangeText: (t: string) => void; placeholder?: string;
   secureTextEntry?: boolean; multiline?: boolean; style?: ViewStyle; keyboardType?: any; autoCapitalize?: any;
+  icon?: keyof typeof Ionicons.glyphMap;
 }) {
+  const [show, setShow] = React.useState(false);
   return (
     <View style={[styles.inputWrap, style]}>
       {label ? <Text style={styles.inputLabel}>{label}</Text> : null}
-      <TextInput
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor={Colors.textMuted}
-        secureTextEntry={secureTextEntry}
-        multiline={multiline}
-        keyboardType={keyboardType}
-        autoCapitalize={autoCapitalize}
-        style={[styles.input, multiline && { height: 100, textAlignVertical: 'top' }]}
-      />
+      <View style={styles.inputRow}>
+        {icon ? <Ionicons name={icon} size={18} color={Colors.textMuted} style={{ marginRight: 8 }} /> : null}
+        <TextInput
+          value={value}
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+          placeholderTextColor={Colors.textMuted}
+          secureTextEntry={secureTextEntry && !show}
+          multiline={multiline}
+          keyboardType={keyboardType}
+          autoCapitalize={autoCapitalize ?? 'none'}
+          style={[styles.input, { flex: 1, borderWidth: 0, paddingHorizontal: 0, backgroundColor: 'transparent' }, multiline && { height: 100, textAlignVertical: 'top' }]}
+        />
+        {secureTextEntry ? (
+          <TouchableOpacity onPress={() => setShow(s => !s)} style={{ padding: 4 }}>
+            <Ionicons name={show ? 'eye-off' : 'eye'} size={18} color={Colors.textMuted} />
+          </TouchableOpacity>
+        ) : null}
+      </View>
     </View>
   );
 }
@@ -306,6 +316,16 @@ const styles = StyleSheet.create({
   badgeText: { fontSize: 11, fontWeight: '600' },
   inputWrap: { marginBottom: Spacing.md },
   inputLabel: { ...Typography.label, marginBottom: 6 },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.md,
+    borderWidth: 1,
+    borderColor: Colors.surfaceBorder,
+    paddingHorizontal: 14,
+    paddingVertical: 2,
+  },
   input: {
     backgroundColor: Colors.surface,
     borderRadius: Radius.md,

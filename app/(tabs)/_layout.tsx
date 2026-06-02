@@ -28,6 +28,7 @@ export default function TabsLayout() {
 
   return (
     <Tabs
+      key={locale}
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarActiveTintColor: Colors.tabActive,
@@ -48,12 +49,12 @@ export default function TabsLayout() {
         },
       })}
     >
-      <Tabs.Screen name="index" options={{ title: t('tabs.home', { locale }) }} />
-      <Tabs.Screen name="safety" options={{ title: t('tabs.safety', { locale }) }} />
-      <Tabs.Screen name="community" options={{ title: t('tabs.community', { locale }) }} />
-      <Tabs.Screen name="directory" options={{ title: t('tabs.directory', { locale }) }} />
-      <Tabs.Screen name="marketplace" options={{ title: t('tabs.marketplace', { locale }) }} />
-      <Tabs.Screen name="profile" options={{ title: t('tabs.profile', { locale }) }} />
+      <Tabs.Screen name="index" options={{ title: t('tabs.home') }} />
+      <Tabs.Screen name="safety" options={{ title: t('tabs.safety') }} />
+      <Tabs.Screen name="community" options={{ title: t('tabs.community') }} />
+      <Tabs.Screen name="directory" options={{ title: t('tabs.directory') }} />
+      <Tabs.Screen name="marketplace" options={{ title: t('tabs.marketplace') }} />
+      <Tabs.Screen name="profile" options={{ title: t('tabs.profile') }} />
     </Tabs>
   );
 }

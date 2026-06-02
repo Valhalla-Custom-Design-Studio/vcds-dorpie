@@ -10,7 +10,8 @@ r.get('/', authenticate, async (req: AuthRequest, res: Response) => {
   const { category, search, limit = 30 } = req.query;
   try {
     const u = await pool.query('SELECT town_id FROM users WHERE id=$1', [req.user!.id]);
-    const townId = u.rows[0]?.town_id;
+    const townId = u.rows[0]?.town_id ?? null;
+    if (!townId) { res.json({ success: true, data: [] }); return; }
     let q = `SELECT b.*,u.name as owner_name,f.cloud_storage_path as logo_url,
              COALESCE(AVG(br.rating),0) as avg_rating,COUNT(br.id) as review_count
              FROM businesses b JOIN users u ON u.id=b.owner_id
@@ -51,8 +52,8 @@ r.post('/', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const u = await pool.query('SELECT town_id FROM users WHERE id=$1', [req.user!.id]);
     const { rows } = await pool.query(
-      `INSERT INTO businesses(name,category,description,phone,email,website,address,lat,lng,owner_id,town_id,operating_hours,social_links)
-       VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING *`,
+      `INSERT INTO businesses(name,category,description,phone,email,website,address,lat,lng,owner_id,town_id,operating_hours,social_links,is_active)
+       VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,true) RETURNING *`,
       [name,category,description,phone,email,website,address,lat,lng,req.user!.id,u.rows[0]?.town_id,
        JSON.stringify(operating_hours||{}), JSON.stringify(social_links||{})]
     );
