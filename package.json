@@ -26,7 +26,7 @@
     "@react-native-picker/picker": "2.11.1",
     "@sentry/react-native": "~6.14.0",
     "@types/react-dom": "^19.2.3",
-    "axios": "^1.8.4",
+    "axios": "^1.15.1",
     "date-fns": "^3.6.0",
     "expo": "~53.0.0",
     "expo-asset": "~11.1.7",
@@ -70,5 +70,15 @@
   },
   "engines": {
     "node": ">=20.19.4"
+  },
+  "overrides": {
+    "follow-redirects": "^1.15.9",
+    "semver": "^7.6.0",
+    "word-wrap": "^1.2.5",
+    "tough-cookie": "^4.1.4",
+    "ws": "^8.18.0",
+    "undici": "^6.21.0",
+    "braces": "^3.0.3",
+    "micromatch": "^4.0.8"
   }
 }
