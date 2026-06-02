@@ -16,17 +16,18 @@ const JPF_PROMO_CODE = '#JPF2026';
 const JPF_PROMO_EXPIRY = new Date('2026-06-30T23:59:59+02:00');
 const JORDAANPARK_SLUG = 'jordaanpark';
 
-// Fallback towns — used if API is slow/offline
-const FALLBACK_TOWNS = [
-  { id: 'jordaanpark', name: 'Jordaanpark', province: 'Gauteng' },
-  { id: 'heidelberg-gp', name: 'Heidelberg', province: 'Gauteng' },
-  { id: 'nigel', name: 'Nigel', province: 'Gauteng' },
-  { id: 'alberton', name: 'Alberton', province: 'Gauteng' },
-  { id: 'vereeniging', name: 'Vereeniging', province: 'Gauteng' },
+// Fallback towns — shown while API loads or if API fails.
+// Jordaanpark is hardcoded so promo flow always works.
+// IDs are placeholders; real UUID is resolved from API response.
+const FALLBACK_TOWNS: { id: string; name: string; province: string }[] = [
+  { id: '__jordaanpark__', name: 'Jordaanpark', province: 'Gauteng' },
+  { id: '__heidelberg__', name: 'Heidelberg', province: 'Gauteng' },
 ];
 
 function isJordaanpark(towns: any[], townId: string): boolean {
   if (!townId) return false;
+  // Handle placeholder fallback ID
+  if (townId === '__jordaanpark__') return true;
   const town = towns.find(t => t.id === townId);
   return !!town && town.name.toLowerCase().replace(/\s/g, '') === JORDAANPARK_SLUG;
 }
@@ -57,16 +58,37 @@ export default function Signup() {
   useEffect(() => {
     townsAPI.list()
       .then(r => {
-        const apiTowns = r.data.data || [];
+        const apiTowns: any[] = r.data.data || [];
         if (apiTowns.length > 0) {
-          // Merge: ensure Jordaanpark always present
+          // Always ensure Jordaanpark is present with its real UUID
           const hasJP = apiTowns.some((t: any) =>
             t.name.toLowerCase().replace(/\s/g, '') === JORDAANPARK_SLUG
           );
-          setTowns(hasJP ? apiTowns : [...FALLBACK_TOWNS.slice(0, 1), ...apiTowns]);
+          setTowns(hasJP ? apiTowns : [
+            { id: '__jordaanpark__', name: 'Jordaanpark', province: 'Gauteng' },
+            ...apiTowns,
+          ]);
+          // If user had selected a placeholder, swap to real UUID
+          setTownId(prev => {
+            if (prev === '__jordaanpark__') {
+              const real = apiTowns.find((t: any) =>
+                t.name.toLowerCase().replace(/\s/g, '') === JORDAANPARK_SLUG
+              );
+              return real ? real.id : prev;
+            }
+            if (prev === '__heidelberg__') {
+              const real = apiTowns.find((t: any) =>
+                t.name.toLowerCase() === 'heidelberg'
+              );
+              return real ? real.id : prev;
+            }
+            return prev;
+          });
         }
       })
-      .catch(() => {}); // keep fallback list on error
+      .catch(() => {
+        // Keep fallback list — user can still register, UUID resolved on backend
+      });
   }, []);
 
   const filteredTowns = useMemo(() =>
@@ -100,11 +122,18 @@ export default function Signup() {
 
     setLoading(true); setError('');
     try {
+      // Resolve placeholder town IDs — if API never loaded, send name instead
+      // Backend will resolve by name if townId starts with '__'
+      const resolvedTownId = townId.startsWith('__') ? undefined : (townId || undefined);
+      const resolvedTownName = townId === '__jordaanpark__' ? 'Jordaanpark'
+        : townId === '__heidelberg__' ? 'Heidelberg' : undefined;
+
       const res = await authAPI.signup({
         name,
         email: email.trim().toLowerCase(),
         password,
-        townId: townId || undefined,
+        townId: resolvedTownId,
+        townName: resolvedTownName,
         phone: phone || undefined,
         promoCode: showPromo && promoCode ? promoCode.trim() : undefined,
       });

@@ -54,6 +54,27 @@ export default function RootLayout() {
             <Stack.Screen name="deadman-checkin" options={{ presentation: 'fullScreenModal' }} />
             <Stack.Screen name="movement-checkin" options={{ presentation: 'fullScreenModal' }} />
             <Stack.Screen name="sos-evidence/[sosId]" />
+            <Stack.Screen name="settings" />
+            <Stack.Screen name="subscribe" />
+            <Stack.Screen name="profile" />
+            <Stack.Screen name="geofence" />
+            <Stack.Screen name="mood" />
+            <Stack.Screen name="sos-contacts" />
+            <Stack.Screen name="guardian" />
+            <Stack.Screen name="heatmap" />
+            <Stack.Screen name="ai-crime" />
+            <Stack.Screen name="incidents" />
+            <Stack.Screen name="notices" />
+            <Stack.Screen name="events" />
+            <Stack.Screen name="topics" />
+            <Stack.Screen name="businesses" />
+            <Stack.Screen name="patrols" />
+            <Stack.Screen name="listings" />
+            <Stack.Screen name="messages" />
+            <Stack.Screen name="alerts" />
+            <Stack.Screen name="payments" />
+            <Stack.Screen name="lpr" />
+            <Stack.Screen name="phantom-alert" options={{ presentation: 'fullScreenModal', animation: 'fade' }} />
           </Stack>
         </AuthGate>
       </SafeAreaProvider>

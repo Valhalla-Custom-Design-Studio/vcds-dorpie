@@ -338,7 +338,7 @@ const s = StyleSheet.create({
   emptyText: { fontSize: 16, color: Colors.text, fontWeight: '600', marginTop: 8 },
   emptySubText: { fontSize: 13, color: Colors.textMuted, textAlign: 'center' },
   emptyBtn: { marginTop: 12, backgroundColor: Colors.accent, paddingHorizontal: 20, paddingVertical: 10, borderRadius: Radius.md },
-  emptyBtnText: { color: '#000', fontWeight: '700', fontSize: 14 },
+  emptyBtnText: { color: '#0A0A0A', fontWeight: '700', fontSize: 14 },
   cameraCard: { marginBottom: Spacing.sm },
   cameraHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
   cameraInfo: { flexDirection: 'row', alignItems: 'center', gap: 8 },
@@ -369,5 +369,5 @@ const s = StyleSheet.create({
   infoBox: { flexDirection: 'row', gap: 8, backgroundColor: Colors.accent + '11', borderRadius: Radius.md, padding: 12, marginVertical: Spacing.md },
   infoText: { flex: 1, fontSize: 11, color: Colors.textMuted, lineHeight: 16 },
   addBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: Colors.accent, borderRadius: Radius.md, paddingVertical: 14 },
-  addBtnText: { fontSize: 15, fontWeight: '700', color: '#000' },
+  addBtnText: { fontSize: 15, fontWeight: '700', color: '#0A0A0A' },
 });
