@@ -9,11 +9,25 @@ const r = Router();
 const VALID_APPS = ['dorpwag', 'ouma_en_oppas', 'oppas', 'plaasboek', 'veekos', 'fitness_fuel', 'vleiskraft'];
 
 r.post('/signup', async (req: Request, res: Response) => {
-  const { email, password, name, townId, phone, appName = 'dorpwag' } = req.body;
+  const { email, password, name, townId, townName, phone, appName = 'dorpwag' } = req.body;
   if (!email || !password || !name) { res.status(400).json({ success: false, message: 'Email, password and name required' }); return; }
   if (password.length < 8) { res.status(400).json({ success: false, message: 'Password must be at least 8 characters' }); return; }
   const app = VALID_APPS.includes(appName) ? appName : 'dorpwag';
   try {
+    // Resolve townId from townName if townId not provided (fallback for offline town picker)
+    // Also validate UUID format — placeholder IDs (starting with '__') are not valid UUIDs
+    const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    let resolvedTownId: string | null = (townId && UUID_REGEX.test(townId)) ? townId : null;
+    if (!resolvedTownId && townName) {
+      const townRes = await pool.query(
+        'SELECT id FROM towns WHERE LOWER(name) = LOWER($1) LIMIT 1',
+        [townName]
+      );
+      if (townRes.rows.length) resolvedTownId = townRes.rows[0].id;
+    } else if (!resolvedTownId && townId && !townId.startsWith('__')) {
+      // townId provided but not a valid UUID — try resolving by name as last resort
+      console.warn('[Auth] Invalid townId format received:', townId);
+    }
     const ex = await pool.query('SELECT id,email,name,role,subscription_tier,town_id,registered_apps FROM users WHERE email=$1', [email.toLowerCase()]);
     if (ex.rows.length) {
       // User exists — add this app to registeredApps and return JWT
@@ -32,7 +46,7 @@ r.post('/signup', async (req: Request, res: Response) => {
     const hash = await bcrypt.hash(password, 12);
     const { rows } = await pool.query(
       'INSERT INTO users (email,password,name,town_id,phone,registered_apps) VALUES($1,$2,$3,$4,$5,$6) RETURNING id,email,name,role,subscription_tier,town_id,registered_apps',
-      [email.toLowerCase(), hash, name, townId || null, phone || null, [app]]
+      [email.toLowerCase(), hash, name, resolvedTownId, phone || null, [app]]
     );
     const user = rows[0];
     await pool.query('INSERT INTO notification_preferences (user_id) VALUES($1) ON CONFLICT DO NOTHING', [user.id]);

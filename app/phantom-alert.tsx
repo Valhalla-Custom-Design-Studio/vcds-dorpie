@@ -184,6 +184,6 @@ const s = StyleSheet.create({
   btnText: { fontSize: 28, fontWeight: '400', color: '#FFFFFF' },
   btnTextOperator: { color: '#FFFFFF' },
   btnTextEquals: { color: '#FFFFFF' },
-  btnTextClear: { color: '#000000' },
+  btnTextClear: { color: '#0A0A0A' },
   hiddenBack: { position: 'absolute', top: 0, left: 0, width: 44, height: 44 },
 });

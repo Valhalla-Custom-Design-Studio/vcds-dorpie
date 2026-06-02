@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   btnText: {
-    color: '#000',
+    color: '#0A0A0A',
     fontWeight: '700',
     fontSize: 15,
   },

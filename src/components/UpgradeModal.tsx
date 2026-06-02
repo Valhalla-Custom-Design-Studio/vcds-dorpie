@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   featureRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 6 },
   featureText: { color: '#D1D5DB', fontSize: 13 },
   cta: { marginTop: 24, paddingVertical: 14, borderRadius: 28, alignItems: 'center' },
-  ctaText: { color: '#000', fontWeight: '800', fontSize: 16 },
+  ctaText: { color: '#0A0A0A', fontWeight: '800', fontSize: 16 },
   cancel: { marginTop: 12, alignItems: 'center' },
   cancelText: { color: '#6B7280', fontSize: 14 },
 });

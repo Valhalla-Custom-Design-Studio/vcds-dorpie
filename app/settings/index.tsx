@@ -10,6 +10,7 @@ const SETTINGS = [
     { icon: 'location-outline', label: 'Geo-Omheinings', route: '/geofence' },
     { icon: 'happy-outline', label: 'Gesigstemming Skandering', route: '/mood' },
     { icon: 'people-outline', label: 'SOS Noodkontakte', route: '/sos-contacts' },
+    { icon: 'eye-off-outline', label: 'Phantom Alert™ Instellings', route: '/settings/phantom' },
   ]},
   { section: 'Rekening', items: [
     { icon: 'person-outline', label: 'Wysig Profiel', route: '/settings/edit-profile' },

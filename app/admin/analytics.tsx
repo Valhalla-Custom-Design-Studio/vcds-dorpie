@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   tab: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, paddingVertical: 7, backgroundColor: Colors.card, borderRadius: 20 },
   activeTab: { backgroundColor: Colors.accent },
   tabText: { color: Colors.muted, fontSize: 12, fontWeight: '600' },
-  activeTabText: { color: '#000' },
+  activeTabText: { color: '#0A0A0A' },
   scroll: { flex: 1, marginTop: 8 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', margin: 16, gap: 12 },
   statCard: { flex: 1, minWidth: '45%', backgroundColor: Colors.card, borderRadius: 14, padding: 16, alignItems: 'center', gap: 4 },

@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
   lprTitle: { color: '#F9FAFB', fontSize: 15, fontWeight: '700', flex: 1 },
   lprSub: { color: '#9CA3AF', fontSize: 13, marginBottom: 12 },
   lprBtn: { backgroundColor: '#C9A84C', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 20, alignSelf: 'flex-start' },
-  lprBtnText: { color: '#000', fontWeight: '700', fontSize: 13 },
+  lprBtnText: { color: '#0A0A0A', fontWeight: '700', fontSize: 13 },
   actionCard: { flexDirection: 'row', alignItems: 'center', gap: 14, marginBottom: 8, padding: 16 },
   actionContent: { flex: 1 },
   actionTitle: { color: '#F9FAFB', fontSize: 14, fontWeight: '600' },
