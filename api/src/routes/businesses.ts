@@ -16,8 +16,8 @@ r.get('/', authenticate, async (req: AuthRequest, res: Response) => {
              FROM businesses b JOIN users u ON u.id=b.owner_id
              LEFT JOIN files f ON f.id=b.logo_file_id
              LEFT JOIN business_reviews br ON br.business_id=b.id
-             WHERE b.town_id=$1 AND b.is_active=true`;
-    const params: any[] = [townId];
+             WHERE b.is_active=true\${townId ? ' AND b.town_id=$1' : ''}\`;
+    const params: any[] = townId ? [townId] : [];
     if (category) { q += ` AND b.category=$${params.length+1}`; params.push(category); }
     if (search) { q += ` AND (b.name ILIKE $${params.length+1} OR b.description ILIKE $${params.length+1})`; params.push(`%${search}%`); }
     q += ` GROUP BY b.id,u.name,f.cloud_storage_path ORDER BY b.is_verified DESC, avg_rating DESC LIMIT $${params.length+1}`;

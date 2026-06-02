@@ -26,21 +26,26 @@ export function useSubscription(appId: string): UseSubscriptionReturn {
   const sdk = createPayFastSDK(appId);
 
   const load = useCallback(async () => {
+    // 5-second timeout so PayFast SDK failures don't block the UI
+    const timeout = new Promise<void>((_, reject) =>
+      setTimeout(() => reject(new Error('useSubscription timeout')), 5000)
+    );
     try {
       const token = await AsyncStorage.getItem('vcds_auth_token');
       if (token) sdk.setToken(token);
 
-      const [subData, tierData] = await Promise.all([
-        sdk.getSubscription(),
-        sdk.getTiers(),
-      ]);
+      const [subData, tierData] = await Promise.race([
+        Promise.all([sdk.getSubscription(), sdk.getTiers()]),
+        timeout.then(() => { throw new Error('timeout'); }),
+      ]) as [any, any];
 
       setSubscription(subData.subscription);
       setFeatures(subData.features);
       setTierLabel(subData.tierLabel);
       setTiers(tierData.tiers);
     } catch (e) {
-      console.warn('useSubscription error:', e);
+      console.warn('useSubscription error (falling back to local tier):', e);
+      // Graceful degradation — PaywallGate will use local auth store tier
     } finally {
       setLoading(false);
     }

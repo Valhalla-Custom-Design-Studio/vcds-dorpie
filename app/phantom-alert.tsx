@@ -57,11 +57,12 @@ export default function PhantomAlertScreen() {
         ? await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced })
         : null;
 
-      await sosAPI.trigger(
-        loc?.coords.latitude ?? 0,
-        loc?.coords.longitude ?? 0,
-        { silent: true, source: 'phantom' }
-      );
+      await sosAPI.trigger({
+        lat: loc?.coords.latitude ?? 0,
+        lng: loc?.coords.longitude ?? 0,
+        silent: true,
+        source: 'phantom',
+      });
     } catch {
       // Fail silently — do NOT show any error to avoid suspicion
     }

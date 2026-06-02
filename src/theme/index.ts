@@ -47,6 +47,7 @@ export const Colors = {
   text: '#F5F0FF',
   muted: '#8B7BA0',
   card: 'rgba(255,255,255,0.05)',
+  textPrimary: '#F5F0FF',  // alias for textHeading — used in legacy screens
 };
 
 export const Spacing = {

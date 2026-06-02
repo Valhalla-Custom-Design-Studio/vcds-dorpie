@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useSubscription } from '../hooks/useSubscription';
 import { useAuthStore } from '../store/auth';
 
@@ -42,7 +42,11 @@ export function PaywallGate({
   // Fallback: read tier directly from local auth store (covers promo + manual DB updates)
   const localTier = useAuthStore(s => s.user?.subscription_tier) || 'free';
 
-  if (loading) return null;
+  if (loading) return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#0A0A0A' }}>
+      <ActivityIndicator color="#C9A84C" size="large" />
+    </View>
+  );
 
   // Access granted if:
   // 1. PayFast SDK says feature is included, OR
