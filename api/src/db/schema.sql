@@ -467,3 +467,21 @@ CREATE TABLE IF NOT EXISTS notification_log (
 CREATE INDEX IF NOT EXISTS idx_notification_log_user ON notification_log(user_id);
 CREATE INDEX IF NOT EXISTS idx_notification_log_app ON notification_log(target_app);
 CREATE INDEX IF NOT EXISTS idx_notification_log_created ON notification_log(created_at DESC);
+
+-- ─── Medical Profile (SOS dispatch data) ─────────────────────────────────────
+CREATE TABLE IF NOT EXISTS user_medical_profiles (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id             UUID NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+  blood_type          VARCHAR(10),
+  allergies           TEXT,
+  medical_conditions  TEXT,
+  current_medications TEXT,
+  doctor_name         VARCHAR(255),
+  doctor_phone        VARCHAR(50),
+  medical_aid_name    VARCHAR(255),
+  medical_aid_number  VARCHAR(100),
+  emergency_notes     TEXT,
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_user_medical_profiles_user_id ON user_medical_profiles(user_id);
