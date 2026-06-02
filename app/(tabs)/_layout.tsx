@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/theme';
-import { t } from '@/i18n';
+import i18n from '@/i18n';
 import { useLanguageStore } from '@/store/language';
 
 const TAB_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
@@ -23,8 +23,12 @@ export default function TabsLayout() {
   }, []);
 
   // Wait for persisted language to load before rendering tabs
-  // This prevents the flash of English labels on Afrikaans devices
   if (!ready) return null;
+
+  // Ensure i18n uses the current locale from the store
+  i18n.locale = locale;
+
+  const tl = (key: string) => i18n.t(key);
 
   return (
     <Tabs
@@ -48,12 +52,12 @@ export default function TabsLayout() {
         },
       })}
     >
-      <Tabs.Screen name="index" options={{ title: t('tabs.home', { locale }) }} />
-      <Tabs.Screen name="safety" options={{ title: t('tabs.safety', { locale }) }} />
-      <Tabs.Screen name="community" options={{ title: t('tabs.community', { locale }) }} />
-      <Tabs.Screen name="directory" options={{ title: t('tabs.directory', { locale }) }} />
-      <Tabs.Screen name="marketplace" options={{ title: t('tabs.marketplace', { locale }) }} />
-      <Tabs.Screen name="profile" options={{ title: t('tabs.profile', { locale }) }} />
+      <Tabs.Screen name="index" options={{ title: tl('tabs.home') }} />
+      <Tabs.Screen name="safety" options={{ title: tl('tabs.safety') }} />
+      <Tabs.Screen name="community" options={{ title: tl('tabs.community') }} />
+      <Tabs.Screen name="directory" options={{ title: tl('tabs.directory') }} />
+      <Tabs.Screen name="marketplace" options={{ title: tl('tabs.marketplace') }} />
+      <Tabs.Screen name="profile" options={{ title: tl('tabs.profile') }} />
     </Tabs>
   );
 }
