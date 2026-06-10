@@ -110,7 +110,7 @@ export const translations = {
     welcome: 'Welkom', signUp: 'Registreer', login: 'Teken In', logout: 'Teken Uit',
     joinYourDorpwag: 'Sluit Aan by Jou Dorpwag', email: 'E-pos', password: 'Wagwoord',
     confirmPassword: 'Bevestig Wagwoord', fullName: 'Volle Naam', selectTown: 'Kies Dorp',
-    searchTowns: 'Soek dorpe...', dontHaveAccount: "Het jy nie 'n rekening nie?",`
+    searchTowns: 'Soek dorpe...', dontHaveAccount: "Het jy nie 'n rekening nie?",
     alreadyHaveAccount: "Het jy reeds 'n rekening?",
     passwordMin8: 'Wagwoord moet ten minste 8 karakters wees',
     passwordsNoMatch: 'Wagwoorde stem nie ooreen nie', emailRequired: 'E-pos is verpligtend',
